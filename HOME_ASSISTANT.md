@@ -395,7 +395,7 @@ Once integrated, you'll see rich analytics in WhoRang:
 Need help with your Home Assistant integration?
 
 - 📖 Check the [WhoRang Documentation](README.md)
-- 🐛 Report issues on [GitHub](https://github.com/Beast12/door-scribe-ai-view/issues)
+- 🐛 Report issues on [GitHub](https://github.com/Beast12/who-rang/issues)
 - 💬 Join the community discussions
 - 📧 Contact support for complex setups
 

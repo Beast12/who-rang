@@ -37,8 +37,8 @@ Get up and running in under 5 minutes:
 
 ```bash
 # Clone the repository
-git clone https://github.com/Beast12/door-scribe-ai-view.git
-cd door-scribe-ai-view
+git clone https://github.com/Beast12/who-rang.git
+cd who-rang
 
 # Build and start the containers (first run will take a few minutes)
 docker-compose up -d --build

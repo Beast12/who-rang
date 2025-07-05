@@ -72,8 +72,8 @@
 
 ```bash
 # Clone and start in under 2 minutes
-git clone https://github.com/Beast12/door-scribe-ai-view.git
-cd door-scribe-ai-view
+git clone https://github.com/Beast12/who-rang.git
+cd who-rang
 docker-compose up -d
 
 # Access your dashboard
@@ -143,4 +143,4 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ⭐ **Star this repo** if you find it useful!
 
-**Download:** [Source code (zip)](https://github.com/Beast12/door-scribe-ai-view/archive/refs/tags/v1.0.0.zip) | [Source code (tar.gz)](https://github.com/Beast12/door-scribe-ai-view/archive/refs/tags/v1.0.0.tar.gz)
+**Download:** [Source code (zip)](https://github.com/Beast12/who-rang/archive/refs/tags/v1.0.0.zip) | [Source code (tar.gz)](https://github.com/Beast12/who-rang/archive/refs/tags/v1.0.0.tar.gz)
