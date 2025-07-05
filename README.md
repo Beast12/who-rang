@@ -17,25 +17,42 @@
 
 <div align="center">
 
-### **🏠 Main Dashboard**
-*Real-time visitor monitoring with AI-powered insights*
+*Click any screenshot to view full size*
 
-<img src="screenshots/dashboard.png" alt="WhoRang Dashboard" width="800">
-
-### **🤖 AI Provider Configuration**
-*Choose from 5 different AI providers for optimal performance*
-
-<img src="screenshots/ai-providers.png" alt="AI Providers Setup" width="800">
-
-### **📊 AI Analytics & Insights**
-*Track costs, performance, and usage across all AI providers*
-
-<img src="screenshots/ai-analytics.png" alt="AI Analytics Dashboard" width="800">
-
-### **👤 Face Recognition Settings**
-*Advanced face detection and visitor identification*
-
-<img src="screenshots/FacesSettings.png" alt="Face Recognition Settings" width="800">
+<table>
+<tr>
+<td align="center" width="50%">
+<strong>🏠 Main Dashboard</strong><br>
+<em>Real-time visitor monitoring with AI-powered insights</em><br><br>
+<a href="screenshots/dashboard.png">
+<img src="screenshots/dashboard.png" alt="WhoRang Dashboard" width="400">
+</a>
+</td>
+<td align="center" width="50%">
+<strong>🤖 AI Provider Configuration</strong><br>
+<em>Choose from 5 different AI providers for optimal performance</em><br><br>
+<a href="screenshots/ai-providers.png">
+<img src="screenshots/ai-providers.png" alt="AI Providers Setup" width="400">
+</a>
+</td>
+</tr>
+<tr>
+<td align="center" width="50%">
+<strong>📊 AI Analytics & Insights</strong><br>
+<em>Track costs, performance, and usage across all AI providers</em><br><br>
+<a href="screenshots/ai-analytics.png">
+<img src="screenshots/ai-analytics.png" alt="AI Analytics Dashboard" width="400">
+</a>
+</td>
+<td align="center" width="50%">
+<strong>👤 Face Recognition Settings</strong><br>
+<em>Advanced face detection and visitor identification</em><br><br>
+<a href="screenshots/FacesSettings.png">
+<img src="screenshots/FacesSettings.png" alt="Face Recognition Settings" width="400">
+</a>
+</td>
+</tr>
+</table>
 
 </div>
 
