@@ -13,6 +13,34 @@
 
 ---
 
+## 📸 **Screenshots**
+
+<div align="center">
+
+### **🏠 Main Dashboard**
+*Real-time visitor monitoring with AI-powered insights*
+
+<img src="screenshots/dashboard.png" alt="WhoRang Dashboard" width="800">
+
+### **🤖 AI Provider Configuration**
+*Choose from 5 different AI providers for optimal performance*
+
+<img src="screenshots/ai-providers.png" alt="AI Providers Setup" width="800">
+
+### **📊 AI Analytics & Insights**
+*Track costs, performance, and usage across all AI providers*
+
+<img src="screenshots/ai-analytics.png" alt="AI Analytics Dashboard" width="800">
+
+### **👤 Face Recognition Settings**
+*Advanced face detection and visitor identification*
+
+<img src="screenshots/FacesSettings.png" alt="Face Recognition Settings" width="800">
+
+</div>
+
+---
+
 ## ✨ **What Makes WhoRang Special?**
 
 🧠 **Multi-Provider AI Intelligence** - Choose from 5 AI providers (OpenAI, Claude, Gemini, Google Cloud Vision, Ollama)  
@@ -202,12 +230,19 @@ If you find WhoRang useful, consider supporting its development:
 
 ## 🤝 **Contributing**
 
-We welcome contributions! Whether it's:
+We welcome contributions from the community! Please read our [Contributing Guide](CONTRIBUTING.md) for detailed information on how to get started.
 
-- 🐛 **Bug Reports** - Help us improve
-- 💡 **Feature Requests** - Share your ideas
-- 🔧 **Code Contributions** - Submit pull requests
-- 📖 **Documentation** - Improve our guides
+**Quick Start for Contributors:**
+- 🍴 Fork the repository and create a feature branch from `develop`
+- 🧪 Test your changes locally with `docker-compose up -d --build`
+- 📝 Follow our [Pull Request Template](.github/pull_request_template.md)
+- ✅ Ensure all CI checks pass (automated testing via GitHub Actions)
+
+**Types of Contributions:**
+- 🐛 **Bug Reports & Fixes** - Help us improve stability
+- 💡 **Feature Requests & Implementation** - Share your ideas
+- 🔧 **Code Contributions** - Submit pull requests to `develop` branch
+- 📖 **Documentation** - Improve our guides and examples
 
 ---
 
