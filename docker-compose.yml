@@ -1,0 +1,56 @@
+services:
+  doorbell-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      - VITE_API_URL=http://localhost:3001/api
+      - VITE_WS_URL=ws://localhost:3001
+    depends_on:
+      - doorbell-backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+
+
+  doorbell-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      # Core backend configuration
+      - PORT=3001
+      - NODE_ENV=production
+      - DATABASE_PATH=/app/data/doorbell.db
+      # CORS configuration
+      - CORS_ORIGIN=http://localhost:8080
+      - CORS_MODE=permissive
+      # Webhook configuration
+      - WEBHOOK_TOKEN=your-secure-webhook-token-here
+      - WEBHOOK_PATH=/api/webhook/doorbell
+      - PUBLIC_URL=http://localhost:3001
+      # Docker flag
+      - DOCKER_ENV=true
+    volumes:
+      - doorbell-data:/app/data
+      - doorbell-uploads:/app/uploads
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 4
+      start_period: 15s
+
+
+volumes:
+  doorbell-data:
+  doorbell-uploads:

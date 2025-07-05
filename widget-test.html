@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMC Widget Test</title>
+</head>
+<body>
+    <h1>Buy Me A Coffee Widget Test</h1>
+    <p>This page tests if the BMC widget loads correctly.</p>
+    
+    <!-- Buy Me A Coffee Widget -->
+    <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="koen1203" data-description="Support me on Buy me a coffee!" data-message="Ring the bell, fuel the dev ☕" data-color="#5F7FFF" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
+    
+    <style>
+        /* Hide BMC widget on mobile devices to prevent interface blocking */
+        @media (max-width: 768px) {
+            .bmc-btn-container {
+                display: none !important;
+            }
+        }
+        
+        /* Show widget only on desktop/tablet with proper z-index */
+        @media (min-width: 769px) {
+            .bmc-btn-container {
+                z-index: 40 !important;
+            }
+        }
+    </style>
+    
+    <script>
+        // Debug script loading
+        console.log('Page loaded, checking for BMC widget...');
+        console.log('Screen width:', window.innerWidth);
+        
+        setTimeout(() => {
+            const widget = document.querySelector('.bmc-btn-container');
+            if (widget) {
+                console.log('BMC widget found:', widget);
+                console.log('Widget display style:', window.getComputedStyle(widget).display);
+            } else {
+                console.log('BMC widget not found');
+            }
+        }, 3000);
+    </script>
+</body>
+</html>
