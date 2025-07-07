@@ -1,5 +1,6 @@
 const express = require('express');
 const multer = require('multer');
+const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const { validateWebhookToken } = require('../middleware/auth');
 const { broadcast } = require('../websocket/handler');
@@ -33,7 +34,7 @@ function parseWeatherData(weatherString) {
 }
 
 // Webhook handler function
-function handleWebhookEvent(req, res) {
+async function handleWebhookEvent(req, res) {
   const { 
     ai_message, 
     ai_title, 
@@ -66,12 +67,32 @@ function handleWebhookEvent(req, res) {
   const finalWeatherCondition = weather_condition || weatherInfo?.condition;
   const finalWeatherHumidity = validatedWeatherHumidity !== null ? validatedWeatherHumidity : weatherInfo?.humidity;
 
+  // Handle image URL - download remote images immediately
+  let processedImageUrl;
+  if (req.file) {
+    processedImageUrl = `/uploads/${req.file.filename}`;
+  } else if (image_url && image_url.startsWith('http')) {
+    // Download remote image and store locally
+    try {
+      const faceCroppingService = require('../services/faceCroppingService');
+      const localPath = await faceCroppingService.downloadRemoteImage(image_url);
+      const filename = path.basename(localPath);
+      processedImageUrl = `/uploads/${filename}`;
+      console.log(`Downloaded remote image: ${image_url} -> ${processedImageUrl}`);
+    } catch (error) {
+      console.error('Failed to download remote image:', error);
+      processedImageUrl = image_url; // Fallback to original URL
+    }
+  } else {
+    processedImageUrl = image_url || '/placeholder.svg';
+  }
+
   const newEvent = {
     visitor_id: uuidv4(),
     timestamp: new Date().toISOString(),
     ai_message,
     ai_title: ai_title || null,
-    image_url: req.file ? `/uploads/${req.file.filename}` : (image_url || '/placeholder.svg'),
+    image_url: processedImageUrl,
     location,
     weather: finalWeatherCondition || weather || null,
     weather_temperature: finalWeatherTemp,
