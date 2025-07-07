@@ -620,14 +620,29 @@ If no faces are detected, set faces_detected to 0 and faces to empty array. Alwa
     try {
       let imageBuffer;
       
-      if (imageUrl.startsWith('/uploads/')) {
+      // First, try to convert external URLs to local paths
+      if (imageUrl.startsWith('http')) {
+        // Extract the path from the URL and try to access it locally first
+        const urlPath = new URL(imageUrl).pathname;
+        if (urlPath.startsWith('/uploads/')) {
+          console.log('Converting external URL to local path:', urlPath);
+          const localPath = path.join(__dirname, '..', urlPath);
+          try {
+            imageBuffer = await fs.readFile(localPath);
+            console.log('Successfully read image from local path:', localPath);
+          } catch (localError) {
+            console.log('Local file not found, attempting download:', imageUrl);
+            imageBuffer = await this.downloadImage(imageUrl);
+          }
+        } else {
+          // Remote URL - download the image
+          console.log('Downloading remote image:', imageUrl);
+          imageBuffer = await this.downloadImage(imageUrl);
+        }
+      } else if (imageUrl.startsWith('/uploads/')) {
         // Local file path
         const imagePath = path.join(__dirname, '..', imageUrl);
         imageBuffer = await fs.readFile(imagePath);
-      } else if (imageUrl.startsWith('http')) {
-        // Remote URL - download the image
-        console.log('Downloading remote image:', imageUrl);
-        imageBuffer = await this.downloadImage(imageUrl);
       } else {
         // Direct file path
         imageBuffer = await fs.readFile(imageUrl);
