@@ -1,0 +1,259 @@
+# WhoRang Home Assistant Integration - Example Automations
+# Copy these examples to your automations.yaml file and customize as needed
+
+# Basic doorbell notification with image
+- alias: "WhoRang - Doorbell Notification"
+  description: "Send notification when doorbell is pressed"
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.whorang_doorbell
+      to: "on"
+  action:
+    - service: notify.mobile_app_your_phone
+      data:
+        title: "🔔 Doorbell"
+        message: "{{ states('sensor.whorang_latest_visitor') }}"
+        data:
+          image: "/api/camera_proxy/camera.whorang_latest_image"
+          actions:
+            - action: "view_visitor"
+              title: "View Details"
+
+# Welcome known visitors with TTS
+- alias: "WhoRang - Welcome Known Visitor"
+  description: "Welcome known visitors with voice announcement"
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.whorang_known_visitor
+      to: "on"
+  condition:
+    - condition: state
+      entity_id: input_boolean.tts_announcements
+      state: "on"
+  action:
+    - service: tts.google_translate_say
+      data:
+        entity_id: media_player.living_room_speaker
+        message: >
+          Welcome home, {{ state_attr('binary_sensor.whorang_known_visitor', 'person_name') }}!
+    - service: light.turn_on
+      target:
+        entity_id: light.porch_light
+      data:
+        brightness: 255
+        color_name: "green"
+
+# Motion detection during away mode
+- alias: "WhoRang - Motion Alert Away Mode"
+  description: "Alert when motion detected while away"
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.whorang_motion
+      to: "on"
+  condition:
+    - condition: state
+      entity_id: alarm_control_panel.home_alarm
+      state: "armed_away"
+  action:
+    - service: notify.family_group
+      data:
+        title: "🚨 Motion Detected"
+        message: "Motion at front door while away: {{ states('sensor.whorang_latest_visitor') }}"
+        data:
+          image: "/api/camera_proxy/camera.whorang_latest_image"
+          tag: "motion_alert"
+          actions:
+            - action: "trigger_analysis"
+              title: "Analyze Visitor"
+            - action: "view_camera"
+              title: "View Camera"
+
+# AI cost monitoring and alerts
+- alias: "WhoRang - AI Cost Alert"
+  description: "Alert when daily AI costs exceed threshold"
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.whorang_ai_cost_today
+      above: 5.00
+  action:
+    - service: notify.persistent_notification
+      data:
+        title: "⚠️ High AI Costs"
+        message: "Today's AI processing costs have exceeded $5.00 (Current: ${{ states('sensor.whorang_ai_cost_today') }})"
+    - service: whorang.set_ai_provider
+      data:
+        provider: "local"  # Switch to local provider to reduce costs
+
+# Unknown visitor analysis trigger
+- alias: "WhoRang - Auto Analyze Unknown Visitors"
+  description: "Automatically trigger analysis for unknown visitors"
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.whorang_doorbell
+      to: "on"
+  condition:
+    - condition: state
+      entity_id: binary_sensor.whorang_known_visitor
+      state: "off"
+    - condition: numeric_state
+      entity_id: sensor.whorang_ai_cost_today
+      below: 10.00  # Only if under daily budget
+  action:
+    - delay: "00:00:05"  # Wait for image to be captured
+    - service: whorang.trigger_analysis
+
+# System health monitoring
+- alias: "WhoRang - System Offline Alert"
+  description: "Alert when WhoRang system goes offline"
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.whorang_system_online
+      to: "off"
+      for: "00:05:00"  # 5 minutes offline
+  action:
+    - service: notify.admin_group
+      data:
+        title: "🔴 WhoRang System Offline"
+        message: "WhoRang doorbell system has been offline for 5 minutes"
+        data:
+          tag: "system_offline"
+
+# Daily visitor summary
+- alias: "WhoRang - Daily Visitor Summary"
+  description: "Send daily summary of visitors"
+  trigger:
+    - platform: time
+      at: "22:00:00"  # 10 PM
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.whorang_visitor_count_today
+      above: 0
+  action:
+    - service: notify.family_group
+      data:
+        title: "📊 Daily Visitor Summary"
+        message: >
+          Today's visitors: {{ states('sensor.whorang_visitor_count_today') }}
+          This week: {{ states('sensor.whorang_visitor_count_week') }}
+          Known faces: {{ states('sensor.whorang_known_faces_count') }}
+          AI cost today: ${{ states('sensor.whorang_ai_cost_today') }}
+
+# Automatic porch light control
+- alias: "WhoRang - Auto Porch Light"
+  description: "Turn on porch light when visitor detected"
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.whorang_motion
+      to: "on"
+  condition:
+    - condition: sun
+      after: sunset
+      after_offset: "-01:00:00"  # 1 hour before sunset
+  action:
+    - service: light.turn_on
+      target:
+        entity_id: light.porch_light
+      data:
+        brightness: 255
+    - delay: "00:10:00"  # Keep on for 10 minutes
+    - service: light.turn_off
+      target:
+        entity_id: light.porch_light
+
+# Package delivery detection
+- alias: "WhoRang - Package Delivery Detection"
+  description: "Detect package deliveries based on AI analysis"
+  trigger:
+    - platform: event
+      event_type: whorang_visitor_detected
+  condition:
+    - condition: template
+      value_template: >
+        {{ 'package' in trigger.event.data.ai_message.lower() or
+           'delivery' in trigger.event.data.ai_message.lower() or
+           'ups' in trigger.event.data.ai_message.lower() or
+           'fedex' in trigger.event.data.ai_message.lower() or
+           'amazon' in trigger.event.data.ai_message.lower() }}
+  action:
+    - service: notify.family_group
+      data:
+        title: "📦 Package Delivery"
+        message: "Package delivery detected: {{ trigger.event.data.ai_message }}"
+        data:
+          image: "/api/camera_proxy/camera.whorang_latest_image"
+          tag: "package_delivery"
+    - service: input_boolean.turn_on
+      target:
+        entity_id: input_boolean.package_delivered_today
+
+# Visitor frequency tracking
+- alias: "WhoRang - Frequent Visitor Alert"
+  description: "Alert for frequent unknown visitors"
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.whorang_visitor_count_today
+      above: 10
+  condition:
+    - condition: time
+      after: "08:00:00"
+      before: "20:00:00"
+  action:
+    - service: notify.admin_group
+      data:
+        title: "🚪 High Visitor Activity"
+        message: "Unusually high visitor activity today ({{ states('sensor.whorang_visitor_count_today') }} visitors)"
+
+# AI provider auto-switching based on time
+- alias: "WhoRang - Night Mode AI Provider"
+  description: "Switch to local AI provider during night hours to reduce costs"
+  trigger:
+    - platform: time
+      at: "23:00:00"  # 11 PM
+    - platform: time
+      at: "07:00:00"  # 7 AM
+  action:
+    - service: whorang.set_ai_provider
+      data:
+        provider: >
+          {% if now().hour >= 23 or now().hour < 7 %}
+            local
+          {% else %}
+            openai
+          {% endif %}
+
+# Webhook test automation
+- alias: "WhoRang - Weekly Webhook Test"
+  description: "Test webhook functionality weekly"
+  trigger:
+    - platform: time
+      at: "09:00:00"
+  condition:
+    - condition: time
+      weekday:
+        - mon
+  action:
+    - service: whorang.test_webhook
+    - delay: "00:00:30"
+    - condition: state
+      entity_id: binary_sensor.whorang_system_online
+      state: "on"
+    - service: notify.admin_group
+      data:
+        title: "✅ WhoRang Weekly Test"
+        message: "Weekly webhook test completed successfully"
+
+# Data export automation
+- alias: "WhoRang - Monthly Data Export"
+  description: "Export visitor data monthly"
+  trigger:
+    - platform: time
+      at: "02:00:00"  # 2 AM
+  condition:
+    - condition: template
+      value_template: "{{ now().day == 1 }}"  # First day of month
+  action:
+    - service: whorang.export_data
+      data:
+        format: "csv"
+        start_date: "{{ (now().replace(day=1) - timedelta(days=1)).replace(day=1).isoformat() }}Z"
+        end_date: "{{ (now().replace(day=1) - timedelta(days=1)).replace(day=31).isoformat() }}Z"

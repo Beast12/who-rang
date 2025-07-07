@@ -1,0 +1,17 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 Documentation
+    url: https://github.com/Beast12/who-rang/blob/main/README.md
+    about: Read the complete documentation for setup and usage instructions
+  - name: 🔧 Troubleshooting Guide
+    url: https://github.com/Beast12/who-rang/blob/main/docs/troubleshooting/common-issues.md
+    about: Check common issues and solutions before creating an issue
+  - name: 💬 Community Discussions
+    url: https://github.com/Beast12/who-rang/discussions
+    about: Ask questions and discuss with the community
+  - name: 🏠 Home Assistant Community
+    url: https://community.home-assistant.io/
+    about: Get help from the broader Home Assistant community
+  - name: ☕ Support the Project
+    url: https://www.buymeacoffee.com/koen1203
+    about: Support WhoRang development with a coffee

@@ -1,0 +1,84 @@
+{
+  "system_info": {
+    "health": {
+      "status": "healthy",
+      "uptime": "2 days, 3 hours",
+      "environment": "production"
+    },
+    "stats": {
+      "today": 5,
+      "week": 25,
+      "month": 100,
+      "connectedClients": 2,
+      "isOnline": true
+    },
+    "face_config": {
+      "enabled": true,
+      "ai_provider": "openai",
+      "confidence_threshold": 0.8,
+      "cost_tracking_enabled": true,
+      "monthly_budget_limit": 50.0
+    }
+  },
+  "visitor_data": {
+    "visitor_id": "visitor_123",
+    "timestamp": "2025-01-07T12:00:00Z",
+    "ai_message": "A person in casual clothing standing at the front door",
+    "ai_title": "Visitor at Front Door",
+    "location": "Front Door",
+    "weather": "Sunny, 22°C",
+    "device_name": "WhoRang Camera",
+    "confidence_score": 0.95,
+    "objects_detected": ["person", "door", "package"],
+    "faces_detected": 1,
+    "processing_time": "1250ms",
+    "image_url": "/api/visitors/visitor_123/image",
+    "person_id": null
+  },
+  "known_persons": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "face_count": 5,
+      "last_seen": "2025-01-06T18:30:00Z",
+      "notes": "Family member"
+    },
+    {
+      "id": 2,
+      "name": "Jane Smith",
+      "face_count": 3,
+      "last_seen": "2025-01-05T14:20:00Z",
+      "notes": "Neighbor"
+    }
+  ],
+  "ai_usage": {
+    "total_cost": 2.45,
+    "total_requests": 15,
+    "providers": [
+      {
+        "name": "openai",
+        "requests": 12,
+        "cost": 2.10
+      },
+      {
+        "name": "local",
+        "requests": 3,
+        "cost": 0.35
+      }
+    ]
+  },
+  "error_responses": {
+    "connection_error": {
+      "error": "Connection refused",
+      "code": "ECONNREFUSED"
+    },
+    "auth_error": {
+      "error": "Invalid API key",
+      "code": "UNAUTHORIZED"
+    },
+    "timeout_error": {
+      "error": "Request timeout",
+      "code": "TIMEOUT"
+    }
+  }
+}

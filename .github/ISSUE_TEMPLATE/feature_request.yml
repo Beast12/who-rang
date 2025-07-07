@@ -1,0 +1,182 @@
+name: Feature Request
+description: Suggest an idea for WhoRang AI Doorbell
+title: "[Feature]: "
+labels: ["enhancement", "triage"]
+assignees:
+  - Beast12
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a new feature! Your ideas help make WhoRang better for everyone.
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Pre-submission Checklist
+      description: Please confirm you have completed these steps before submitting
+      options:
+        - label: I have searched existing issues to ensure this feature hasn't been requested
+          required: true
+        - label: I have checked the [documentation](https://github.com/Beast12/who-rang/blob/main/README.md) to ensure this feature doesn't already exist
+          required: true
+        - label: This feature request is specific to the Home Assistant integration (not the main WhoRang application)
+          required: true
+
+  - type: dropdown
+    id: feature_type
+    attributes:
+      label: Feature Type
+      description: What type of feature are you requesting?
+      options:
+        - New Entity Type
+        - New Sensor
+        - New Service
+        - Configuration Enhancement
+        - Automation Feature
+        - Dashboard/UI Improvement
+        - AI/ML Enhancement
+        - Performance Improvement
+        - Integration with other HA components
+        - Documentation Improvement
+        - Other (please specify in description)
+      default: 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem-description
+    attributes:
+      label: Problem Description
+      description: Is your feature request related to a problem? Please describe.
+      placeholder: A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution-description
+    attributes:
+      label: Proposed Solution
+      description: Describe the solution you'd like
+      placeholder: A clear and concise description of what you want to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternative Solutions
+      description: Describe any alternative solutions or features you've considered
+      placeholder: A clear and concise description of any alternative solutions or features you've considered.
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority Level
+      description: How important is this feature to you?
+      options:
+        - Low - Nice to have
+        - Medium - Would improve my experience
+        - High - Important for my use case
+        - Critical - Blocking my usage
+      default: 0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: complexity
+    attributes:
+      label: Estimated Complexity
+      description: How complex do you think this feature would be to implement?
+      options:
+        - Simple - Minor change or addition
+        - Medium - Moderate development effort
+        - Complex - Significant development effort
+        - Unknown - I'm not sure
+      default: 3
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case
+      description: Describe your specific use case for this feature
+      placeholder: |
+        Explain how you would use this feature in your Home Assistant setup:
+        - What problem does it solve?
+        - How would it fit into your automations?
+        - What value would it provide?
+    validations:
+      required: true
+
+  - type: textarea
+    id: technical-details
+    attributes:
+      label: Technical Details (Optional)
+      description: If you have technical knowledge, provide implementation suggestions
+      placeholder: |
+        Any technical details or implementation suggestions:
+        - Specific entity types or attributes
+        - Service parameters
+        - Integration points with other HA components
+        - API endpoints or data sources
+
+  - type: checkboxes
+    id: affected_components
+    attributes:
+      label: Related Components
+      description: Which components would this feature affect or relate to?
+      options:
+        - label: Sensors
+        - label: Binary Sensors
+        - label: Camera
+        - label: Buttons
+        - label: Select entities
+        - label: Device Trackers
+        - label: Services
+        - label: Configuration Flow
+        - label: WebSocket Connection
+        - label: AI Processing
+        - label: Face Recognition
+        - label: Notifications
+        - label: Automations
+        - label: Dashboard/UI
+        - label: Documentation
+
+  - type: textarea
+    id: examples
+    attributes:
+      label: Examples or Mockups
+      description: Provide examples, mockups, or references to similar features
+      placeholder: |
+        - Screenshots or mockups (if applicable)
+        - Examples from other integrations
+        - Links to similar features
+        - Code examples or configuration samples
+
+  - type: dropdown
+    id: ai_provider_related
+    attributes:
+      label: AI Provider Related
+      description: Is this feature related to AI processing or specific providers?
+      options:
+        - Not AI related
+        - General AI enhancement
+        - OpenAI specific
+        - Ollama specific
+        - Claude specific
+        - Google Gemini specific
+        - Google Cloud Vision specific
+        - Multi-provider feature
+      default: 0
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Add any other context, screenshots, or examples about the feature request
+      placeholder: |
+        Any additional information that would help understand or implement this feature:
+        - Related issues or discussions
+        - Community feedback
+        - Similar features in other projects
+        - Performance considerations

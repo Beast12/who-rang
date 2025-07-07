@@ -1,0 +1,452 @@
+# WhoRang Home Assistant Integration - Example Configuration
+# Add these examples to your configuration.yaml file as needed
+
+# Input Booleans for WhoRang Controls
+input_boolean:
+  # Enable/disable TTS announcements for visitors
+  tts_announcements:
+    name: "TTS Announcements"
+    icon: mdi:volume-high
+    initial: true
+
+  # Track if package was delivered today
+  package_delivered_today:
+    name: "Package Delivered Today"
+    icon: mdi:package-variant
+    initial: false
+
+  # Enable/disable automatic porch light control
+  auto_porch_light:
+    name: "Auto Porch Light"
+    icon: mdi:lightbulb-auto
+    initial: true
+
+  # Enable/disable visitor notifications
+  visitor_notifications:
+    name: "Visitor Notifications"
+    icon: mdi:bell
+    initial: true
+
+  # Enable/disable cost monitoring alerts
+  ai_cost_alerts:
+    name: "AI Cost Alerts"
+    icon: mdi:currency-usd
+    initial: true
+
+# Input Numbers for WhoRang Settings
+input_number:
+  # Daily AI cost budget limit
+  ai_cost_budget:
+    name: "Daily AI Cost Budget"
+    min: 0
+    max: 50
+    step: 0.50
+    unit_of_measurement: "USD"
+    icon: mdi:currency-usd
+    initial: 10.00
+
+  # Visitor count threshold for alerts
+  visitor_alert_threshold:
+    name: "Visitor Alert Threshold"
+    min: 5
+    max: 50
+    step: 1
+    unit_of_measurement: "visitors"
+    icon: mdi:account-multiple
+    initial: 15
+
+  # Porch light duration (minutes)
+  porch_light_duration:
+    name: "Porch Light Duration"
+    min: 1
+    max: 60
+    step: 1
+    unit_of_measurement: "minutes"
+    icon: mdi:timer
+    initial: 10
+
+# Input Select for WhoRang Options
+input_select:
+  # Notification priority levels
+  visitor_notification_priority:
+    name: "Visitor Notification Priority"
+    options:
+      - "low"
+      - "normal"
+      - "high"
+      - "critical"
+    initial: "normal"
+    icon: mdi:priority-high
+
+  # AI provider preferences by time of day
+  ai_provider_schedule:
+    name: "AI Provider Schedule"
+    options:
+      - "always_openai"
+      - "always_local"
+      - "cost_optimized"
+      - "performance_optimized"
+    initial: "cost_optimized"
+    icon: mdi:clock-outline
+
+# Input Text for WhoRang Data
+input_text:
+  # Custom notification message template
+  visitor_notification_template:
+    name: "Visitor Notification Template"
+    initial: "🔔 Visitor at door: {visitor_description}"
+    max: 255
+    icon: mdi:message-text
+
+  # Known visitor notes
+  temp_visitor_name:
+    name: "Temporary Visitor Name"
+    max: 100
+    icon: mdi:account-plus
+
+  temp_visitor_notes:
+    name: "Temporary Visitor Notes"
+    max: 255
+    icon: mdi:note-text
+
+# Input DateTime for WhoRang Scheduling
+input_datetime:
+  # Quiet hours start time
+  quiet_hours_start:
+    name: "Quiet Hours Start"
+    has_date: false
+    has_time: true
+    initial: "22:00"
+
+  # Quiet hours end time
+  quiet_hours_end:
+    name: "Quiet Hours End"
+    has_date: false
+    has_time: true
+    initial: "07:00"
+
+  # Last visitor export date
+  last_data_export:
+    name: "Last Data Export"
+    has_date: true
+    has_time: true
+
+# Counters for WhoRang Statistics
+counter:
+  # Weekly visitor count (manual reset)
+  weekly_visitor_count:
+    name: "Weekly Visitor Count"
+    icon: mdi:counter
+    initial: 0
+    step: 1
+
+  # Monthly known visitor count
+  monthly_known_visitors:
+    name: "Monthly Known Visitors"
+    icon: mdi:account-check
+    initial: 0
+    step: 1
+
+  # False positive count (for AI tuning)
+  ai_false_positives:
+    name: "AI False Positives"
+    icon: mdi:alert-circle
+    initial: 0
+    step: 1
+
+# Timers for WhoRang Operations
+timer:
+  # Porch light auto-off timer
+  porch_light_timer:
+    name: "Porch Light Timer"
+    duration: "00:10:00"
+    icon: mdi:timer
+
+  # Visitor notification cooldown
+  visitor_notification_cooldown:
+    name: "Visitor Notification Cooldown"
+    duration: "00:02:00"
+    icon: mdi:timer-off
+
+  # AI processing timeout
+  ai_processing_timeout:
+    name: "AI Processing Timeout"
+    duration: "00:05:00"
+    icon: mdi:timer-alert
+
+# Scripts for WhoRang Actions
+script:
+  # Add known visitor with dialog
+  add_known_visitor_dialog:
+    alias: "Add Known Visitor Dialog"
+    sequence:
+      - service: input_text.set_value
+        target:
+          entity_id: input_text.temp_visitor_name
+        data:
+          value: ""
+      - service: input_text.set_value
+        target:
+          entity_id: input_text.temp_visitor_notes
+        data:
+          value: ""
+      # Note: This would typically open a custom dialog
+      # Implementation depends on your frontend setup
+
+  # Emergency disable all notifications
+  disable_all_notifications:
+    alias: "Disable All WhoRang Notifications"
+    sequence:
+      - service: input_boolean.turn_off
+        target:
+          entity_id:
+            - input_boolean.visitor_notifications
+            - input_boolean.tts_announcements
+            - input_boolean.ai_cost_alerts
+      - service: notify.persistent_notification
+        data:
+          title: "WhoRang Notifications Disabled"
+          message: "All WhoRang notifications have been disabled"
+
+  # Reset daily counters
+  reset_daily_counters:
+    alias: "Reset Daily WhoRang Counters"
+    sequence:
+      - service: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.package_delivered_today
+      - service: counter.reset
+        target:
+          entity_id: counter.ai_false_positives
+
+  # Optimize AI provider based on usage
+  optimize_ai_provider:
+    alias: "Optimize AI Provider"
+    sequence:
+      - choose:
+          - conditions:
+              - condition: numeric_state
+                entity_id: sensor.whorang_ai_cost_today
+                above: input_number.ai_cost_budget
+            sequence:
+              - service: whorang.set_ai_provider
+                data:
+                  provider: "local"
+              - service: notify.persistent_notification
+                data:
+                  title: "AI Provider Switched"
+                  message: "Switched to local AI due to high costs"
+          - conditions:
+              - condition: state
+                entity_id: input_select.ai_provider_schedule
+                state: "performance_optimized"
+              - condition: time
+                after: "07:00:00"
+                before: "22:00:00"
+            sequence:
+              - service: whorang.set_ai_provider
+                data:
+                  provider: "openai"
+        default:
+          - service: whorang.set_ai_provider
+            data:
+              provider: "local"
+
+# Sensors for WhoRang Analytics
+sensor:
+  # Template sensors for enhanced analytics
+  - platform: template
+    sensors:
+      whorang_cost_per_visitor:
+        friendly_name: "Cost per Visitor Today"
+        unit_of_measurement: "USD"
+        value_template: >
+          {% set cost = states('sensor.whorang_ai_cost_today') | float %}
+          {% set visitors = states('sensor.whorang_visitor_count_today') | int %}
+          {% if visitors > 0 %}
+            {{ (cost / visitors) | round(4) }}
+          {% else %}
+            0
+          {% endif %}
+        icon_template: mdi:calculator
+
+      whorang_system_uptime:
+        friendly_name: "WhoRang System Uptime"
+        value_template: >
+          {{ state_attr('sensor.whorang_system_status', 'uptime') or 'Unknown' }}
+        icon_template: mdi:clock-outline
+
+      whorang_visitor_frequency:
+        friendly_name: "Visitor Frequency"
+        unit_of_measurement: "visitors/hour"
+        value_template: >
+          {% set visitors = states('sensor.whorang_visitor_count_today') | int %}
+          {% set hours = now().hour + 1 %}
+          {{ (visitors / hours) | round(2) if hours > 0 else 0 }}
+        icon_template: mdi:chart-line
+
+      whorang_known_visitor_percentage:
+        friendly_name: "Known Visitor Percentage"
+        unit_of_measurement: "%"
+        value_template: >
+          {% set total = states('sensor.whorang_visitor_count_today') | int %}
+          {% set known = states('counter.monthly_known_visitors') | int %}
+          {{ (known / total * 100) | round(1) if total > 0 else 0 }}
+        icon_template: mdi:percent
+
+# Binary Sensors for WhoRang Status
+binary_sensor:
+  # Template binary sensors for enhanced monitoring
+  - platform: template
+    sensors:
+      whorang_quiet_hours:
+        friendly_name: "WhoRang Quiet Hours"
+        value_template: >
+          {% set start = states('input_datetime.quiet_hours_start') %}
+          {% set end = states('input_datetime.quiet_hours_end') %}
+          {% set now_time = now().strftime('%H:%M') %}
+          {% if start > end %}
+            {{ now_time >= start or now_time < end }}
+          {% else %}
+            {{ start <= now_time < end }}
+          {% endif %}
+        icon_template: >
+          {% if is_state('binary_sensor.whorang_quiet_hours', 'on') %}
+            mdi:volume-off
+          {% else %}
+            mdi:volume-high
+          {% endif %}
+
+      whorang_budget_exceeded:
+        friendly_name: "AI Budget Exceeded"
+        value_template: >
+          {{ states('sensor.whorang_ai_cost_today') | float > states('input_number.ai_cost_budget') | float }}
+        icon_template: >
+          {% if is_state('binary_sensor.whorang_budget_exceeded', 'on') %}
+            mdi:currency-usd-off
+          {% else %}
+            mdi:currency-usd
+          {% endif %}
+
+      whorang_high_activity:
+        friendly_name: "High Visitor Activity"
+        value_template: >
+          {{ states('sensor.whorang_visitor_count_today') | int > states('input_number.visitor_alert_threshold') | int }}
+        icon_template: >
+          {% if is_state('binary_sensor.whorang_high_activity', 'on') %}
+            mdi:account-multiple-plus
+          {% else %}
+            mdi:account-multiple
+          {% endif %}
+
+# Notify Groups for WhoRang
+notify:
+  - name: family_group
+    platform: group
+    services:
+      - service: mobile_app_phone1
+      - service: mobile_app_phone2
+
+  - name: admin_group
+    platform: group
+    services:
+      - service: mobile_app_admin_phone
+      - service: persistent_notification
+
+# Recorder Configuration for WhoRang
+recorder:
+  include:
+    entities:
+      # Include all WhoRang entities in history
+      - sensor.whorang_latest_visitor
+      - sensor.whorang_visitor_count_today
+      - sensor.whorang_visitor_count_week
+      - sensor.whorang_visitor_count_month
+      - sensor.whorang_system_status
+      - sensor.whorang_ai_provider_active
+      - sensor.whorang_ai_cost_today
+      - sensor.whorang_ai_response_time
+      - sensor.whorang_known_faces_count
+      - binary_sensor.whorang_doorbell
+      - binary_sensor.whorang_motion
+      - binary_sensor.whorang_known_visitor
+      - binary_sensor.whorang_system_online
+      - binary_sensor.whorang_ai_processing
+      - camera.whorang_latest_image
+
+# History Configuration
+history:
+  include:
+    entities:
+      # Keep detailed history for analytics
+      - sensor.whorang_visitor_count_today
+      - sensor.whorang_ai_cost_today
+      - binary_sensor.whorang_doorbell
+      - binary_sensor.whorang_motion
+      - binary_sensor.whorang_known_visitor
+
+# Logbook Configuration
+logbook:
+  include:
+    entities:
+      # Log important WhoRang events
+      - binary_sensor.whorang_doorbell
+      - binary_sensor.whorang_known_visitor
+      - binary_sensor.whorang_system_online
+    entity_globs:
+      - device_tracker.whorang_visitors_*
+
+# Customize Entity Appearance
+homeassistant:
+  customize:
+    # WhoRang Sensors
+    sensor.whorang_latest_visitor:
+      friendly_name: "Latest Visitor"
+      icon: mdi:account-clock
+    sensor.whorang_visitor_count_today:
+      friendly_name: "Visitors Today"
+      icon: mdi:counter
+    sensor.whorang_ai_cost_today:
+      friendly_name: "AI Cost Today"
+      icon: mdi:currency-usd
+    
+    # WhoRang Binary Sensors
+    binary_sensor.whorang_doorbell:
+      friendly_name: "Doorbell Activity"
+      icon: mdi:doorbell
+    binary_sensor.whorang_motion:
+      friendly_name: "Motion Detection"
+      device_class: motion
+    binary_sensor.whorang_known_visitor:
+      friendly_name: "Known Visitor"
+      device_class: occupancy
+    
+    # WhoRang Camera
+    camera.whorang_latest_image:
+      friendly_name: "Latest Visitor Image"
+      icon: mdi:camera
+    
+    # WhoRang Controls
+    button.whorang_trigger_analysis:
+      friendly_name: "Trigger AI Analysis"
+      icon: mdi:brain
+    select.whorang_ai_provider:
+      friendly_name: "AI Provider"
+      icon: mdi:robot
+
+# Zone Configuration for Device Trackers
+zone:
+  - name: Front Door
+    latitude: !secret home_latitude
+    longitude: !secret home_longitude
+    radius: 10
+    icon: mdi:door
+    passive: false
+
+# Person Configuration (for known visitor tracking)
+person:
+  # Add known visitors as persons for enhanced tracking
+  # - name: "John Doe"
+  #   id: john_doe
+  #   device_trackers:
+  #     - device_tracker.whorang_visitors_john_doe

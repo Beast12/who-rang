@@ -1,0 +1,13 @@
+{
+  "name": "WhoRang AI Doorbell",
+  "hacs": "1.6.0",
+  "domains": ["sensor", "binary_sensor", "camera", "button", "select", "device_tracker"],
+  "iot_class": "Local Push",
+  "homeassistant": "2023.1.0",
+  "documentation": "https://github.com/Beast12/who-rang/blob/main/README.md",
+  "issue_tracker": "https://github.com/Beast12/who-rang/issues",
+  "codeowners": ["@Beast12"],
+  "config_flow": true,
+  "quality_scale": "silver",
+  "category": "integration"
+}

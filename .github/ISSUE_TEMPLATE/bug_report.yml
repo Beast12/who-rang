@@ -1,0 +1,168 @@
+name: Bug Report
+description: File a bug report to help us improve WhoRang AI Doorbell
+title: "[Bug]: "
+labels: ["bug", "triage"]
+assignees:
+  - Beast12
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report! Please provide as much detail as possible to help us resolve the issue quickly.
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Pre-submission Checklist
+      description: Please confirm you have completed these steps before submitting
+      options:
+        - label: I have searched existing issues to ensure this is not a duplicate
+          required: true
+        - label: I have checked the [troubleshooting guide](https://github.com/Beast12/who-rang/blob/main/docs/troubleshooting/common-issues.md)
+          required: true
+        - label: I am running the latest version of WhoRang
+          required: true
+
+  - type: dropdown
+    id: version
+    attributes:
+      label: WhoRang Version
+      description: What version of WhoRang are you running?
+      options:
+        - v1.0.0
+        - v1.0.1
+        - v1.1.0
+        - Development/Main branch
+        - Other (please specify in description)
+      default: 0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: ha_version
+    attributes:
+      label: Home Assistant Version
+      description: What version of Home Assistant are you running?
+      options:
+        - 2024.12.x
+        - 2024.11.x
+        - 2024.10.x
+        - 2024.9.x
+        - 2024.8.x
+        - 2024.7.x
+        - 2023.x.x
+        - Other (please specify in description)
+      default: 0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: installation_method
+    attributes:
+      label: Installation Method
+      description: How did you install WhoRang?
+      options:
+        - HACS
+        - Manual Installation
+        - Docker
+        - Other (please specify in description)
+      default: 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear and concise description of what the bug is
+      placeholder: Tell us what you see!
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: A clear and concise description of what you expected to happen
+      placeholder: What should have happened instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Log Output
+      description: Please copy and paste any relevant log output from Home Assistant
+      render: shell
+      placeholder: |
+        Paste your Home Assistant logs here. You can find them in:
+        - Settings → System → Logs
+        - Or check the integration logs specifically
+
+  - type: textarea
+    id: configuration
+    attributes:
+      label: Configuration
+      description: Please share your WhoRang configuration (remove sensitive information like API keys)
+      render: yaml
+      placeholder: |
+        # Your WhoRang configuration
+        # Please remove any sensitive information like API keys, passwords, etc.
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Add any other context about the problem here
+      placeholder: |
+        - Screenshots (if applicable)
+        - Browser information (if web interface related)
+        - Network setup details
+        - Any other relevant information
+
+  - type: dropdown
+    id: ai_provider
+    attributes:
+      label: AI Provider (if relevant)
+      description: Which AI provider are you using when the issue occurs?
+      options:
+        - Not applicable
+        - OpenAI
+        - Ollama (Local)
+        - Claude (Anthropic)
+        - Google Gemini
+        - Google Cloud Vision
+        - Multiple providers
+      default: 0
+
+  - type: checkboxes
+    id: affected_components
+    attributes:
+      label: Affected Components
+      description: Which components are affected by this issue?
+      options:
+        - label: Sensors
+        - label: Binary Sensors
+        - label: Camera
+        - label: Buttons
+        - label: Select entities
+        - label: Device Trackers
+        - label: Configuration Flow
+        - label: WebSocket Connection
+        - label: AI Processing
+        - label: Face Recognition
+        - label: Notifications
+        - label: Documentation

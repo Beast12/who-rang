@@ -1,0 +1,94 @@
+# Services for WhoRang AI Doorbell integration
+
+trigger_analysis:
+  name: Trigger AI Analysis
+  description: Trigger AI analysis for a visitor (latest if no visitor_id specified)
+  fields:
+    visitor_id:
+      name: Visitor ID
+      description: ID of the visitor to analyze (optional, uses latest if not specified)
+      example: "abc123-def456-ghi789"
+      selector:
+        text:
+
+add_known_visitor:
+  name: Add Known Visitor
+  description: Add a new known person for face recognition
+  fields:
+    name:
+      name: Name
+      description: Name of the person
+      required: true
+      example: "John Doe"
+      selector:
+        text:
+    notes:
+      name: Notes
+      description: Optional notes about the person
+      example: "Neighbor from next door"
+      selector:
+        text:
+          multiline: true
+
+remove_known_visitor:
+  name: Remove Known Visitor
+  description: Remove a known person from face recognition
+  fields:
+    person_id:
+      name: Person ID
+      description: ID of the person to remove
+      required: true
+      example: 1
+      selector:
+        number:
+          min: 1
+          mode: box
+
+set_ai_provider:
+  name: Set AI Provider
+  description: Change the active AI provider for face recognition
+  fields:
+    provider:
+      name: Provider
+      description: AI provider to use
+      required: true
+      example: "openai"
+      selector:
+        select:
+          options:
+            - "openai"
+            - "local"
+            - "claude"
+            - "gemini"
+            - "google-cloud-vision"
+
+export_data:
+  name: Export Visitor Data
+  description: Export visitor data in specified format
+  fields:
+    start_date:
+      name: Start Date
+      description: Start date for export (ISO format)
+      example: "2024-01-01T00:00:00Z"
+      selector:
+        datetime:
+    end_date:
+      name: End Date
+      description: End date for export (ISO format)
+      example: "2024-12-31T23:59:59Z"
+      selector:
+        datetime:
+    format:
+      name: Format
+      description: Export format
+      default: "json"
+      example: "json"
+      selector:
+        select:
+          options:
+            - "json"
+            - "csv"
+
+test_webhook:
+  name: Test Webhook
+  description: Test webhook functionality by sending a test event

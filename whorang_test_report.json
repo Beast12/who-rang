@@ -1,0 +1,161 @@
+{
+  "test_summary": {
+    "total_tests": 18,
+    "passed_tests": 15,
+    "failed_tests": 3,
+    "success_rate": 83.33333333333334,
+    "duration": 0.016596555709838867,
+    "issues_count": 3,
+    "recommendations_count": 0
+  },
+  "test_results": {
+    "installation": {
+      "manifest_compliance": {
+        "passed": true,
+        "details": "All required fields present: ['domain', 'name', 'config_flow', 'documentation', 'integration_type', 'iot_class', 'requirements', 'version']",
+        "error": "",
+        "timestamp": "2025-07-07T12:43:26.991882"
+      },
+      "version_format": {
+        "passed": true,
+        "details": "Version: 1.0.0",
+        "error": "",
+        "timestamp": "2025-07-07T12:43:26.991891"
+      },
+      "file_structure": {
+        "passed": true,
+        "details": "All 14 required files present",
+        "error": "",
+        "timestamp": "2025-07-07T12:43:26.991933"
+      }
+    },
+    "configuration": {
+      "flow_import": {
+        "passed": false,
+        "details": "",
+        "error": "WhoRang modules not available",
+        "timestamp": "2025-07-07T12:43:26.991963"
+      }
+    },
+    "entities": {
+      "import_check": {
+        "passed": false,
+        "details": "",
+        "error": "WhoRang modules not available",
+        "timestamp": "2025-07-07T12:43:26.991984"
+      }
+    },
+    "websocket": {
+      "message_types": {
+        "passed": true,
+        "details": "All 5 WebSocket message types defined",
+        "error": "",
+        "timestamp": "2025-07-07T12:43:26.992005"
+      },
+      "path_definition": {
+        "passed": true,
+        "details": "WebSocket path: /ws",
+        "error": "",
+        "timestamp": "2025-07-07T12:43:26.992007"
+      }
+    },
+    "services": {
+      "service_constants": {
+        "passed": true,
+        "details": "All 6 services defined",
+        "error": "",
+        "timestamp": "2025-07-07T12:43:26.992025"
+      },
+      "yaml_definitions": {
+        "passed": true,
+        "details": "All services defined in YAML: ['trigger_analysis', 'add_known_visitor', 'remove_known_visitor', 'set_ai_provider', 'export_data', 'test_webhook']",
+        "error": "",
+        "timestamp": "2025-07-07T12:43:27.008174"
+      }
+    },
+    "events": {
+      "naming_convention": {
+        "passed": true,
+        "details": "All events follow naming convention: whorang_*",
+        "error": "",
+        "timestamp": "2025-07-07T12:43:27.008250"
+      },
+      "event_constants": {
+        "passed": true,
+        "details": "All 4 event types defined",
+        "error": "",
+        "timestamp": "2025-07-07T12:43:27.008253"
+      }
+    },
+    "error_handling": {
+      "import_check": {
+        "passed": false,
+        "details": "",
+        "error": "WhoRang modules not available",
+        "timestamp": "2025-07-07T12:43:27.008279"
+      }
+    },
+    "performance": {
+      "timeout_values": {
+        "passed": true,
+        "details": "Timeouts: HTTP=10s, WS=30s",
+        "error": "",
+        "timestamp": "2025-07-07T12:43:27.008301"
+      },
+      "update_interval": {
+        "passed": true,
+        "details": "Default update interval: 30s",
+        "error": "",
+        "timestamp": "2025-07-07T12:43:27.008303"
+      }
+    },
+    "compliance": {
+      "domain_naming": {
+        "passed": true,
+        "details": "Domain follows HA conventions: whorang",
+        "error": "",
+        "timestamp": "2025-07-07T12:43:27.008322"
+      },
+      "device_info": {
+        "passed": true,
+        "details": "Device info: WhoRang AI Doorbell System",
+        "error": "",
+        "timestamp": "2025-07-07T12:43:27.008324"
+      },
+      "state_classes": {
+        "passed": true,
+        "details": "State classes defined: 3",
+        "error": "",
+        "timestamp": "2025-07-07T12:43:27.008326"
+      },
+      "device_classes": {
+        "passed": true,
+        "details": "Device classes defined: 6",
+        "error": "",
+        "timestamp": "2025-07-07T12:43:27.008327"
+      }
+    }
+  },
+  "issues": [
+    {
+      "category": "configuration",
+      "test": "flow_import",
+      "error": "WhoRang modules not available",
+      "details": ""
+    },
+    {
+      "category": "entities",
+      "test": "import_check",
+      "error": "WhoRang modules not available",
+      "details": ""
+    },
+    {
+      "category": "error_handling",
+      "test": "import_check",
+      "error": "WhoRang modules not available",
+      "details": ""
+    }
+  ],
+  "recommendations": [],
+  "generated_at": "2025-07-07T12:43:27.008337"
+}

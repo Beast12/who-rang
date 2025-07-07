@@ -1,0 +1,222 @@
+name: Support Request
+description: Get help with WhoRang AI Doorbell setup or usage
+title: "[Support]: "
+labels: ["question", "support"]
+assignees:
+  - Beast12
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Need help with WhoRang? We're here to assist! Please provide as much detail as possible so we can help you quickly.
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Pre-submission Checklist
+      description: Please confirm you have completed these steps before requesting support
+      options:
+        - label: I have read the [documentation](https://github.com/Beast12/who-rang/blob/main/README.md)
+          required: true
+        - label: I have checked the [troubleshooting guide](https://github.com/Beast12/who-rang/blob/main/docs/troubleshooting/common-issues.md)
+          required: true
+        - label: I have searched existing issues for similar problems
+          required: true
+
+  - type: dropdown
+    id: support_type
+    attributes:
+      label: Support Type
+      description: What type of help do you need?
+      options:
+        - Installation Help
+        - Configuration Assistance
+        - Troubleshooting
+        - Usage Questions
+        - Integration Setup
+        - AI Provider Configuration
+        - Automation Help
+        - Performance Issues
+        - Documentation Clarification
+        - Other (please specify)
+      default: 0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: version
+    attributes:
+      label: WhoRang Version
+      description: What version of WhoRang are you running?
+      options:
+        - v1.0.0
+        - v1.0.1
+        - v1.1.0
+        - Development/Main branch
+        - Not installed yet
+        - Other (please specify in description)
+      default: 0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: ha_version
+    attributes:
+      label: Home Assistant Version
+      description: What version of Home Assistant are you running?
+      options:
+        - 2024.12.x
+        - 2024.11.x
+        - 2024.10.x
+        - 2024.9.x
+        - 2024.8.x
+        - 2024.7.x
+        - 2023.x.x
+        - Not using Home Assistant
+        - Other (please specify in description)
+      default: 0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: installation_method
+    attributes:
+      label: Installation Method
+      description: How did you install or plan to install WhoRang?
+      options:
+        - HACS
+        - Manual Installation
+        - Docker
+        - Haven't installed yet
+        - Other (please specify in description)
+      default: 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your Question
+      description: What do you need help with?
+      placeholder: Please describe your question or issue in detail...
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-tried
+    attributes:
+      label: What Have You Tried?
+      description: What steps have you already taken to solve this?
+      placeholder: |
+        Please describe what you've already tried:
+        - Configuration changes
+        - Troubleshooting steps
+        - Documentation sections you've read
+        - Other solutions you've attempted
+
+  - type: textarea
+    id: current-setup
+    attributes:
+      label: Current Setup
+      description: Describe your current WhoRang and Home Assistant setup
+      placeholder: |
+        Please describe your setup:
+        - Hardware (Raspberry Pi, NUC, etc.)
+        - Network configuration
+        - AI providers you're using
+        - Other relevant integrations
+        - Any custom configurations
+
+  - type: textarea
+    id: configuration
+    attributes:
+      label: Configuration (if relevant)
+      description: Share your WhoRang configuration (remove sensitive information)
+      render: yaml
+      placeholder: |
+        # Your WhoRang configuration
+        # Please remove any sensitive information like API keys, passwords, etc.
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Logs (if applicable)
+      description: Include any relevant log output
+      render: shell
+      placeholder: |
+        Paste any relevant logs here:
+        - Home Assistant logs
+        - WhoRang system logs
+        - Error messages
+
+  - type: dropdown
+    id: urgency
+    attributes:
+      label: Urgency Level
+      description: How urgent is this support request?
+      options:
+        - Low - General question or curiosity
+        - Medium - Affecting functionality but not critical
+        - High - Blocking important use case
+        - Critical - System not working at all
+      default: 0
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: affected_areas
+    attributes:
+      label: Affected Areas
+      description: Which areas are you having trouble with?
+      options:
+        - label: Initial Installation
+        - label: Home Assistant Integration
+        - label: AI Provider Setup
+        - label: Face Recognition
+        - label: Sensors/Entities
+        - label: Automations
+        - label: WebSocket Connection
+        - label: Camera Integration
+        - label: Notifications
+        - label: Performance
+        - label: Configuration
+        - label: Documentation
+        - label: Other
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional Information
+      description: Any other information that might be helpful
+      placeholder: |
+        - Screenshots (if helpful)
+        - Error messages
+        - Network setup details
+        - Browser information (if web interface related)
+        - Any other relevant context
+
+  - type: dropdown
+    id: ai_provider
+    attributes:
+      label: AI Provider (if relevant)
+      description: Which AI provider are you using or trying to configure?
+      options:
+        - Not applicable
+        - OpenAI
+        - Ollama (Local)
+        - Claude (Anthropic)
+        - Google Gemini
+        - Google Cloud Vision
+        - Multiple providers
+        - Haven't chosen yet
+      default: 0
+
+  - type: checkboxes
+    id: community_help
+    attributes:
+      label: Community Support
+      description: Would you be interested in community support options?
+      options:
+        - label: I'm open to community members helping with this issue
+        - label: I'd like to be notified of similar issues and solutions
+        - label: I'm willing to help test solutions

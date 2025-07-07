@@ -1,0 +1,2401 @@
+{
+  "summary": {
+    "files_analyzed": 14,
+    "total_issues": 0,
+    "total_warnings": 1,
+    "total_ha_issues": 0,
+    "code_stats": {
+      "files_analyzed": 11,
+      "lines_of_code": 2785,
+      "functions": 149,
+      "classes": 35,
+      "imports": 264
+    }
+  },
+  "file_results": {
+    "coordinator.py": {
+      "file": "home_assistant/custom_components/whorang/coordinator.py",
+      "syntax_valid": true,
+      "issues": [],
+      "warnings": [],
+      "stats": {
+        "lines": 380,
+        "imports": 30,
+        "classes": 1,
+        "functions": 24
+      },
+      "imports": [
+        "__future__.annotations",
+        "asyncio",
+        "json",
+        "logging",
+        "datetime.datetime",
+        "datetime.timedelta",
+        "typing.Any",
+        "typing.Dict",
+        "typing.List",
+        "typing.Optional",
+        "websockets",
+        "homeassistant.core.HomeAssistant",
+        "homeassistant.core.callback",
+        "homeassistant.helpers.update_coordinator.DataUpdateCoordinator",
+        "homeassistant.helpers.update_coordinator.UpdateFailed",
+        "api_client.WhoRangAPIClient",
+        "api_client.WhoRangConnectionError",
+        "const.DOMAIN",
+        "const.DEFAULT_UPDATE_INTERVAL",
+        "const.DEFAULT_WEBSOCKET_TIMEOUT",
+        "const.WEBSOCKET_PATH",
+        "const.WS_TYPE_NEW_VISITOR",
+        "const.WS_TYPE_CONNECTION_STATUS",
+        "const.WS_TYPE_AI_ANALYSIS_COMPLETE",
+        "const.WS_TYPE_FACE_DETECTION_COMPLETE",
+        "const.WS_TYPE_SYSTEM_STATUS",
+        "const.EVENT_VISITOR_DETECTED",
+        "const.EVENT_KNOWN_VISITOR_DETECTED",
+        "const.EVENT_AI_ANALYSIS_COMPLETE",
+        "const.EVENT_FACE_DETECTION_COMPLETE"
+      ],
+      "classes": [
+        {
+          "name": "WhoRangDataUpdateCoordinator",
+          "line": 34,
+          "methods": [],
+          "bases": [
+            "DataUpdateCoordinator"
+          ]
+        }
+      ],
+      "functions": [
+        {
+          "name": "__init__",
+          "line": 37,
+          "is_async": false,
+          "class": "WhoRangDataUpdateCoordinator",
+          "args": [
+            "self",
+            "hass",
+            "api_client",
+            "update_interval",
+            "enable_websocket"
+          ],
+          "returns": true
+        },
+        {
+          "name": "_async_update_data",
+          "line": 63,
+          "is_async": true,
+          "class": "WhoRangDataUpdateCoordinator",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "async_setup",
+          "line": 96,
+          "is_async": true,
+          "class": "WhoRangDataUpdateCoordinator",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "async_shutdown",
+          "line": 102,
+          "is_async": true,
+          "class": "WhoRangDataUpdateCoordinator",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "_start_websocket",
+          "line": 107,
+          "is_async": true,
+          "class": "WhoRangDataUpdateCoordinator",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "_stop_websocket",
+          "line": 115,
+          "is_async": true,
+          "class": "WhoRangDataUpdateCoordinator",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "_websocket_handler",
+          "line": 137,
+          "is_async": true,
+          "class": "WhoRangDataUpdateCoordinator",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "_handle_websocket_message",
+          "line": 179,
+          "is_async": true,
+          "class": "WhoRangDataUpdateCoordinator",
+          "args": [
+            "self",
+            "message"
+          ],
+          "returns": true
+        },
+        {
+          "name": "_handle_new_visitor",
+          "line": 211,
+          "is_async": true,
+          "class": "WhoRangDataUpdateCoordinator",
+          "args": [
+            "self",
+            "visitor_data"
+          ],
+          "returns": true
+        },
+        {
+          "name": "_handle_ai_analysis_complete",
+          "line": 239,
+          "is_async": true,
+          "class": "WhoRangDataUpdateCoordinator",
+          "args": [
+            "self",
+            "analysis_data"
+          ],
+          "returns": true
+        },
+        {
+          "name": "_handle_face_detection_complete",
+          "line": 255,
+          "is_async": true,
+          "class": "WhoRangDataUpdateCoordinator",
+          "args": [
+            "self",
+            "face_data"
+          ],
+          "returns": true
+        },
+        {
+          "name": "_handle_system_status",
+          "line": 269,
+          "is_async": true,
+          "class": "WhoRangDataUpdateCoordinator",
+          "args": [
+            "self",
+            "status_data"
+          ],
+          "returns": true
+        },
+        {
+          "name": "_is_known_visitor",
+          "line": 273,
+          "is_async": false,
+          "class": "WhoRangDataUpdateCoordinator",
+          "args": [
+            "self",
+            "visitor_data"
+          ],
+          "returns": true
+        },
+        {
+          "name": "async_get_latest_visitor",
+          "line": 284,
+          "is_async": false,
+          "class": "WhoRangDataUpdateCoordinator",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "async_get_system_info",
+          "line": 291,
+          "is_async": false,
+          "class": "WhoRangDataUpdateCoordinator",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "async_get_known_persons",
+          "line": 298,
+          "is_async": false,
+          "class": "WhoRangDataUpdateCoordinator",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "async_get_ai_usage",
+          "line": 305,
+          "is_async": false,
+          "class": "WhoRangDataUpdateCoordinator",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "async_is_websocket_connected",
+          "line": 312,
+          "is_async": false,
+          "class": "WhoRangDataUpdateCoordinator",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "async_trigger_analysis",
+          "line": 318,
+          "is_async": true,
+          "class": "WhoRangDataUpdateCoordinator",
+          "args": [
+            "self",
+            "visitor_id"
+          ],
+          "returns": true
+        },
+        {
+          "name": "async_test_webhook",
+          "line": 327,
+          "is_async": true,
+          "class": "WhoRangDataUpdateCoordinator",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "async_set_ai_provider",
+          "line": 336,
+          "is_async": true,
+          "class": "WhoRangDataUpdateCoordinator",
+          "args": [
+            "self",
+            "provider"
+          ],
+          "returns": true
+        },
+        {
+          "name": "async_add_known_person",
+          "line": 347,
+          "is_async": true,
+          "class": "WhoRangDataUpdateCoordinator",
+          "args": [
+            "self",
+            "name",
+            "notes"
+          ],
+          "returns": true
+        },
+        {
+          "name": "async_remove_known_person",
+          "line": 358,
+          "is_async": true,
+          "class": "WhoRangDataUpdateCoordinator",
+          "args": [
+            "self",
+            "person_id"
+          ],
+          "returns": true
+        },
+        {
+          "name": "async_export_data",
+          "line": 369,
+          "is_async": true,
+          "class": "WhoRangDataUpdateCoordinator",
+          "args": [
+            "self",
+            "start_date",
+            "end_date",
+            "format_type"
+          ],
+          "returns": true
+        }
+      ],
+      "ha_issues": []
+    },
+    "binary_sensor.py": {
+      "file": "home_assistant/custom_components/whorang/binary_sensor.py",
+      "syntax_valid": true,
+      "issues": [],
+      "warnings": [],
+      "stats": {
+        "lines": 348,
+        "imports": 32,
+        "classes": 6,
+        "functions": 18
+      },
+      "imports": [
+        "__future__.annotations",
+        "logging",
+        "datetime.datetime",
+        "datetime.timedelta",
+        "typing.Any",
+        "typing.Dict",
+        "typing.Optional",
+        "homeassistant.components.binary_sensor.BinarySensorDeviceClass",
+        "homeassistant.components.binary_sensor.BinarySensorEntity",
+        "homeassistant.config_entries.ConfigEntry",
+        "homeassistant.core.HomeAssistant",
+        "homeassistant.helpers.entity.DeviceInfo",
+        "homeassistant.helpers.entity_platform.AddEntitiesCallback",
+        "homeassistant.helpers.update_coordinator.CoordinatorEntity",
+        "const.DOMAIN",
+        "const.MANUFACTURER",
+        "const.MODEL",
+        "const.SW_VERSION",
+        "const.BINARY_SENSOR_DOORBELL",
+        "const.BINARY_SENSOR_MOTION",
+        "const.BINARY_SENSOR_KNOWN_VISITOR",
+        "const.BINARY_SENSOR_SYSTEM_ONLINE",
+        "const.BINARY_SENSOR_AI_PROCESSING",
+        "const.ATTR_VISITOR_ID",
+        "const.ATTR_TIMESTAMP",
+        "const.ATTR_AI_MESSAGE",
+        "const.ATTR_LOCATION",
+        "const.ATTR_CONFIDENCE_SCORE",
+        "const.DEVICE_CLASS_CONNECTIVITY",
+        "const.DEVICE_CLASS_MOTION",
+        "const.DEVICE_CLASS_OCCUPANCY",
+        "coordinator.WhoRangDataUpdateCoordinator"
+      ],
+      "classes": [
+        {
+          "name": "WhoRangBinarySensorEntity",
+          "line": 61,
+          "methods": [],
+          "bases": [
+            "CoordinatorEntity",
+            "BinarySensorEntity"
+          ]
+        },
+        {
+          "name": "WhoRangDoorbellBinarySensor",
+          "line": 90,
+          "methods": [],
+          "bases": [
+            "WhoRangBinarySensorEntity"
+          ]
+        },
+        {
+          "name": "WhoRangMotionBinarySensor",
+          "line": 143,
+          "methods": [],
+          "bases": [
+            "WhoRangBinarySensorEntity"
+          ]
+        },
+        {
+          "name": "WhoRangKnownVisitorBinarySensor",
+          "line": 191,
+          "methods": [],
+          "bases": [
+            "WhoRangBinarySensorEntity"
+          ]
+        },
+        {
+          "name": "WhoRangSystemOnlineBinarySensor",
+          "line": 255,
+          "methods": [],
+          "bases": [
+            "WhoRangBinarySensorEntity"
+          ]
+        },
+        {
+          "name": "WhoRangAIProcessingBinarySensor",
+          "line": 293,
+          "methods": [],
+          "bases": [
+            "WhoRangBinarySensorEntity"
+          ]
+        }
+      ],
+      "functions": [
+        {
+          "name": "async_setup_entry",
+          "line": 42,
+          "is_async": true,
+          "class": null,
+          "args": [
+            "hass",
+            "config_entry",
+            "async_add_entities"
+          ],
+          "returns": true
+        },
+        {
+          "name": "__init__",
+          "line": 64,
+          "is_async": false,
+          "class": "WhoRangBinarySensorEntity",
+          "args": [
+            "self",
+            "coordinator",
+            "config_entry",
+            "sensor_type"
+          ],
+          "returns": true
+        },
+        {
+          "name": "device_info",
+          "line": 78,
+          "is_async": false,
+          "class": "WhoRangBinarySensorEntity",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "__init__",
+          "line": 93,
+          "is_async": false,
+          "class": "WhoRangDoorbellBinarySensor",
+          "args": [
+            "self",
+            "coordinator",
+            "config_entry"
+          ],
+          "returns": true
+        },
+        {
+          "name": "is_on",
+          "line": 105,
+          "is_async": false,
+          "class": "WhoRangDoorbellBinarySensor",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "extra_state_attributes",
+          "line": 129,
+          "is_async": false,
+          "class": "WhoRangDoorbellBinarySensor",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "__init__",
+          "line": 146,
+          "is_async": false,
+          "class": "WhoRangMotionBinarySensor",
+          "args": [
+            "self",
+            "coordinator",
+            "config_entry"
+          ],
+          "returns": true
+        },
+        {
+          "name": "is_on",
+          "line": 158,
+          "is_async": false,
+          "class": "WhoRangMotionBinarySensor",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "extra_state_attributes",
+          "line": 177,
+          "is_async": false,
+          "class": "WhoRangMotionBinarySensor",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "__init__",
+          "line": 194,
+          "is_async": false,
+          "class": "WhoRangKnownVisitorBinarySensor",
+          "args": [
+            "self",
+            "coordinator",
+            "config_entry"
+          ],
+          "returns": true
+        },
+        {
+          "name": "is_on",
+          "line": 206,
+          "is_async": false,
+          "class": "WhoRangKnownVisitorBinarySensor",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "extra_state_attributes",
+          "line": 229,
+          "is_async": false,
+          "class": "WhoRangKnownVisitorBinarySensor",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "__init__",
+          "line": 258,
+          "is_async": false,
+          "class": "WhoRangSystemOnlineBinarySensor",
+          "args": [
+            "self",
+            "coordinator",
+            "config_entry"
+          ],
+          "returns": true
+        },
+        {
+          "name": "is_on",
+          "line": 270,
+          "is_async": false,
+          "class": "WhoRangSystemOnlineBinarySensor",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "extra_state_attributes",
+          "line": 277,
+          "is_async": false,
+          "class": "WhoRangSystemOnlineBinarySensor",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "__init__",
+          "line": 296,
+          "is_async": false,
+          "class": "WhoRangAIProcessingBinarySensor",
+          "args": [
+            "self",
+            "coordinator",
+            "config_entry"
+          ],
+          "returns": true
+        },
+        {
+          "name": "is_on",
+          "line": 308,
+          "is_async": false,
+          "class": "WhoRangAIProcessingBinarySensor",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "extra_state_attributes",
+          "line": 332,
+          "is_async": false,
+          "class": "WhoRangAIProcessingBinarySensor",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        }
+      ],
+      "ha_issues": []
+    },
+    "const.py": {
+      "file": "home_assistant/custom_components/whorang/const.py",
+      "syntax_valid": true,
+      "issues": [],
+      "warnings": [],
+      "stats": {
+        "lines": 148,
+        "imports": 2,
+        "classes": 0,
+        "functions": 0
+      },
+      "imports": [
+        "__future__.annotations",
+        "typing.Final"
+      ],
+      "classes": [],
+      "functions": [],
+      "ha_issues": []
+    },
+    "button.py": {
+      "file": "home_assistant/custom_components/whorang/button.py",
+      "syntax_valid": true,
+      "issues": [],
+      "warnings": [],
+      "stats": {
+        "lines": 183,
+        "imports": 18,
+        "classes": 4,
+        "functions": 12
+      },
+      "imports": [
+        "__future__.annotations",
+        "logging",
+        "typing.Any",
+        "typing.Dict",
+        "homeassistant.components.button.ButtonEntity",
+        "homeassistant.config_entries.ConfigEntry",
+        "homeassistant.core.HomeAssistant",
+        "homeassistant.helpers.entity.DeviceInfo",
+        "homeassistant.helpers.entity_platform.AddEntitiesCallback",
+        "homeassistant.helpers.update_coordinator.CoordinatorEntity",
+        "const.DOMAIN",
+        "const.MANUFACTURER",
+        "const.MODEL",
+        "const.SW_VERSION",
+        "const.BUTTON_TRIGGER_ANALYSIS",
+        "const.BUTTON_TEST_WEBHOOK",
+        "const.BUTTON_REFRESH_DATA",
+        "coordinator.WhoRangDataUpdateCoordinator"
+      ],
+      "classes": [
+        {
+          "name": "WhoRangButtonEntity",
+          "line": 45,
+          "methods": [],
+          "bases": [
+            "CoordinatorEntity",
+            "ButtonEntity"
+          ]
+        },
+        {
+          "name": "WhoRangTriggerAnalysisButton",
+          "line": 74,
+          "methods": [],
+          "bases": [
+            "WhoRangButtonEntity"
+          ]
+        },
+        {
+          "name": "WhoRangTestWebhookButton",
+          "line": 113,
+          "methods": [],
+          "bases": [
+            "WhoRangButtonEntity"
+          ]
+        },
+        {
+          "name": "WhoRangRefreshDataButton",
+          "line": 150,
+          "methods": [],
+          "bases": [
+            "WhoRangButtonEntity"
+          ]
+        }
+      ],
+      "functions": [
+        {
+          "name": "async_setup_entry",
+          "line": 28,
+          "is_async": true,
+          "class": null,
+          "args": [
+            "hass",
+            "config_entry",
+            "async_add_entities"
+          ],
+          "returns": true
+        },
+        {
+          "name": "__init__",
+          "line": 48,
+          "is_async": false,
+          "class": "WhoRangButtonEntity",
+          "args": [
+            "self",
+            "coordinator",
+            "config_entry",
+            "button_type"
+          ],
+          "returns": true
+        },
+        {
+          "name": "device_info",
+          "line": 62,
+          "is_async": false,
+          "class": "WhoRangButtonEntity",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "__init__",
+          "line": 77,
+          "is_async": false,
+          "class": "WhoRangTriggerAnalysisButton",
+          "args": [
+            "self",
+            "coordinator",
+            "config_entry"
+          ],
+          "returns": true
+        },
+        {
+          "name": "async_press",
+          "line": 87,
+          "is_async": true,
+          "class": "WhoRangTriggerAnalysisButton",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "extra_state_attributes",
+          "line": 100,
+          "is_async": false,
+          "class": "WhoRangTriggerAnalysisButton",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "__init__",
+          "line": 116,
+          "is_async": false,
+          "class": "WhoRangTestWebhookButton",
+          "args": [
+            "self",
+            "coordinator",
+            "config_entry"
+          ],
+          "returns": true
+        },
+        {
+          "name": "async_press",
+          "line": 126,
+          "is_async": true,
+          "class": "WhoRangTestWebhookButton",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "extra_state_attributes",
+          "line": 139,
+          "is_async": false,
+          "class": "WhoRangTestWebhookButton",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "__init__",
+          "line": 153,
+          "is_async": false,
+          "class": "WhoRangRefreshDataButton",
+          "args": [
+            "self",
+            "coordinator",
+            "config_entry"
+          ],
+          "returns": true
+        },
+        {
+          "name": "async_press",
+          "line": 163,
+          "is_async": true,
+          "class": "WhoRangRefreshDataButton",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "extra_state_attributes",
+          "line": 172,
+          "is_async": false,
+          "class": "WhoRangRefreshDataButton",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        }
+      ],
+      "ha_issues": []
+    },
+    "config_flow.py": {
+      "file": "home_assistant/custom_components/whorang/config_flow.py",
+      "syntax_valid": true,
+      "issues": [],
+      "warnings": [],
+      "stats": {
+        "lines": 223,
+        "imports": 26,
+        "classes": 4,
+        "functions": 8
+      },
+      "imports": [
+        "__future__.annotations",
+        "logging",
+        "typing.Any",
+        "typing.Dict",
+        "typing.Optional",
+        "voluptuous",
+        "homeassistant.config_entries",
+        "homeassistant.const.CONF_HOST",
+        "homeassistant.const.CONF_PORT",
+        "homeassistant.core.HomeAssistant",
+        "homeassistant.data_entry_flow.FlowResult",
+        "homeassistant.exceptions.HomeAssistantError",
+        "api_client.WhoRangAPIClient",
+        "api_client.WhoRangConnectionError",
+        "api_client.WhoRangAuthError",
+        "const.DOMAIN",
+        "const.CONF_API_KEY",
+        "const.CONF_UPDATE_INTERVAL",
+        "const.CONF_ENABLE_WEBSOCKET",
+        "const.CONF_ENABLE_COST_TRACKING",
+        "const.DEFAULT_PORT",
+        "const.DEFAULT_UPDATE_INTERVAL",
+        "const.ERROR_CANNOT_CONNECT",
+        "const.ERROR_INVALID_AUTH",
+        "const.ERROR_TIMEOUT",
+        "const.ERROR_UNKNOWN"
+      ],
+      "classes": [
+        {
+          "name": "ConfigFlow",
+          "line": 86,
+          "methods": [],
+          "bases": [
+            "config_entries.ConfigFlow"
+          ]
+        },
+        {
+          "name": "OptionsFlowHandler",
+          "line": 178,
+          "methods": [],
+          "bases": [
+            "config_entries.OptionsFlow"
+          ]
+        },
+        {
+          "name": "CannotConnect",
+          "line": 218,
+          "methods": [],
+          "bases": [
+            "HomeAssistantError"
+          ]
+        },
+        {
+          "name": "InvalidAuth",
+          "line": 222,
+          "methods": [],
+          "bases": [
+            "HomeAssistantError"
+          ]
+        }
+      ],
+      "functions": [
+        {
+          "name": "validate_input",
+          "line": 50,
+          "is_async": true,
+          "class": null,
+          "args": [
+            "hass",
+            "data"
+          ],
+          "returns": true
+        },
+        {
+          "name": "__init__",
+          "line": 91,
+          "is_async": false,
+          "class": "ConfigFlow",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "async_step_user",
+          "line": 95,
+          "is_async": true,
+          "class": "ConfigFlow",
+          "args": [
+            "self",
+            "user_input"
+          ],
+          "returns": true
+        },
+        {
+          "name": "async_step_discovery",
+          "line": 124,
+          "is_async": true,
+          "class": "ConfigFlow",
+          "args": [
+            "self",
+            "discovery_info"
+          ],
+          "returns": true
+        },
+        {
+          "name": "async_step_discovery_confirm",
+          "line": 143,
+          "is_async": true,
+          "class": "ConfigFlow",
+          "args": [
+            "self",
+            "user_input"
+          ],
+          "returns": true
+        },
+        {
+          "name": "async_get_options_flow",
+          "line": 171,
+          "is_async": false,
+          "class": "ConfigFlow",
+          "args": [
+            "config_entry"
+          ],
+          "returns": true
+        },
+        {
+          "name": "__init__",
+          "line": 181,
+          "is_async": false,
+          "class": "OptionsFlowHandler",
+          "args": [
+            "self",
+            "config_entry"
+          ],
+          "returns": true
+        },
+        {
+          "name": "async_step_init",
+          "line": 185,
+          "is_async": true,
+          "class": "OptionsFlowHandler",
+          "args": [
+            "self",
+            "user_input"
+          ],
+          "returns": true
+        }
+      ],
+      "ha_issues": []
+    },
+    "camera.py": {
+      "file": "home_assistant/custom_components/whorang/camera.py",
+      "syntax_valid": true,
+      "issues": [],
+      "warnings": [],
+      "stats": {
+        "lines": 138,
+        "imports": 15,
+        "classes": 2,
+        "functions": 7
+      },
+      "imports": [
+        "__future__.annotations",
+        "logging",
+        "typing.Optional",
+        "homeassistant.components.camera.Camera",
+        "homeassistant.config_entries.ConfigEntry",
+        "homeassistant.core.HomeAssistant",
+        "homeassistant.helpers.entity.DeviceInfo",
+        "homeassistant.helpers.entity_platform.AddEntitiesCallback",
+        "homeassistant.helpers.update_coordinator.CoordinatorEntity",
+        "const.DOMAIN",
+        "const.MANUFACTURER",
+        "const.MODEL",
+        "const.SW_VERSION",
+        "const.CAMERA_LATEST_IMAGE",
+        "coordinator.WhoRangDataUpdateCoordinator"
+      ],
+      "classes": [
+        {
+          "name": "WhoRangCameraEntity",
+          "line": 41,
+          "methods": [],
+          "bases": [
+            "CoordinatorEntity",
+            "Camera"
+          ]
+        },
+        {
+          "name": "WhoRangLatestImageCamera",
+          "line": 71,
+          "methods": [],
+          "bases": [
+            "WhoRangCameraEntity"
+          ]
+        }
+      ],
+      "functions": [
+        {
+          "name": "async_setup_entry",
+          "line": 26,
+          "is_async": true,
+          "class": null,
+          "args": [
+            "hass",
+            "config_entry",
+            "async_add_entities"
+          ],
+          "returns": true
+        },
+        {
+          "name": "__init__",
+          "line": 44,
+          "is_async": false,
+          "class": "WhoRangCameraEntity",
+          "args": [
+            "self",
+            "coordinator",
+            "config_entry",
+            "camera_type"
+          ],
+          "returns": true
+        },
+        {
+          "name": "device_info",
+          "line": 59,
+          "is_async": false,
+          "class": "WhoRangCameraEntity",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "__init__",
+          "line": 74,
+          "is_async": false,
+          "class": "WhoRangLatestImageCamera",
+          "args": [
+            "self",
+            "coordinator",
+            "config_entry"
+          ],
+          "returns": true
+        },
+        {
+          "name": "async_camera_image",
+          "line": 86,
+          "is_async": true,
+          "class": "WhoRangLatestImageCamera",
+          "args": [
+            "self",
+            "width",
+            "height"
+          ],
+          "returns": true
+        },
+        {
+          "name": "extra_state_attributes",
+          "line": 113,
+          "is_async": false,
+          "class": "WhoRangLatestImageCamera",
+          "args": [
+            "self"
+          ],
+          "returns": false
+        },
+        {
+          "name": "available",
+          "line": 130,
+          "is_async": false,
+          "class": "WhoRangLatestImageCamera",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        }
+      ],
+      "ha_issues": []
+    },
+    "device_tracker.py": {
+      "file": "home_assistant/custom_components/whorang/device_tracker.py",
+      "syntax_valid": true,
+      "issues": [],
+      "warnings": [],
+      "stats": {
+        "lines": 198,
+        "imports": 26,
+        "classes": 2,
+        "functions": 9
+      },
+      "imports": [
+        "__future__.annotations",
+        "logging",
+        "datetime.datetime",
+        "datetime.timedelta",
+        "typing.Any",
+        "typing.Dict",
+        "typing.List",
+        "typing.Optional",
+        "homeassistant.components.device_tracker.SourceType",
+        "homeassistant.components.device_tracker.config_entry.ScannerEntity",
+        "homeassistant.config_entries.ConfigEntry",
+        "homeassistant.core.HomeAssistant",
+        "homeassistant.helpers.entity.DeviceInfo",
+        "homeassistant.helpers.entity_platform.AddEntitiesCallback",
+        "homeassistant.helpers.update_coordinator.CoordinatorEntity",
+        "const.DOMAIN",
+        "const.MANUFACTURER",
+        "const.MODEL",
+        "const.SW_VERSION",
+        "const.DEVICE_TRACKER_PREFIX",
+        "const.ATTR_PERSON_NAME",
+        "const.ATTR_PERSON_ID",
+        "const.ATTR_TIMESTAMP",
+        "const.ATTR_CONFIDENCE_SCORE",
+        "const.ATTR_LOCATION",
+        "coordinator.WhoRangDataUpdateCoordinator"
+      ],
+      "classes": [
+        {
+          "name": "WhoRangPersonDeviceTracker",
+          "line": 53,
+          "methods": [],
+          "bases": [
+            "CoordinatorEntity",
+            "ScannerEntity"
+          ]
+        },
+        {
+          "name": "WhoRangDynamicDeviceTrackerManager",
+          "line": 151,
+          "methods": [],
+          "bases": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "async_setup_entry",
+          "line": 33,
+          "is_async": true,
+          "class": null,
+          "args": [
+            "hass",
+            "config_entry",
+            "async_add_entities"
+          ],
+          "returns": true
+        },
+        {
+          "name": "__init__",
+          "line": 56,
+          "is_async": false,
+          "class": "WhoRangPersonDeviceTracker",
+          "args": [
+            "self",
+            "coordinator",
+            "config_entry",
+            "person"
+          ],
+          "returns": true
+        },
+        {
+          "name": "device_info",
+          "line": 75,
+          "is_async": false,
+          "class": "WhoRangPersonDeviceTracker",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "source_type",
+          "line": 87,
+          "is_async": false,
+          "class": "WhoRangPersonDeviceTracker",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "is_connected",
+          "line": 92,
+          "is_async": false,
+          "class": "WhoRangPersonDeviceTracker",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "extra_state_attributes",
+          "line": 116,
+          "is_async": false,
+          "class": "WhoRangPersonDeviceTracker",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "available",
+          "line": 145,
+          "is_async": false,
+          "class": "WhoRangPersonDeviceTracker",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "__init__",
+          "line": 154,
+          "is_async": false,
+          "class": "WhoRangDynamicDeviceTrackerManager",
+          "args": [
+            "self",
+            "hass",
+            "coordinator",
+            "config_entry",
+            "async_add_entities"
+          ],
+          "returns": true
+        },
+        {
+          "name": "async_update_device_trackers",
+          "line": 168,
+          "is_async": true,
+          "class": "WhoRangDynamicDeviceTrackerManager",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        }
+      ],
+      "ha_issues": []
+    },
+    "sensor.py": {
+      "file": "home_assistant/custom_components/whorang/sensor.py",
+      "syntax_valid": true,
+      "issues": [],
+      "warnings": [],
+      "stats": {
+        "lines": 397,
+        "imports": 52,
+        "classes": 10,
+        "functions": 26
+      },
+      "imports": [
+        "__future__.annotations",
+        "logging",
+        "datetime.datetime",
+        "typing.Any",
+        "typing.Dict",
+        "typing.Optional",
+        "homeassistant.components.sensor.SensorDeviceClass",
+        "homeassistant.components.sensor.SensorEntity",
+        "homeassistant.components.sensor.SensorStateClass",
+        "homeassistant.config_entries.ConfigEntry",
+        "homeassistant.core.HomeAssistant",
+        "homeassistant.helpers.entity.DeviceInfo",
+        "homeassistant.helpers.entity_platform.AddEntitiesCallback",
+        "homeassistant.helpers.update_coordinator.CoordinatorEntity",
+        "const.DOMAIN",
+        "const.MANUFACTURER",
+        "const.MODEL",
+        "const.SW_VERSION",
+        "const.SENSOR_LATEST_VISITOR",
+        "const.SENSOR_VISITOR_COUNT_TODAY",
+        "const.SENSOR_VISITOR_COUNT_WEEK",
+        "const.SENSOR_VISITOR_COUNT_MONTH",
+        "const.SENSOR_SYSTEM_STATUS",
+        "const.SENSOR_AI_PROVIDER_ACTIVE",
+        "const.SENSOR_AI_COST_TODAY",
+        "const.SENSOR_AI_RESPONSE_TIME",
+        "const.SENSOR_KNOWN_FACES_COUNT",
+        "const.ATTR_VISITOR_ID",
+        "const.ATTR_TIMESTAMP",
+        "const.ATTR_AI_MESSAGE",
+        "const.ATTR_AI_TITLE",
+        "const.ATTR_LOCATION",
+        "const.ATTR_WEATHER",
+        "const.ATTR_DEVICE_NAME",
+        "const.ATTR_CONFIDENCE_SCORE",
+        "const.ATTR_OBJECTS_DETECTED",
+        "const.ATTR_FACES_DETECTED",
+        "const.ATTR_PROCESSING_TIME",
+        "const.ATTR_AI_PROVIDER",
+        "const.ATTR_COST_USD",
+        "const.ATTR_IMAGE_URL",
+        "const.UNIT_MILLISECONDS",
+        "const.UNIT_CURRENCY_USD",
+        "const.UNIT_VISITORS",
+        "const.UNIT_FACES",
+        "const.STATE_CLASS_MEASUREMENT",
+        "const.STATE_CLASS_TOTAL",
+        "const.STATE_CLASS_TOTAL_INCREASING",
+        "const.DEVICE_CLASS_TIMESTAMP",
+        "const.DEVICE_CLASS_DURATION",
+        "const.DEVICE_CLASS_MONETARY",
+        "coordinator.WhoRangDataUpdateCoordinator"
+      ],
+      "classes": [
+        {
+          "name": "WhoRangSensorEntity",
+          "line": 86,
+          "methods": [],
+          "bases": [
+            "CoordinatorEntity",
+            "SensorEntity"
+          ]
+        },
+        {
+          "name": "WhoRangLatestVisitorSensor",
+          "line": 115,
+          "methods": [],
+          "bases": [
+            "WhoRangSensorEntity"
+          ]
+        },
+        {
+          "name": "WhoRangVisitorCountTodaySensor",
+          "line": 159,
+          "methods": [],
+          "bases": [
+            "WhoRangSensorEntity"
+          ]
+        },
+        {
+          "name": "WhoRangVisitorCountWeekSensor",
+          "line": 182,
+          "methods": [],
+          "bases": [
+            "WhoRangSensorEntity"
+          ]
+        },
+        {
+          "name": "WhoRangVisitorCountMonthSensor",
+          "line": 205,
+          "methods": [],
+          "bases": [
+            "WhoRangSensorEntity"
+          ]
+        },
+        {
+          "name": "WhoRangSystemStatusSensor",
+          "line": 228,
+          "methods": [],
+          "bases": [
+            "WhoRangSensorEntity"
+          ]
+        },
+        {
+          "name": "WhoRangAIProviderSensor",
+          "line": 264,
+          "methods": [],
+          "bases": [
+            "WhoRangSensorEntity"
+          ]
+        },
+        {
+          "name": "WhoRangAICostTodaySensor",
+          "line": 298,
+          "methods": [],
+          "bases": [
+            "WhoRangSensorEntity"
+          ]
+        },
+        {
+          "name": "WhoRangAIResponseTimeSensor",
+          "line": 331,
+          "methods": [],
+          "bases": [
+            "WhoRangSensorEntity"
+          ]
+        },
+        {
+          "name": "WhoRangKnownFacesCountSensor",
+          "line": 361,
+          "methods": [],
+          "bases": [
+            "WhoRangSensorEntity"
+          ]
+        }
+      ],
+      "functions": [
+        {
+          "name": "async_setup_entry",
+          "line": 63,
+          "is_async": true,
+          "class": null,
+          "args": [
+            "hass",
+            "config_entry",
+            "async_add_entities"
+          ],
+          "returns": true
+        },
+        {
+          "name": "__init__",
+          "line": 89,
+          "is_async": false,
+          "class": "WhoRangSensorEntity",
+          "args": [
+            "self",
+            "coordinator",
+            "config_entry",
+            "sensor_type"
+          ],
+          "returns": true
+        },
+        {
+          "name": "device_info",
+          "line": 103,
+          "is_async": false,
+          "class": "WhoRangSensorEntity",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "__init__",
+          "line": 118,
+          "is_async": false,
+          "class": "WhoRangLatestVisitorSensor",
+          "args": [
+            "self",
+            "coordinator",
+            "config_entry"
+          ],
+          "returns": true
+        },
+        {
+          "name": "native_value",
+          "line": 129,
+          "is_async": false,
+          "class": "WhoRangLatestVisitorSensor",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "extra_state_attributes",
+          "line": 137,
+          "is_async": false,
+          "class": "WhoRangLatestVisitorSensor",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "__init__",
+          "line": 162,
+          "is_async": false,
+          "class": "WhoRangVisitorCountTodaySensor",
+          "args": [
+            "self",
+            "coordinator",
+            "config_entry"
+          ],
+          "returns": true
+        },
+        {
+          "name": "native_value",
+          "line": 175,
+          "is_async": false,
+          "class": "WhoRangVisitorCountTodaySensor",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "__init__",
+          "line": 185,
+          "is_async": false,
+          "class": "WhoRangVisitorCountWeekSensor",
+          "args": [
+            "self",
+            "coordinator",
+            "config_entry"
+          ],
+          "returns": true
+        },
+        {
+          "name": "native_value",
+          "line": 198,
+          "is_async": false,
+          "class": "WhoRangVisitorCountWeekSensor",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "__init__",
+          "line": 208,
+          "is_async": false,
+          "class": "WhoRangVisitorCountMonthSensor",
+          "args": [
+            "self",
+            "coordinator",
+            "config_entry"
+          ],
+          "returns": true
+        },
+        {
+          "name": "native_value",
+          "line": 221,
+          "is_async": false,
+          "class": "WhoRangVisitorCountMonthSensor",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "__init__",
+          "line": 231,
+          "is_async": false,
+          "class": "WhoRangSystemStatusSensor",
+          "args": [
+            "self",
+            "coordinator",
+            "config_entry"
+          ],
+          "returns": true
+        },
+        {
+          "name": "native_value",
+          "line": 242,
+          "is_async": false,
+          "class": "WhoRangSystemStatusSensor",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "extra_state_attributes",
+          "line": 249,
+          "is_async": false,
+          "class": "WhoRangSystemStatusSensor",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "__init__",
+          "line": 267,
+          "is_async": false,
+          "class": "WhoRangAIProviderSensor",
+          "args": [
+            "self",
+            "coordinator",
+            "config_entry"
+          ],
+          "returns": true
+        },
+        {
+          "name": "native_value",
+          "line": 278,
+          "is_async": false,
+          "class": "WhoRangAIProviderSensor",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "extra_state_attributes",
+          "line": 285,
+          "is_async": false,
+          "class": "WhoRangAIProviderSensor",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "__init__",
+          "line": 301,
+          "is_async": false,
+          "class": "WhoRangAICostTodaySensor",
+          "args": [
+            "self",
+            "coordinator",
+            "config_entry"
+          ],
+          "returns": true
+        },
+        {
+          "name": "native_value",
+          "line": 315,
+          "is_async": false,
+          "class": "WhoRangAICostTodaySensor",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "extra_state_attributes",
+          "line": 321,
+          "is_async": false,
+          "class": "WhoRangAICostTodaySensor",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "__init__",
+          "line": 334,
+          "is_async": false,
+          "class": "WhoRangAIResponseTimeSensor",
+          "args": [
+            "self",
+            "coordinator",
+            "config_entry"
+          ],
+          "returns": true
+        },
+        {
+          "name": "native_value",
+          "line": 348,
+          "is_async": false,
+          "class": "WhoRangAIResponseTimeSensor",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "__init__",
+          "line": 364,
+          "is_async": false,
+          "class": "WhoRangKnownFacesCountSensor",
+          "args": [
+            "self",
+            "coordinator",
+            "config_entry"
+          ],
+          "returns": true
+        },
+        {
+          "name": "native_value",
+          "line": 377,
+          "is_async": false,
+          "class": "WhoRangKnownFacesCountSensor",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "extra_state_attributes",
+          "line": 383,
+          "is_async": false,
+          "class": "WhoRangKnownFacesCountSensor",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        }
+      ],
+      "ha_issues": []
+    },
+    "select.py": {
+      "file": "home_assistant/custom_components/whorang/select.py",
+      "syntax_valid": true,
+      "issues": [],
+      "warnings": [],
+      "stats": {
+        "lines": 127,
+        "imports": 19,
+        "classes": 2,
+        "functions": 7
+      },
+      "imports": [
+        "__future__.annotations",
+        "logging",
+        "typing.Any",
+        "typing.Dict",
+        "typing.List",
+        "typing.Optional",
+        "homeassistant.components.select.SelectEntity",
+        "homeassistant.config_entries.ConfigEntry",
+        "homeassistant.core.HomeAssistant",
+        "homeassistant.helpers.entity.DeviceInfo",
+        "homeassistant.helpers.entity_platform.AddEntitiesCallback",
+        "homeassistant.helpers.update_coordinator.CoordinatorEntity",
+        "const.DOMAIN",
+        "const.MANUFACTURER",
+        "const.MODEL",
+        "const.SW_VERSION",
+        "const.SELECT_AI_PROVIDER",
+        "const.AI_PROVIDERS",
+        "coordinator.WhoRangDataUpdateCoordinator"
+      ],
+      "classes": [
+        {
+          "name": "WhoRangSelectEntity",
+          "line": 42,
+          "methods": [],
+          "bases": [
+            "CoordinatorEntity",
+            "SelectEntity"
+          ]
+        },
+        {
+          "name": "WhoRangAIProviderSelect",
+          "line": 71,
+          "methods": [],
+          "bases": [
+            "WhoRangSelectEntity"
+          ]
+        }
+      ],
+      "functions": [
+        {
+          "name": "async_setup_entry",
+          "line": 27,
+          "is_async": true,
+          "class": null,
+          "args": [
+            "hass",
+            "config_entry",
+            "async_add_entities"
+          ],
+          "returns": true
+        },
+        {
+          "name": "__init__",
+          "line": 45,
+          "is_async": false,
+          "class": "WhoRangSelectEntity",
+          "args": [
+            "self",
+            "coordinator",
+            "config_entry",
+            "select_type"
+          ],
+          "returns": true
+        },
+        {
+          "name": "device_info",
+          "line": 59,
+          "is_async": false,
+          "class": "WhoRangSelectEntity",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "__init__",
+          "line": 74,
+          "is_async": false,
+          "class": "WhoRangAIProviderSelect",
+          "args": [
+            "self",
+            "coordinator",
+            "config_entry"
+          ],
+          "returns": true
+        },
+        {
+          "name": "current_option",
+          "line": 86,
+          "is_async": false,
+          "class": "WhoRangAIProviderSelect",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "async_select_option",
+          "line": 99,
+          "is_async": true,
+          "class": "WhoRangAIProviderSelect",
+          "args": [
+            "self",
+            "option"
+          ],
+          "returns": true
+        },
+        {
+          "name": "extra_state_attributes",
+          "line": 116,
+          "is_async": false,
+          "class": "WhoRangAIProviderSelect",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        }
+      ],
+      "ha_issues": []
+    },
+    "api_client.py": {
+      "file": "home_assistant/custom_components/whorang/api_client.py",
+      "syntax_valid": true,
+      "issues": [],
+      "warnings": [],
+      "stats": {
+        "lines": 357,
+        "imports": 18,
+        "classes": 4,
+        "functions": 28
+      },
+      "imports": [
+        "__future__.annotations",
+        "asyncio",
+        "json",
+        "logging",
+        "typing.Any",
+        "typing.Dict",
+        "typing.List",
+        "typing.Optional",
+        "aiohttp",
+        "const.API_HEALTH",
+        "const.API_VISITORS",
+        "const.API_STATS",
+        "const.API_CONFIG_WEBHOOK",
+        "const.API_FACES_CONFIG",
+        "const.API_FACES_PERSONS",
+        "const.API_DETECTED_FACES",
+        "const.API_OPENAI",
+        "const.DEFAULT_TIMEOUT"
+      ],
+      "classes": [
+        {
+          "name": "WhoRangAPIError",
+          "line": 26,
+          "methods": [],
+          "bases": [
+            "Exception"
+          ]
+        },
+        {
+          "name": "WhoRangConnectionError",
+          "line": 30,
+          "methods": [],
+          "bases": [
+            "WhoRangAPIError"
+          ]
+        },
+        {
+          "name": "WhoRangAuthError",
+          "line": 34,
+          "methods": [],
+          "bases": [
+            "WhoRangAPIError"
+          ]
+        },
+        {
+          "name": "WhoRangAPIClient",
+          "line": 38,
+          "methods": [],
+          "bases": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "__init__",
+          "line": 41,
+          "is_async": false,
+          "class": "WhoRangAPIClient",
+          "args": [
+            "self",
+            "host",
+            "port",
+            "api_key",
+            "session",
+            "timeout"
+          ],
+          "returns": true
+        },
+        {
+          "name": "_get_session",
+          "line": 60,
+          "is_async": true,
+          "class": "WhoRangAPIClient",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "close",
+          "line": 67,
+          "is_async": true,
+          "class": "WhoRangAPIClient",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "_get_headers",
+          "line": 72,
+          "is_async": false,
+          "class": "WhoRangAPIClient",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "_request",
+          "line": 82,
+          "is_async": true,
+          "class": "WhoRangAPIClient",
+          "args": [
+            "self",
+            "method",
+            "endpoint",
+            "data",
+            "params"
+          ],
+          "returns": true
+        },
+        {
+          "name": "make_request",
+          "line": 96,
+          "is_async": true,
+          "class": "WhoRangAPIClient",
+          "args": [],
+          "returns": false
+        },
+        {
+          "name": "get_health",
+          "line": 126,
+          "is_async": true,
+          "class": "WhoRangAPIClient",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "get_visitors",
+          "line": 134,
+          "is_async": true,
+          "class": "WhoRangAPIClient",
+          "args": [
+            "self",
+            "page",
+            "limit",
+            "search"
+          ],
+          "returns": true
+        },
+        {
+          "name": "get_latest_visitor",
+          "line": 151,
+          "is_async": true,
+          "class": "WhoRangAPIClient",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "get_visitor_by_id",
+          "line": 161,
+          "is_async": true,
+          "class": "WhoRangAPIClient",
+          "args": [
+            "self",
+            "visitor_id"
+          ],
+          "returns": true
+        },
+        {
+          "name": "get_stats",
+          "line": 169,
+          "is_async": true,
+          "class": "WhoRangAPIClient",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "get_detected_objects",
+          "line": 177,
+          "is_async": true,
+          "class": "WhoRangAPIClient",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "get_webhook_config",
+          "line": 185,
+          "is_async": true,
+          "class": "WhoRangAPIClient",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "test_webhook",
+          "line": 193,
+          "is_async": true,
+          "class": "WhoRangAPIClient",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "get_face_config",
+          "line": 201,
+          "is_async": true,
+          "class": "WhoRangAPIClient",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "update_face_config",
+          "line": 209,
+          "is_async": true,
+          "class": "WhoRangAPIClient",
+          "args": [
+            "self",
+            "config"
+          ],
+          "returns": true
+        },
+        {
+          "name": "get_known_persons",
+          "line": 217,
+          "is_async": true,
+          "class": "WhoRangAPIClient",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "create_person",
+          "line": 226,
+          "is_async": true,
+          "class": "WhoRangAPIClient",
+          "args": [
+            "self",
+            "name",
+            "notes"
+          ],
+          "returns": true
+        },
+        {
+          "name": "delete_person",
+          "line": 238,
+          "is_async": true,
+          "class": "WhoRangAPIClient",
+          "args": [
+            "self",
+            "person_id"
+          ],
+          "returns": true
+        },
+        {
+          "name": "get_detected_faces",
+          "line": 246,
+          "is_async": true,
+          "class": "WhoRangAPIClient",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "get_ai_providers",
+          "line": 255,
+          "is_async": true,
+          "class": "WhoRangAPIClient",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "set_ai_provider",
+          "line": 264,
+          "is_async": true,
+          "class": "WhoRangAPIClient",
+          "args": [
+            "self",
+            "provider"
+          ],
+          "returns": true
+        },
+        {
+          "name": "trigger_analysis",
+          "line": 273,
+          "is_async": true,
+          "class": "WhoRangAPIClient",
+          "args": [
+            "self",
+            "visitor_id"
+          ],
+          "returns": true
+        },
+        {
+          "name": "get_latest_image",
+          "line": 286,
+          "is_async": true,
+          "class": "WhoRangAPIClient",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "get_ai_usage_stats",
+          "line": 297,
+          "is_async": true,
+          "class": "WhoRangAPIClient",
+          "args": [
+            "self",
+            "days"
+          ],
+          "returns": true
+        },
+        {
+          "name": "export_visitor_data",
+          "line": 306,
+          "is_async": true,
+          "class": "WhoRangAPIClient",
+          "args": [
+            "self",
+            "start_date",
+            "end_date",
+            "format_type"
+          ],
+          "returns": true
+        },
+        {
+          "name": "validate_connection",
+          "line": 325,
+          "is_async": true,
+          "class": "WhoRangAPIClient",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        },
+        {
+          "name": "get_system_info",
+          "line": 334,
+          "is_async": true,
+          "class": "WhoRangAPIClient",
+          "args": [
+            "self"
+          ],
+          "returns": true
+        }
+      ],
+      "ha_issues": []
+    },
+    "__init__.py": {
+      "file": "home_assistant/custom_components/whorang/__init__.py",
+      "syntax_valid": true,
+      "issues": [],
+      "warnings": [],
+      "stats": {
+        "lines": 286,
+        "imports": 26,
+        "classes": 0,
+        "functions": 10
+      },
+      "imports": [
+        "__future__.annotations",
+        "logging",
+        "typing.Any",
+        "typing.Dict",
+        "voluptuous",
+        "homeassistant.config_entries.ConfigEntry",
+        "homeassistant.const.CONF_HOST",
+        "homeassistant.const.CONF_PORT",
+        "homeassistant.const.Platform",
+        "homeassistant.core.HomeAssistant",
+        "homeassistant.exceptions.ConfigEntryNotReady",
+        "api_client.WhoRangAPIClient",
+        "api_client.WhoRangConnectionError",
+        "const.DOMAIN",
+        "const.CONF_API_KEY",
+        "const.CONF_UPDATE_INTERVAL",
+        "const.CONF_ENABLE_WEBSOCKET",
+        "const.CONF_ENABLE_COST_TRACKING",
+        "const.DEFAULT_UPDATE_INTERVAL",
+        "const.SERVICE_TRIGGER_ANALYSIS",
+        "const.SERVICE_ADD_KNOWN_VISITOR",
+        "const.SERVICE_REMOVE_KNOWN_VISITOR",
+        "const.SERVICE_SET_AI_PROVIDER",
+        "const.SERVICE_EXPORT_DATA",
+        "const.SERVICE_TEST_WEBHOOK",
+        "coordinator.WhoRangDataUpdateCoordinator"
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "async_setup_entry",
+          "line": 42,
+          "is_async": true,
+          "class": null,
+          "args": [
+            "hass",
+            "entry"
+          ],
+          "returns": true
+        },
+        {
+          "name": "async_unload_entry",
+          "line": 93,
+          "is_async": true,
+          "class": null,
+          "args": [
+            "hass",
+            "entry"
+          ],
+          "returns": true
+        },
+        {
+          "name": "async_update_options",
+          "line": 109,
+          "is_async": true,
+          "class": null,
+          "args": [
+            "hass",
+            "entry"
+          ],
+          "returns": true
+        },
+        {
+          "name": "_async_register_services",
+          "line": 114,
+          "is_async": true,
+          "class": null,
+          "args": [
+            "hass"
+          ],
+          "returns": true
+        },
+        {
+          "name": "trigger_analysis_service",
+          "line": 117,
+          "is_async": true,
+          "class": null,
+          "args": [
+            "call"
+          ],
+          "returns": true
+        },
+        {
+          "name": "add_known_visitor_service",
+          "line": 134,
+          "is_async": true,
+          "class": null,
+          "args": [
+            "call"
+          ],
+          "returns": true
+        },
+        {
+          "name": "remove_known_visitor_service",
+          "line": 156,
+          "is_async": true,
+          "class": null,
+          "args": [
+            "call"
+          ],
+          "returns": true
+        },
+        {
+          "name": "set_ai_provider_service",
+          "line": 177,
+          "is_async": true,
+          "class": null,
+          "args": [
+            "call"
+          ],
+          "returns": true
+        },
+        {
+          "name": "export_data_service",
+          "line": 198,
+          "is_async": true,
+          "class": null,
+          "args": [
+            "call"
+          ],
+          "returns": true
+        },
+        {
+          "name": "test_webhook_service",
+          "line": 217,
+          "is_async": true,
+          "class": null,
+          "args": [
+            "call"
+          ],
+          "returns": true
+        }
+      ],
+      "ha_issues": []
+    },
+    "manifest.json": {
+      "file": "home_assistant/custom_components/whorang/manifest.json",
+      "issues": [],
+      "warnings": [
+        "Requirement format may be invalid: websockets>=11.0"
+      ]
+    },
+    "services.yaml": {
+      "file": "home_assistant/custom_components/whorang/services.yaml",
+      "issues": [],
+      "warnings": []
+    },
+    "strings.json": {
+      "file": "home_assistant/custom_components/whorang/strings.json",
+      "issues": [],
+      "warnings": []
+    }
+  },
+  "global_issues": [],
+  "recommendations": []
+}

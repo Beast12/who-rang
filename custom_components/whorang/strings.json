@@ -1,0 +1,244 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "WhoRang AI Doorbell",
+        "description": "Set up your WhoRang AI Doorbell integration. Enter the URL where your WhoRang system is accessible.",
+        "data": {
+          "url": "WhoRang URL",
+          "api_key": "API Key (optional)",
+          "verify_ssl": "Verify SSL certificates"
+        },
+        "data_description": {
+          "url": "Enter the full URL to your WhoRang system. Examples: https://api-doorbell.tuxito.be, 192.168.1.100:3001, http://localhost:3001",
+          "api_key": "Optional API key for authentication",
+          "verify_ssl": "Uncheck for self-signed certificates"
+        }
+      },
+      "discovery_confirm": {
+        "title": "Confirm WhoRang Discovery",
+        "description": "Do you want to add the WhoRang system found at {host}:{port}?"
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to WhoRang system. Please check the URL and ensure the system is accessible.",
+      "invalid_auth": "Invalid authentication. Please check your API key.",
+      "invalid_url": "Invalid URL format. Please enter a valid URL or IP:port combination.",
+      "ssl_error": "SSL connection error. Please check your SSL settings or disable SSL verification for self-signed certificates.",
+      "timeout": "Connection timeout. Please check your network connection and try again.",
+      "unknown": "Unexpected error occurred. Please try again."
+    },
+    "abort": {
+      "already_configured": "WhoRang system is already configured",
+      "cannot_connect": "Failed to connect to WhoRang system",
+      "invalid_auth": "Invalid authentication",
+      "unknown": "Unexpected error occurred"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "WhoRang Options",
+        "description": "Configure WhoRang integration options to customize behavior and performance.",
+        "data": {
+          "update_interval": "Update interval (seconds)",
+          "enable_websocket": "Enable WebSocket for real-time updates",
+          "enable_cost_tracking": "Enable AI cost tracking"
+        },
+        "data_description": {
+          "update_interval": "How often to poll for updates (10-300 seconds)",
+          "enable_websocket": "Enable real-time updates via WebSocket connection",
+          "enable_cost_tracking": "Track AI processing costs and usage statistics"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "latest_visitor": {
+        "name": "Latest Visitor",
+        "state": {
+          "no_visitors": "No visitors"
+        }
+      },
+      "visitor_count_today": {
+        "name": "Visitors Today"
+      },
+      "visitor_count_week": {
+        "name": "Visitors This Week"
+      },
+      "visitor_count_month": {
+        "name": "Visitors This Month"
+      },
+      "system_status": {
+        "name": "System Status",
+        "state": {
+          "healthy": "Healthy",
+          "warning": "Warning",
+          "error": "Error",
+          "unknown": "Unknown"
+        }
+      },
+      "ai_provider_active": {
+        "name": "AI Provider",
+        "state": {
+          "openai": "OpenAI",
+          "local": "Local",
+          "claude": "Claude",
+          "gemini": "Gemini",
+          "google-cloud-vision": "Google Cloud Vision",
+          "unknown": "Unknown"
+        }
+      },
+      "ai_cost_today": {
+        "name": "AI Cost Today"
+      },
+      "ai_response_time": {
+        "name": "AI Response Time"
+      },
+      "known_faces_count": {
+        "name": "Known Faces"
+      }
+    },
+    "binary_sensor": {
+      "doorbell": {
+        "name": "Doorbell"
+      },
+      "motion": {
+        "name": "Motion"
+      },
+      "known_visitor": {
+        "name": "Known Visitor"
+      },
+      "system_online": {
+        "name": "System Online"
+      },
+      "ai_processing": {
+        "name": "AI Processing"
+      }
+    },
+    "camera": {
+      "latest_image": {
+        "name": "Latest Image"
+      }
+    },
+    "button": {
+      "trigger_analysis": {
+        "name": "Trigger Analysis"
+      },
+      "test_webhook": {
+        "name": "Test Webhook"
+      },
+      "refresh_data": {
+        "name": "Refresh Data"
+      }
+    },
+    "select": {
+      "ai_provider": {
+        "name": "AI Provider",
+        "state": {
+          "openai": "OpenAI",
+          "local": "Local",
+          "claude": "Claude",
+          "gemini": "Gemini",
+          "google-cloud-vision": "Google Cloud Vision"
+        }
+      }
+    },
+    "device_tracker": {
+      "visitor": {
+        "name": "Visitor Tracker"
+      }
+    }
+  },
+  "services": {
+    "trigger_analysis": {
+      "name": "Trigger AI Analysis",
+      "description": "Trigger AI analysis for a specific visitor or the latest visitor",
+      "fields": {
+        "visitor_id": {
+          "name": "Visitor ID",
+          "description": "ID of the visitor to analyze (optional, uses latest if not specified)"
+        }
+      }
+    },
+    "add_known_visitor": {
+      "name": "Add Known Visitor",
+      "description": "Add a new known person for face recognition",
+      "fields": {
+        "name": {
+          "name": "Name",
+          "description": "Name of the person to add"
+        },
+        "notes": {
+          "name": "Notes",
+          "description": "Optional notes about this person"
+        }
+      }
+    },
+    "remove_known_visitor": {
+      "name": "Remove Known Visitor",
+      "description": "Remove a known person from face recognition",
+      "fields": {
+        "person_id": {
+          "name": "Person ID",
+          "description": "ID of the person to remove"
+        }
+      }
+    },
+    "set_ai_provider": {
+      "name": "Set AI Provider",
+      "description": "Change the active AI provider for analysis",
+      "fields": {
+        "provider": {
+          "name": "Provider",
+          "description": "AI provider to use for analysis"
+        }
+      }
+    },
+    "export_data": {
+      "name": "Export Visitor Data",
+      "description": "Export visitor data in the specified format",
+      "fields": {
+        "start_date": {
+          "name": "Start Date",
+          "description": "Start date for data export (YYYY-MM-DD)"
+        },
+        "end_date": {
+          "name": "End Date",
+          "description": "End date for data export (YYYY-MM-DD)"
+        },
+        "format": {
+          "name": "Format",
+          "description": "Export format (json or csv)"
+        }
+      }
+    },
+    "test_webhook": {
+      "name": "Test Webhook",
+      "description": "Test webhook functionality and connectivity"
+    }
+  },
+  "exceptions": {
+    "cannot_connect": {
+      "message": "Cannot connect to WhoRang system at {host}:{port}"
+    },
+    "invalid_auth": {
+      "message": "Invalid authentication credentials"
+    },
+    "api_error": {
+      "message": "API error: {error}"
+    },
+    "timeout": {
+      "message": "Connection timeout after {timeout} seconds"
+    }
+  },
+  "device_automation": {
+    "trigger_type": {
+      "visitor_detected": "Visitor detected",
+      "known_visitor_detected": "Known visitor detected",
+      "ai_analysis_complete": "AI analysis complete",
+      "face_detection_complete": "Face detection complete"
+    }
+  }
+}

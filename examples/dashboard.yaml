@@ -1,0 +1,368 @@
+# WhoRang Home Assistant Integration - Example Dashboard
+# Copy these examples to your Lovelace dashboard configuration
+
+# Complete WhoRang Dashboard View
+title: WhoRang Doorbell
+path: whorang
+icon: mdi:doorbell
+cards:
+  # Latest Visitor Card with Image
+  - type: vertical-stack
+    cards:
+      - type: picture-entity
+        entity: camera.whorang_latest_image
+        name: Latest Visitor
+        show_state: false
+        show_name: true
+        tap_action:
+          action: more-info
+        hold_action:
+          action: call-service
+          service: whorang.trigger_analysis
+        card_mod:
+          style: |
+            ha-card {
+              border-radius: 15px;
+              box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+      
+      - type: entities
+        title: Latest Visitor Details
+        show_header_toggle: false
+        entities:
+          - entity: sensor.whorang_latest_visitor
+            name: Description
+            icon: mdi:account
+          - type: divider
+          - entity: binary_sensor.whorang_doorbell
+            name: Doorbell Activity
+          - entity: binary_sensor.whorang_motion
+            name: Motion Detected
+          - entity: binary_sensor.whorang_known_visitor
+            name: Known Visitor
+          - type: divider
+          - entity: sensor.whorang_ai_response_time
+            name: AI Response Time
+
+  # Visitor Statistics
+  - type: glance
+    title: Visitor Statistics
+    columns: 4
+    entities:
+      - entity: sensor.whorang_visitor_count_today
+        name: Today
+        icon: mdi:calendar-today
+      - entity: sensor.whorang_visitor_count_week
+        name: This Week
+        icon: mdi:calendar-week
+      - entity: sensor.whorang_visitor_count_month
+        name: This Month
+        icon: mdi:calendar-month
+      - entity: sensor.whorang_known_faces_count
+        name: Known Faces
+        icon: mdi:face-recognition
+
+  # System Status and Controls
+  - type: horizontal-stack
+    cards:
+      - type: entities
+        title: System Status
+        show_header_toggle: false
+        entities:
+          - entity: sensor.whorang_system_status
+            name: Status
+            icon: mdi:server
+          - entity: binary_sensor.whorang_system_online
+            name: Online
+          - entity: binary_sensor.whorang_ai_processing
+            name: AI Processing
+          - type: divider
+          - entity: sensor.whorang_ai_provider_active
+            name: AI Provider
+          - entity: select.whorang_ai_provider
+            name: Change Provider
+
+      - type: entities
+        title: Controls
+        show_header_toggle: false
+        entities:
+          - entity: button.whorang_trigger_analysis
+            name: Trigger Analysis
+            icon: mdi:brain
+          - entity: button.whorang_test_webhook
+            name: Test Webhook
+            icon: mdi:webhook
+          - entity: button.whorang_refresh_data
+            name: Refresh Data
+            icon: mdi:refresh
+
+  # AI Cost Monitoring
+  - type: gauge
+    entity: sensor.whorang_ai_cost_today
+    name: AI Cost Today
+    min: 0
+    max: 10
+    severity:
+      green: 0
+      yellow: 3
+      red: 7
+    needle: true
+
+  # Visitor Activity Chart (requires history_graph card)
+  - type: history-graph
+    title: Visitor Activity (7 Days)
+    hours_to_show: 168
+    refresh_interval: 300
+    entities:
+      - entity: sensor.whorang_visitor_count_today
+        name: Daily Visitors
+
+  # Known Visitors Device Trackers
+  - type: entities
+    title: Known Visitors Presence
+    show_header_toggle: false
+    entities:
+      # These will be dynamically created based on known persons
+      # Examples (replace with actual entity IDs):
+      # - entity: device_tracker.whorang_visitors_john_doe
+      #   name: John Doe
+      # - entity: device_tracker.whorang_visitors_jane_smith
+      #   name: Jane Smith
+
+# Compact WhoRang Card for Main Dashboard
+- type: vertical-stack
+  cards:
+    - type: picture-glance
+      title: WhoRang Doorbell
+      entity: camera.whorang_latest_image
+      entities:
+        - entity: binary_sensor.whorang_doorbell
+          icon: mdi:doorbell
+        - entity: binary_sensor.whorang_motion
+          icon: mdi:motion-sensor
+        - entity: binary_sensor.whorang_known_visitor
+          icon: mdi:account-check
+        - entity: sensor.whorang_visitor_count_today
+          icon: mdi:counter
+      tap_action:
+        action: navigate
+        navigation_path: /lovelace/whorang
+      card_mod:
+        style: |
+          ha-card {
+            border-radius: 15px;
+          }
+
+# Mobile-Optimized WhoRang Card
+- type: vertical-stack
+  cards:
+    - type: picture-entity
+      entity: camera.whorang_latest_image
+      name: Latest Visitor
+      show_state: false
+      aspect_ratio: "16:9"
+      
+    - type: glance
+      entities:
+        - entity: sensor.whorang_visitor_count_today
+          name: Today
+        - entity: binary_sensor.whorang_doorbell
+          name: Doorbell
+        - entity: binary_sensor.whorang_known_visitor
+          name: Known
+        - entity: sensor.whorang_system_status
+          name: Status
+
+    - type: horizontal-stack
+      cards:
+        - type: button
+          entity: button.whorang_trigger_analysis
+          name: Analyze
+          icon: mdi:brain
+          tap_action:
+            action: call-service
+            service: button.press
+            service_data:
+              entity_id: button.whorang_trigger_analysis
+        - type: button
+          entity: button.whorang_test_webhook
+          name: Test
+          icon: mdi:webhook
+          tap_action:
+            action: call-service
+            service: button.press
+            service_data:
+              entity_id: button.whorang_test_webhook
+
+# Advanced Analytics Card
+- type: vertical-stack
+  cards:
+    - type: markdown
+      title: WhoRang Analytics
+      content: |
+        ## Today's Summary
+        - **Visitors**: {{ states('sensor.whorang_visitor_count_today') }}
+        - **Known Visitors**: {{ state_attr('binary_sensor.whorang_known_visitor', 'person_name') or 'None' }}
+        - **AI Cost**: ${{ states('sensor.whorang_ai_cost_today') }}
+        - **Response Time**: {{ states('sensor.whorang_ai_response_time') }}ms
+        
+        ## Latest Visitor
+        {{ states('sensor.whorang_latest_visitor') }}
+        
+        {% if state_attr('sensor.whorang_latest_visitor', 'timestamp') %}
+        *Detected at {{ state_attr('sensor.whorang_latest_visitor', 'timestamp') | as_timestamp | timestamp_custom('%H:%M') }}*
+        {% endif %}
+
+    - type: conditional
+      conditions:
+        - entity: binary_sensor.whorang_system_online
+          state: "off"
+      card:
+        type: markdown
+        content: |
+          ⚠️ **System Offline**
+          
+          The WhoRang system is currently offline. Please check the connection.
+        card_mod:
+          style: |
+            ha-card {
+              background-color: var(--error-color);
+              color: white;
+            }
+
+# Quick Actions Card
+- type: entities
+  title: Quick Actions
+  show_header_toggle: false
+  entities:
+    - type: call-service
+      name: Add Known Visitor
+      icon: mdi:account-plus
+      service: script.add_known_visitor_dialog
+      action_name: Add
+    - type: call-service
+      name: Export Today's Data
+      icon: mdi:download
+      service: whorang.export_data
+      service_data:
+        format: "json"
+        start_date: "{{ now().replace(hour=0, minute=0, second=0, microsecond=0).isoformat() }}Z"
+        end_date: "{{ now().isoformat() }}Z"
+      action_name: Export
+    - type: call-service
+      name: Switch to Local AI
+      icon: mdi:home-assistant
+      service: whorang.set_ai_provider
+      service_data:
+        provider: "local"
+      action_name: Switch
+    - type: call-service
+      name: Switch to OpenAI
+      icon: mdi:robot
+      service: whorang.set_ai_provider
+      service_data:
+        provider: "openai"
+      action_name: Switch
+
+# Conditional Cards for Different States
+- type: conditional
+  conditions:
+    - entity: binary_sensor.whorang_doorbell
+      state: "on"
+  card:
+    type: markdown
+    title: 🔔 Doorbell Active
+    content: |
+      Someone is at the door!
+      
+      **{{ states('sensor.whorang_latest_visitor') }}**
+    card_mod:
+      style: |
+        ha-card {
+          background-color: var(--primary-color);
+          color: white;
+          animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+          0% { opacity: 1; }
+          50% { opacity: 0.7; }
+          100% { opacity: 1; }
+        }
+
+- type: conditional
+  conditions:
+    - entity: binary_sensor.whorang_known_visitor
+      state: "on"
+  card:
+    type: markdown
+    title: 👋 Welcome Home
+    content: |
+      Welcome back, **{{ state_attr('binary_sensor.whorang_known_visitor', 'person_name') }}**!
+      
+      Detected at {{ state_attr('binary_sensor.whorang_known_visitor', 'timestamp') | as_timestamp | timestamp_custom('%H:%M') }}
+    card_mod:
+      style: |
+        ha-card {
+          background-color: var(--success-color);
+          color: white;
+        }
+
+# Cost Monitoring Card
+- type: vertical-stack
+  cards:
+    - type: entities
+      title: AI Cost Monitoring
+      entities:
+        - entity: sensor.whorang_ai_cost_today
+          name: Today's Cost
+          icon: mdi:currency-usd
+        - entity: sensor.whorang_ai_provider_active
+          name: Current Provider
+        - type: divider
+        - type: conditional
+          conditions:
+            - entity: sensor.whorang_ai_cost_today
+              state_not: "0.0000"
+          row:
+            entity: sensor.whorang_ai_cost_today
+            name: Cost per Visitor
+            icon: mdi:calculator
+            secondary_info: |
+              ${{ (states('sensor.whorang_ai_cost_today') | float / states('sensor.whorang_visitor_count_today') | float) | round(4) if states('sensor.whorang_visitor_count_today') | int > 0 else 0 }}
+
+    - type: conditional
+      conditions:
+        - entity: sensor.whorang_ai_cost_today
+          above: "5.0"
+      card:
+        type: markdown
+        content: |
+          ⚠️ **High AI Costs Today**
+          
+          Consider switching to local AI provider to reduce costs.
+        card_mod:
+          style: |
+            ha-card {
+              background-color: var(--warning-color);
+              color: white;
+            }
+
+# Performance Monitoring
+- type: entities
+  title: Performance Metrics
+  entities:
+    - entity: sensor.whorang_ai_response_time
+      name: AI Response Time
+      icon: mdi:timer
+    - entity: binary_sensor.whorang_system_online
+      name: System Online
+    - type: attribute
+      entity: sensor.whorang_system_status
+      attribute: websocket_connected
+      name: WebSocket Connected
+      icon: mdi:wifi
+    - type: attribute
+      entity: sensor.whorang_system_status
+      attribute: connected_clients
+      name: Connected Clients
+      icon: mdi:account-multiple

@@ -1,0 +1,78 @@
+{
+  "new_visitor": {
+    "type": "new_visitor",
+    "data": {
+      "visitor_id": "visitor_456",
+      "timestamp": "2025-01-07T13:00:00Z",
+      "ai_message": "Delivery person with package",
+      "ai_title": "Package Delivery",
+      "location": "Front Door",
+      "confidence_score": 0.92,
+      "faces_detected": 1,
+      "objects_detected": ["person", "package", "uniform"],
+      "image_url": "/api/visitors/visitor_456/image"
+    }
+  },
+  "ai_analysis_complete": {
+    "type": "ai_analysis_complete",
+    "data": {
+      "visitor_id": "visitor_456",
+      "ai_provider": "openai",
+      "processing_time": "980ms",
+      "confidence_score": 0.92,
+      "objects_detected": ["person", "package", "uniform"],
+      "cost_usd": 0.15
+    }
+  },
+  "face_detection_complete": {
+    "type": "face_detection_complete",
+    "data": {
+      "visitor_id": "visitor_456",
+      "faces_detected": 1,
+      "known_faces": [],
+      "processing_time": "450ms"
+    }
+  },
+  "known_visitor_detected": {
+    "type": "new_visitor",
+    "data": {
+      "visitor_id": "visitor_789",
+      "timestamp": "2025-01-07T14:00:00Z",
+      "ai_message": "John Doe approaching the front door",
+      "ai_title": "Known Visitor: John Doe",
+      "location": "Front Door",
+      "confidence_score": 0.98,
+      "faces_detected": 1,
+      "person_id": 1,
+      "objects_detected": ["person", "door"],
+      "image_url": "/api/visitors/visitor_789/image"
+    }
+  },
+  "system_status": {
+    "type": "system_status",
+    "data": {
+      "status": "healthy",
+      "connected_clients": 3,
+      "uptime": "2 days, 4 hours",
+      "memory_usage": "45%",
+      "cpu_usage": "12%"
+    }
+  },
+  "connection_status": {
+    "type": "connection_status",
+    "data": {
+      "status": "connected",
+      "client_id": "ha_integration",
+      "connected_at": "2025-01-07T12:00:00Z"
+    }
+  },
+  "error_message": {
+    "type": "error",
+    "data": {
+      "error": "AI analysis failed",
+      "visitor_id": "visitor_error",
+      "code": "AI_ERROR",
+      "details": "OpenAI API rate limit exceeded"
+    }
+  }
+}

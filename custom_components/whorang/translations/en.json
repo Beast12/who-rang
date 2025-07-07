@@ -1,0 +1,176 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "WhoRang AI Doorbell",
+        "description": "Set up your WhoRang AI Doorbell integration. Enter the host and port where your WhoRang system is running.",
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "api_key": "API Key (optional)"
+        },
+        "data_description": {
+          "host": "IP address or hostname of your WhoRang system",
+          "port": "Port number (default: 3001)",
+          "api_key": "Optional API key for authentication"
+        }
+      },
+      "discovery_confirm": {
+        "title": "Confirm WhoRang Discovery",
+        "description": "A WhoRang AI Doorbell system was discovered on your network. Do you want to add it to Home Assistant?",
+        "description_placeholders": {
+          "host": "Host",
+          "port": "Port"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to the WhoRang system. Please check the host and port.",
+      "invalid_auth": "Invalid authentication credentials.",
+      "timeout": "Connection timeout. Please check your network connection.",
+      "unknown": "An unexpected error occurred. Please try again."
+    },
+    "abort": {
+      "already_configured": "This WhoRang system is already configured in Home Assistant.",
+      "cannot_connect": "Failed to connect to the WhoRang system.",
+      "invalid_auth": "Invalid authentication credentials.",
+      "unknown": "An unexpected error occurred during setup."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "WhoRang Integration Options",
+        "description": "Configure advanced options for your WhoRang integration.",
+        "data": {
+          "update_interval": "Update interval (seconds)",
+          "enable_websocket": "Enable WebSocket for real-time updates",
+          "enable_cost_tracking": "Enable AI cost tracking"
+        },
+        "data_description": {
+          "update_interval": "How often to poll for updates (10-300 seconds)",
+          "enable_websocket": "Use WebSocket for instant notifications of new visitors",
+          "enable_cost_tracking": "Track AI processing costs and usage statistics"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "latest_visitor": {
+        "name": "Latest Visitor",
+        "state": {
+          "no_visitors": "No visitors"
+        }
+      },
+      "visitor_count_today": {
+        "name": "Visitors Today"
+      },
+      "visitor_count_week": {
+        "name": "Visitors This Week"
+      },
+      "visitor_count_month": {
+        "name": "Visitors This Month"
+      },
+      "system_status": {
+        "name": "System Status",
+        "state": {
+          "healthy": "Healthy",
+          "unhealthy": "Unhealthy",
+          "unknown": "Unknown"
+        }
+      },
+      "ai_provider_active": {
+        "name": "AI Provider",
+        "state": {
+          "openai": "OpenAI",
+          "local": "Local (Ollama)",
+          "claude": "Claude",
+          "gemini": "Google Gemini",
+          "google-cloud-vision": "Google Cloud Vision",
+          "unknown": "Unknown"
+        }
+      },
+      "ai_cost_today": {
+        "name": "AI Cost Today"
+      },
+      "ai_response_time": {
+        "name": "AI Response Time"
+      },
+      "known_faces_count": {
+        "name": "Known Faces"
+      }
+    },
+    "binary_sensor": {
+      "doorbell": {
+        "name": "Doorbell"
+      },
+      "motion": {
+        "name": "Motion"
+      },
+      "known_visitor": {
+        "name": "Known Visitor"
+      },
+      "system_online": {
+        "name": "System Online"
+      },
+      "ai_processing": {
+        "name": "AI Processing"
+      }
+    },
+    "camera": {
+      "latest_image": {
+        "name": "Latest Image"
+      }
+    },
+    "button": {
+      "trigger_analysis": {
+        "name": "Trigger Analysis"
+      },
+      "test_webhook": {
+        "name": "Test Webhook"
+      },
+      "refresh_data": {
+        "name": "Refresh Data"
+      }
+    },
+    "select": {
+      "ai_provider": {
+        "name": "AI Provider",
+        "state": {
+          "openai": "OpenAI",
+          "local": "Local (Ollama)",
+          "claude": "Claude",
+          "gemini": "Google Gemini",
+          "google-cloud-vision": "Google Cloud Vision"
+        }
+      }
+    }
+  },
+  "services": {
+    "trigger_analysis": {
+      "name": "Trigger AI Analysis",
+      "description": "Manually trigger AI analysis for a visitor. If no visitor ID is provided, analyzes the latest visitor."
+    },
+    "add_known_visitor": {
+      "name": "Add Known Visitor",
+      "description": "Add a new known person to the face recognition system."
+    },
+    "remove_known_visitor": {
+      "name": "Remove Known Visitor",
+      "description": "Remove a known person from the face recognition system."
+    },
+    "set_ai_provider": {
+      "name": "Set AI Provider",
+      "description": "Change the active AI provider used for face recognition and visitor analysis."
+    },
+    "export_data": {
+      "name": "Export Visitor Data",
+      "description": "Export visitor data within a specified date range in JSON or CSV format."
+    },
+    "test_webhook": {
+      "name": "Test Webhook",
+      "description": "Send a test webhook event to verify the integration is working correctly."
+    }
+  }
+}
