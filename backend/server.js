@@ -64,6 +64,12 @@ const corsConfigs = {
         return callback(null, true);
       }
       
+      // For production, allow tuxito.be subdomains if not explicitly configured
+      if (origin && origin.includes('tuxito.be')) {
+        console.log(`✅ CORS allowed (tuxito.be): ${origin}`);
+        return callback(null, true);
+      }
+      
       // Log CORS rejection for debugging
       console.log(`❌ CORS rejected: ${origin}, allowed: ${corsOrigins.join(', ')}`);
       callback(new Error('Not allowed by CORS'));
@@ -93,6 +99,12 @@ const corsConfigs = {
           origin.includes('192.168.') || origin.includes('10.0.') || 
           origin.includes('172.16.')) {
         console.log(`✅ CORS allowed (dev): ${origin}`);
+        return callback(null, true);
+      }
+      
+      // Allow tuxito.be subdomains
+      if (origin && origin.includes('tuxito.be')) {
+        console.log(`✅ CORS allowed (tuxito.be): ${origin}`);
         return callback(null, true);
       }
       
