@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import {
   WebSocketMessage,
   APIVisitorEvent,
@@ -48,21 +48,25 @@ export const useWebSocket = (
   const maxReconnectAttempts = 5;
   const isConnecting = useRef(false);
 
-  // Memoize callbacks to prevent unnecessary reconnections
-  const memoizedOnNewVisitor = useMemo(() => onNewVisitor, [onNewVisitor]);
-  const memoizedOnStatsUpdate = useMemo(() => onStatsUpdate, [onStatsUpdate]);
-  const memoizedOnDatabaseCleared = useMemo(
-    () => onDatabaseCleared,
-    [onDatabaseCleared]
-  );
-  const memoizedOnFaceRecognized = useMemo(
-    () => onFaceRecognized,
-    [onFaceRecognized]
-  );
-  const memoizedOnUnknownFaceDetected = useMemo(
-    () => onUnknownFaceDetected,
-    [onUnknownFaceDetected]
-  );
+  // Store callbacks in refs to avoid dependency issues
+  const callbacksRef = useRef({
+    onNewVisitor,
+    onStatsUpdate,
+    onDatabaseCleared,
+    onFaceRecognized,
+    onUnknownFaceDetected,
+  });
+
+  // Update refs when callbacks change
+  useEffect(() => {
+    callbacksRef.current = {
+      onNewVisitor,
+      onStatsUpdate,
+      onDatabaseCleared,
+      onFaceRecognized,
+      onUnknownFaceDetected,
+    };
+  });
 
   const cleanup = useCallback(() => {
     if (reconnectTimeout.current) {
@@ -106,19 +110,27 @@ export const useWebSocket = (
 
           switch (message.type) {
             case 'new_visitor':
-              memoizedOnNewVisitor?.(message.data as APIVisitorEvent);
+              callbacksRef.current.onNewVisitor?.(
+                message.data as APIVisitorEvent
+              );
               break;
             case 'stats_update':
-              memoizedOnStatsUpdate?.(message.data as StatsResponse);
+              callbacksRef.current.onStatsUpdate?.(
+                message.data as StatsResponse
+              );
               break;
             case 'database_cleared':
-              memoizedOnDatabaseCleared?.();
+              callbacksRef.current.onDatabaseCleared?.();
               break;
             case 'face_recognized':
-              memoizedOnFaceRecognized?.(message.data as FaceRecognitionData);
+              callbacksRef.current.onFaceRecognized?.(
+                message.data as FaceRecognitionData
+              );
               break;
             case 'unknown_face_detected':
-              memoizedOnUnknownFaceDetected?.(message.data as UnknownFaceData);
+              callbacksRef.current.onUnknownFaceDetected?.(
+                message.data as UnknownFaceData
+              );
               break;
             case 'connection_status':
               console.log('Connection status:', message.data);
@@ -173,13 +185,7 @@ export const useWebSocket = (
       setConnectionStatus('error');
       isConnecting.current = false;
     }
-  }, [
-    memoizedOnNewVisitor,
-    memoizedOnStatsUpdate,
-    memoizedOnDatabaseCleared,
-    memoizedOnFaceRecognized,
-    memoizedOnUnknownFaceDetected,
-  ]);
+  }, []); // Empty dependency array since we use refs for callbacks
 
   const sendMessage = useCallback((message: Record<string, unknown>) => {
     if (ws.current?.readyState === WebSocket.OPEN) {
