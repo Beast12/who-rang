@@ -632,25 +632,23 @@ If no faces are detected, set faces_detected to 0 and faces to empty array. Alwa
   async convertImageToBase64(imageUrl) {
     const fs = require('fs').promises;
     const path = require('path');
+    const http = require('http');
+    const https = require('https');
     
     try {
-      // Use the unified helper to convert HTTP URLs to local paths
-      const localImageUrl = this.convertToLocalPath(imageUrl);
-      
       let imageBuffer;
       
-      if (localImageUrl.startsWith('/uploads/')) {
+      if (imageUrl.startsWith('/uploads/')) {
         // Local file path
-        const imagePath = path.join(__dirname, '..', localImageUrl);
+        const imagePath = path.join(__dirname, '..', imageUrl);
         imageBuffer = await fs.readFile(imagePath);
-        console.log(`Successfully read image from local path: ${imagePath}`);
-      } else if (localImageUrl.startsWith('http')) {
-        // Still an HTTP URL - download it
-        console.log('Downloading remote image:', localImageUrl);
-        imageBuffer = await this.downloadImage(localImageUrl);
+      } else if (imageUrl.startsWith('http')) {
+        // Remote URL - download the image
+        console.log('Downloading remote image:', imageUrl);
+        imageBuffer = await this.downloadImage(imageUrl);
       } else {
         // Direct file path
-        imageBuffer = await fs.readFile(localImageUrl);
+        imageBuffer = await fs.readFile(imageUrl);
       }
       
       return imageBuffer.toString('base64');
