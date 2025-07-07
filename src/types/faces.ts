@@ -74,3 +74,33 @@ export interface FaceRecognitionStats {
   unrecognizedEvents: number;
   averageConfidence: number;
 }
+
+export interface BoundingBox {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+export interface DetectedFace {
+  id: number;
+  visitor_event_id: number;
+  face_crop_path: string;
+  thumbnail_path: string;
+  bounding_box: BoundingBox;
+  confidence: number;
+  quality_score: number;
+  created_at: string;
+  timestamp: string;
+  ai_title: string;
+  original_image: string;
+}
+
+export interface FaceSimilarity {
+  id: number;
+  similarity: number;
+  face_crop_path: string;
+  thumbnail_path: string;
+  confidence: number;
+  person_name?: string;
+}

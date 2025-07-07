@@ -30,7 +30,12 @@ export interface OpenAIConnectionTestResponse {
   success: boolean;
   message: string;
   models_available?: boolean;
-  debug?: any;
+  debug?: {
+    api_key_present: boolean;
+    endpoint_url: string;
+    response_time_ms?: number;
+    error_details?: string;
+  };
 }
 
 export interface OpenAIUsageStats {

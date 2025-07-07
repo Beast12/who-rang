@@ -5,6 +5,8 @@ import {
   FaceRecognitionConfig,
   VisitorEventWithPerson,
   FaceRecognitionStats,
+  DetectedFace,
+  FaceSimilarity,
 } from '@/types/faces';
 import { runtimeConfig } from '@/config/runtime';
 
@@ -147,19 +149,7 @@ export const facesApi = {
     offset = 0,
     qualityThreshold = 0
   ): Promise<{
-    faces: Array<{
-      id: number;
-      visitor_event_id: number;
-      face_crop_path: string;
-      thumbnail_path: string;
-      bounding_box: any;
-      confidence: number;
-      quality_score: number;
-      created_at: string;
-      timestamp: string;
-      ai_title: string;
-      original_image: string;
-    }>;
+    faces: DetectedFace[];
     pagination: {
       total: number;
       limit: number;
@@ -174,19 +164,7 @@ export const facesApi = {
   },
 
   async getPersonFaces(personId: number): Promise<{
-    faces: Array<{
-      id: number;
-      visitor_event_id: number;
-      face_crop_path: string;
-      thumbnail_path: string;
-      bounding_box: any;
-      confidence: number;
-      quality_score: number;
-      created_at: string;
-      timestamp: string;
-      ai_title: string;
-      original_image: string;
-    }>;
+    faces: DetectedFace[];
   }> {
     const response = await api.get(`/detected-faces/person/${personId}`);
     return response.data;
@@ -236,15 +214,8 @@ export const facesApi = {
     threshold = 0.6,
     limit = 10
   ): Promise<{
-    targetFace: any;
-    similarities: Array<{
-      id: number;
-      similarity: number;
-      face_crop_path: string;
-      thumbnail_path: string;
-      confidence: number;
-      person_name?: string;
-    }>;
+    targetFace: DetectedFace;
+    similarities: FaceSimilarity[];
     totalFound: number;
   }> {
     const response = await api.get(

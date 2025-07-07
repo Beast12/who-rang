@@ -72,5 +72,30 @@ export interface WebSocketMessage {
     | StatsResponse
     | { status: 'connected' | 'disconnected' }
     | { deletedCount: number; timestamp: string }
-    | any;
+    | FaceRecognitionData
+    | UnknownFaceData;
+}
+
+export interface FaceRecognitionData {
+  person_id: number;
+  person_name: string;
+  confidence: number;
+  visitor_event_id: number;
+  timestamp: string;
+}
+
+export interface UnknownFaceData {
+  face_id: number;
+  visitor_event_id: number;
+  confidence: number;
+  timestamp: string;
+  image_url: string;
+}
+
+export interface WebhookTestPayload {
+  event_type: string;
+  timestamp: string;
+  visitor_id: string;
+  message: string;
+  test: boolean;
 }

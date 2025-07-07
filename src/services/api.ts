@@ -4,6 +4,7 @@ import {
   StatsResponse,
   DatabaseStatsResponse,
   WebhookConfig,
+  WebhookTestPayload,
 } from '@/types/api';
 import { runtimeConfig } from '@/config/runtime';
 
@@ -182,7 +183,10 @@ export const apiService = {
     return response.data;
   },
 
-  async testWebhook(): Promise<{ message: string; test_payload: any }> {
+  async testWebhook(): Promise<{
+    message: string;
+    test_payload: WebhookTestPayload;
+  }> {
     const response = await api.post('/config/webhook/test');
     return response.data;
   },

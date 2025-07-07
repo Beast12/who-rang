@@ -1,5 +1,11 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
-import { WebSocketMessage, APIVisitorEvent, StatsResponse } from '@/types/api';
+import {
+  WebSocketMessage,
+  APIVisitorEvent,
+  StatsResponse,
+  FaceRecognitionData,
+  UnknownFaceData,
+} from '@/types/api';
 import { runtimeConfig } from '@/config/runtime';
 
 const WS_URL =
@@ -21,15 +27,15 @@ interface UseWebSocketReturn {
   isConnected: boolean;
   connectionStatus: 'connecting' | 'connected' | 'disconnected' | 'error';
   lastMessage: WebSocketMessage | null;
-  sendMessage: (message: any) => void;
+  sendMessage: (message: Record<string, unknown>) => void;
 }
 
 export const useWebSocket = (
   onNewVisitor?: (visitor: APIVisitorEvent) => void,
   onStatsUpdate?: (stats: StatsResponse) => void,
   onDatabaseCleared?: () => void,
-  onFaceRecognized?: (data: any) => void,
-  onUnknownFaceDetected?: (data: any) => void
+  onFaceRecognized?: (data: FaceRecognitionData) => void,
+  onUnknownFaceDetected?: (data: UnknownFaceData) => void
 ): UseWebSocketReturn => {
   const ws = useRef<WebSocket | null>(null);
   const reconnectTimeout = useRef<NodeJS.Timeout>();
@@ -109,10 +115,10 @@ export const useWebSocket = (
               memoizedOnDatabaseCleared?.();
               break;
             case 'face_recognized':
-              memoizedOnFaceRecognized?.(message.data);
+              memoizedOnFaceRecognized?.(message.data as FaceRecognitionData);
               break;
             case 'unknown_face_detected':
-              memoizedOnUnknownFaceDetected?.(message.data);
+              memoizedOnUnknownFaceDetected?.(message.data as UnknownFaceData);
               break;
             case 'connection_status':
               console.log('Connection status:', message.data);
@@ -175,7 +181,7 @@ export const useWebSocket = (
     memoizedOnUnknownFaceDetected,
   ]);
 
-  const sendMessage = useCallback((message: any) => {
+  const sendMessage = useCallback((message: Record<string, unknown>) => {
     if (ws.current?.readyState === WebSocket.OPEN) {
       ws.current.send(JSON.stringify(message));
     }
