@@ -36,6 +36,21 @@ export const getImageUrl = (imageUrl: string | undefined | null): string => {
     return getPlaceholderImage();
   }
 
+  // Handle Home Assistant URLs - convert to backend URLs
+  if (imageUrl.startsWith('https://ha.tuxito.be/local/')) {
+    // Extract filename from HA URL: https://ha.tuxito.be/local/doorbell_snapshot_1751725545.jpg
+    const filename = imageUrl.split('/').pop();
+    if (filename) {
+      // Map to backend uploads directory
+      const finalUrl = `${API_BASE_URL}/uploads/${filename}`;
+      console.log(
+        '🔍 Debug getImageUrl - Converted HA URL to backend:',
+        finalUrl
+      );
+      return finalUrl;
+    }
+  }
+
   // If it's already an absolute URL (starts with http/https), return as-is
   if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
     console.log(
