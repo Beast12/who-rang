@@ -1,4 +1,3 @@
-
 export { SettingsHeader } from './SettingsHeader';
 export { WebhookSettings } from './WebhookSettings';
 export { DatabaseSettings } from './DatabaseSettings';

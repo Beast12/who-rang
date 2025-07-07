@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { facesApi } from '@/services/facesApi';
 import { Person, FaceRecognitionConfig } from '@/types/faces';
@@ -24,7 +23,8 @@ export const useCreatePerson = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (person: { name: string; notes?: string }) => facesApi.createPerson(person),
+    mutationFn: (person: { name: string; notes?: string }) =>
+      facesApi.createPerson(person),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['persons'] });
       toast({
@@ -46,8 +46,13 @@ export const useUpdatePerson = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, person }: { id: number; person: { name: string; notes?: string } }) => 
-      facesApi.updatePerson(id, person),
+    mutationFn: ({
+      id,
+      person,
+    }: {
+      id: number;
+      person: { name: string; notes?: string };
+    }) => facesApi.updatePerson(id, person),
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: ['persons'] });
       queryClient.invalidateQueries({ queryKey: ['person', id] });
@@ -100,20 +105,23 @@ export const useUpdateFaceConfig = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (config: Partial<FaceRecognitionConfig>) => facesApi.updateFaceConfig(config),
+    mutationFn: (config: Partial<FaceRecognitionConfig>) =>
+      facesApi.updateFaceConfig(config),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['faceConfig'] });
       // Also invalidate Ollama models when config changes
       queryClient.invalidateQueries({ queryKey: ['ollamaModels'] });
       toast({
         title: 'Settings updated',
-        description: 'Face recognition settings have been updated successfully.',
+        description:
+          'Face recognition settings have been updated successfully.',
       });
     },
     onError: (error: any) => {
       toast({
         title: 'Error',
-        description: error.message || 'Failed to update face recognition settings.',
+        description:
+          error.message || 'Failed to update face recognition settings.',
         variant: 'destructive',
       });
     },
@@ -124,10 +132,14 @@ export const useLabelVisitor = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ visitorEventId, personId, confidence }: { 
-      visitorEventId: number; 
-      personId?: number; 
-      confidence?: number; 
+    mutationFn: ({
+      visitorEventId,
+      personId,
+      confidence,
+    }: {
+      visitorEventId: number;
+      personId?: number;
+      confidence?: number;
     }) => facesApi.labelVisitorEvent(visitorEventId, personId, confidence),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['visitors'] });
@@ -165,7 +177,11 @@ export const useFaceStats = () => {
 };
 
 // Enhanced face detection hooks
-export const useUnassignedFaces = (limit = 50, offset = 0, qualityThreshold = 0) => {
+export const useUnassignedFaces = (
+  limit = 50,
+  offset = 0,
+  qualityThreshold = 0
+) => {
   return useQuery({
     queryKey: ['unassignedFaces', limit, offset, qualityThreshold],
     queryFn: () => facesApi.getUnassignedFaces(limit, offset, qualityThreshold),
@@ -186,11 +202,13 @@ export const useAssignFaceToPerson = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ faceId, personId }: { faceId: number; personId: number }) => 
+    mutationFn: ({ faceId, personId }: { faceId: number; personId: number }) =>
       facesApi.assignFaceToPerson(faceId, personId),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['unassignedFaces'] });
-      queryClient.invalidateQueries({ queryKey: ['personFaces', data.personId] });
+      queryClient.invalidateQueries({
+        queryKey: ['personFaces', data.personId],
+      });
       queryClient.invalidateQueries({ queryKey: ['persons'] });
       queryClient.invalidateQueries({ queryKey: ['detectedFaceStats'] });
       toast({
@@ -237,8 +255,13 @@ export const useBulkAssignFaces = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ faceIds, personId }: { faceIds: number[]; personId: number }) => 
-      facesApi.bulkAssignFaces(faceIds, personId),
+    mutationFn: ({
+      faceIds,
+      personId,
+    }: {
+      faceIds: number[];
+      personId: number;
+    }) => facesApi.bulkAssignFaces(faceIds, personId),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['unassignedFaces'] });
       queryClient.invalidateQueries({ queryKey: ['personFaces'] });
@@ -259,7 +282,11 @@ export const useBulkAssignFaces = () => {
   });
 };
 
-export const useFaceSimilarities = (faceId: number, threshold = 0.6, limit = 10) => {
+export const useFaceSimilarities = (
+  faceId: number,
+  threshold = 0.6,
+  limit = 10
+) => {
   return useQuery({
     queryKey: ['faceSimilarities', faceId, threshold, limit],
     queryFn: () => facesApi.getFaceSimilarities(faceId, threshold, limit),

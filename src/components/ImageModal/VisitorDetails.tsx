@@ -1,4 +1,3 @@
-
 import { MapPin, Clock } from 'lucide-react';
 import { VisitorEvent } from '@/types/visitor';
 import { WeatherDisplay } from '@/components/weather/WeatherDisplay';
@@ -42,7 +41,7 @@ export const VisitorDetails = ({ visitor }: VisitorDetailsProps) => {
           <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
             Event Details
           </h3>
-          
+
           <div className="space-y-3">
             <div className="flex items-center justify-between py-2 border-b border-border">
               <div className="flex items-center space-x-2 text-muted-foreground">
@@ -65,9 +64,13 @@ export const VisitorDetails = ({ visitor }: VisitorDetailsProps) => {
             </div>
 
             {/* Enhanced Weather Display */}
-            {(visitor.weather || visitor.weather_condition || visitor.weather_temperature) && (
+            {(visitor.weather ||
+              visitor.weather_condition ||
+              visitor.weather_temperature) && (
               <div className="py-2 border-b border-border">
-                <div className="text-muted-foreground text-sm mb-2">Weather</div>
+                <div className="text-muted-foreground text-sm mb-2">
+                  Weather
+                </div>
                 <WeatherDisplay
                   weatherText={visitor.weather}
                   weatherTemperature={visitor.weather_temperature}
@@ -80,7 +83,9 @@ export const VisitorDetails = ({ visitor }: VisitorDetailsProps) => {
 
             <div className="flex items-center justify-between py-2">
               <div className="flex items-center space-x-2 text-muted-foreground">
-                <span className="w-4 h-4 flex items-center justify-center text-xs">#</span>
+                <span className="w-4 h-4 flex items-center justify-center text-xs">
+                  #
+                </span>
                 <span>Visitor ID</span>
               </div>
               <span className="text-foreground text-sm font-mono">

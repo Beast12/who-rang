@@ -1,8 +1,19 @@
-
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 export const ImageSettings = () => {
   return (
@@ -30,7 +41,9 @@ export const ImageSettings = () => {
 
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
-            <Label className="text-foreground font-medium">Auto-download Images</Label>
+            <Label className="text-foreground font-medium">
+              Auto-download Images
+            </Label>
             <p className="text-sm text-muted-foreground">
               Automatically cache images locally
             </p>

@@ -1,4 +1,13 @@
-import { Brain, Eye, Zap, CheckCircle, AlertCircle, Package, Car, User } from 'lucide-react';
+import {
+  Brain,
+  Eye,
+  Zap,
+  CheckCircle,
+  AlertCircle,
+  Package,
+  Car,
+  User,
+} from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -39,7 +48,7 @@ export const AIAnalysisCard = ({
   aiSceneAnalysis,
   aiProcessingComplete,
   facesDetected,
-  className = ''
+  className = '',
 }: AIAnalysisCardProps) => {
   // Parse JSON data
   let detectedObjects: DetectedObject[] = [];
@@ -62,7 +71,12 @@ export const AIAnalysisCard = ({
   }
 
   // Don't render if no AI data is available
-  if (!aiProcessingComplete && !aiConfidenceScore && !detectedObjects.length && !sceneAnalysis) {
+  if (
+    !aiProcessingComplete &&
+    !aiConfidenceScore &&
+    !detectedObjects.length &&
+    !sceneAnalysis
+  ) {
     return null;
   }
 
@@ -79,14 +93,17 @@ export const AIAnalysisCard = ({
           )}
         </CardTitle>
       </CardHeader>
-      
+
       <CardContent className="space-y-4">
         {/* Overall Confidence */}
         {aiConfidenceScore !== undefined && (
           <div className="space-y-2">
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">Overall Confidence</span>
-              <Badge variant="outline" className={getConfidenceColor(aiConfidenceScore)}>
+              <Badge
+                variant="outline"
+                className={getConfidenceColor(aiConfidenceScore)}
+              >
                 {Math.round(aiConfidenceScore)}%
               </Badge>
             </div>
@@ -109,7 +126,10 @@ export const AIAnalysisCard = ({
                 <Zap className="w-3 h-3 mr-1" />
                 {sceneAnalysis.lighting} lighting
               </Badge>
-              <Badge variant="outline" className={`text-xs ${getQualityColor(sceneAnalysis.image_quality)}`}>
+              <Badge
+                variant="outline"
+                className={`text-xs ${getQualityColor(sceneAnalysis.image_quality)}`}
+              >
                 {sceneAnalysis.image_quality} quality
               </Badge>
             </div>
@@ -127,13 +147,21 @@ export const AIAnalysisCard = ({
               {detectedObjects.slice(0, 5).map((obj, index) => {
                 const IconComponent = getObjectIcon(obj.object);
                 return (
-                  <div key={index} className="flex items-center justify-between text-xs">
+                  <div
+                    key={index}
+                    className="flex items-center justify-between text-xs"
+                  >
                     <div className="flex items-center space-x-2">
                       <IconComponent className="w-3 h-3 text-muted-foreground" />
                       <span className="capitalize">{obj.object}</span>
-                      <span className="text-muted-foreground">- {obj.description}</span>
+                      <span className="text-muted-foreground">
+                        - {obj.description}
+                      </span>
                     </div>
-                    <Badge variant="outline" className={`text-xs ${getConfidenceColor(obj.confidence)}`}>
+                    <Badge
+                      variant="outline"
+                      className={`text-xs ${getConfidenceColor(obj.confidence)}`}
+                    >
                       {Math.round(obj.confidence)}%
                     </Badge>
                   </div>
@@ -155,7 +183,14 @@ export const AIAnalysisCard = ({
               <User className="w-3 h-3" />
               <span>Faces Detected</span>
             </span>
-            <Badge variant="outline" className={facesDetected > 0 ? 'text-blue-600 bg-blue-50 border-blue-200' : ''}>
+            <Badge
+              variant="outline"
+              className={
+                facesDetected > 0
+                  ? 'text-blue-600 bg-blue-50 border-blue-200'
+                  : ''
+              }
+            >
               {facesDetected}
             </Badge>
           </div>

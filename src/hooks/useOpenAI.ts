@@ -1,5 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { openaiApi, OpenAIModel, OpenAIModelsResponse, OpenAIConnectionTestResponse, OpenAIUsageStats } from '@/services/openaiApi';
+import {
+  openaiApi,
+  OpenAIModel,
+  OpenAIModelsResponse,
+  OpenAIConnectionTestResponse,
+  OpenAIUsageStats,
+} from '@/services/openaiApi';
 import { toast } from '@/hooks/use-toast';
 
 // Get available OpenAI models
@@ -14,14 +20,14 @@ export const useOpenAIModels = () => {
         return false;
       }
       return failureCount < 2;
-    }
+    },
   });
 };
 
 // Test OpenAI connection
 export const useTestOpenAIConnection = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation<OpenAIConnectionTestResponse>({
     mutationFn: () => openaiApi.testConnection(),
     onSuccess: (data) => {
@@ -45,7 +51,7 @@ export const useTestOpenAIConnection = () => {
 // Refresh OpenAI models
 export const useRefreshOpenAIModels = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async () => {
       // Invalidate and refetch models
@@ -78,7 +84,11 @@ export const useOpenAIUsageStats = (period: string = '30d') => {
 };
 
 // Get OpenAI usage logs
-export const useOpenAIUsageLogs = (limit: number = 50, offset: number = 0, provider?: string) => {
+export const useOpenAIUsageLogs = (
+  limit: number = 50,
+  offset: number = 0,
+  provider?: string
+) => {
   return useQuery({
     queryKey: ['openai', 'usage', 'logs', limit, offset, provider],
     queryFn: () => openaiApi.getUsageLogs(limit, offset, provider),

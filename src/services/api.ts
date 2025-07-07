@@ -1,6 +1,10 @@
-
 import axios from 'axios';
-import { APIVisitorEvent, StatsResponse, DatabaseStatsResponse, WebhookConfig } from '@/types/api';
+import {
+  APIVisitorEvent,
+  StatsResponse,
+  DatabaseStatsResponse,
+  WebhookConfig,
+} from '@/types/api';
 import { runtimeConfig } from '@/config/runtime';
 
 const API_BASE_URL = runtimeConfig.VITE_API_URL;
@@ -39,18 +43,21 @@ api.interceptors.response.use(
       statusText: error.response?.statusText,
       url: error.config?.url,
       message: error.message,
-      code: error.code
+      code: error.code,
     });
-    
+
     // Enhance error message based on type
     if (error.code === 'ECONNREFUSED' || error.code === 'ERR_NETWORK') {
-      error.message = 'Backend server is not accessible. Please check if the server is running.';
+      error.message =
+        'Backend server is not accessible. Please check if the server is running.';
     } else if (error.response?.status === 502) {
-      error.message = 'Backend server is not responding (502 Bad Gateway). Please check server configuration.';
+      error.message =
+        'Backend server is not responding (502 Bad Gateway). Please check server configuration.';
     } else if (error.response?.status === 0 || !error.response) {
-      error.message = 'Cannot connect to backend server. Please check your network connection and server status.';
+      error.message =
+        'Cannot connect to backend server. Please check your network connection and server status.';
     }
-    
+
     return Promise.reject(error);
   }
 );
@@ -58,22 +65,31 @@ api.interceptors.response.use(
 export const apiService = {
   // Visitors
   async getVisitors(
-    page = 1, 
-    limit = 20, 
+    page = 1,
+    limit = 20,
     search?: string
   ): Promise<{
-    visitors: (APIVisitorEvent & { person_name?: string; recognition_confidence?: number })[];
+    visitors: (APIVisitorEvent & {
+      person_name?: string;
+      recognition_confidence?: number;
+    })[];
     total: number;
     page: number;
     limit: number;
     hasMore: boolean;
   }> {
     const searchParam = search ? `&search=${encodeURIComponent(search)}` : '';
-    const response = await api.get(`/visitors?page=${page}&limit=${limit}${searchParam}`);
+    const response = await api.get(
+      `/visitors?page=${page}&limit=${limit}${searchParam}`
+    );
     return response.data;
   },
 
-  async getVisitorById(id: number): Promise<APIVisitorEvent & { person_name?: string; recognition_confidence?: number }> {
+  async getVisitorById(
+    id: number
+  ): Promise<
+    APIVisitorEvent & { person_name?: string; recognition_confidence?: number }
+  > {
     const response = await api.get(`/visitors/${id}`);
     return response.data;
   },

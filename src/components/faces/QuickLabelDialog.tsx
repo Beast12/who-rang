@@ -1,11 +1,22 @@
-
 import { useState } from 'react';
 import { User, UserPlus, X } from 'lucide-react';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Card, CardContent } from '@/components/ui/card';
 import { usePersons, useLabelVisitor, useCreatePerson } from '@/hooks/useFaces';
 import { getImageUrl } from '@/utils/imageUtils';
@@ -22,7 +33,11 @@ interface QuickLabelDialogProps {
   };
 }
 
-export const QuickLabelDialog = ({ open, onOpenChange, visitorEvent }: QuickLabelDialogProps) => {
+export const QuickLabelDialog = ({
+  open,
+  onOpenChange,
+  visitorEvent,
+}: QuickLabelDialogProps) => {
   const [selectedPersonId, setSelectedPersonId] = useState<string>('');
   const [newPersonName, setNewPersonName] = useState('');
   const [isCreatingNew, setIsCreatingNew] = useState(false);
@@ -123,7 +138,10 @@ export const QuickLabelDialog = ({ open, onOpenChange, visitorEvent }: QuickLabe
             {!isCreatingNew ? (
               <div className="space-y-2">
                 <Label htmlFor="person-select">Select existing person</Label>
-                <Select value={selectedPersonId} onValueChange={setSelectedPersonId}>
+                <Select
+                  value={selectedPersonId}
+                  onValueChange={setSelectedPersonId}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Choose a person..." />
                   </SelectTrigger>
@@ -163,7 +181,9 @@ export const QuickLabelDialog = ({ open, onOpenChange, visitorEvent }: QuickLabe
                 <>
                   <Button
                     onClick={handleLabelExisting}
-                    disabled={!selectedPersonId || labelVisitorMutation.isPending}
+                    disabled={
+                      !selectedPersonId || labelVisitorMutation.isPending
+                    }
                     className="flex-1"
                   >
                     <User className="w-4 h-4 mr-2" />
@@ -182,7 +202,9 @@ export const QuickLabelDialog = ({ open, onOpenChange, visitorEvent }: QuickLabe
                 <>
                   <Button
                     onClick={handleCreateAndLabel}
-                    disabled={!newPersonName.trim() || createPersonMutation.isPending}
+                    disabled={
+                      !newPersonName.trim() || createPersonMutation.isPending
+                    }
                     className="flex-1"
                   >
                     <UserPlus className="w-4 h-4 mr-2" />

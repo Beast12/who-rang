@@ -1,4 +1,3 @@
-
 import { useState, useCallback, useEffect } from 'react';
 import { Header } from '@/components/Header';
 import { StatsCards } from '@/components/StatsCards';
@@ -19,7 +18,13 @@ import { useStats } from '@/hooks/useStats';
 import { useWebSocket } from '@/hooks/useWebSocket';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Users, RefreshCw, AlertCircle, Sparkles, Activity } from 'lucide-react';
+import {
+  Users,
+  RefreshCw,
+  AlertCircle,
+  Sparkles,
+  Activity,
+} from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -31,20 +36,27 @@ const Index = () => {
   const [sortBy, setSortBy] = useState<'newest' | 'oldest'>('newest');
   const [currentPage, setCurrentPage] = useState(1);
   const [weatherFilter, setWeatherFilter] = useState<string | null>(null);
-  const [dateFilter, setDateFilter] = useState<{ from: Date; to: Date } | null>(null);
+  const [dateFilter, setDateFilter] = useState<{ from: Date; to: Date } | null>(
+    null
+  );
   const [objectFilter, setObjectFilter] = useState<string | null>(null);
 
   const isMobile = useIsMobile();
 
-  const { 
-    data: visitorsData, 
-    isLoading: visitorsLoading, 
+  const {
+    data: visitorsData,
+    isLoading: visitorsLoading,
     error: visitorsError,
     refetch: refetchVisitors,
-    isFetching: visitorsRefetching 
+    isFetching: visitorsRefetching,
   } = useVisitors(currentPage, 20, searchTerm);
-  
-  const { data: stats, error: statsError, refetch: refetchStats, isLoading: statsLoading } = useStats();
+
+  const {
+    data: stats,
+    error: statsError,
+    refetch: refetchStats,
+    isLoading: statsLoading,
+  } = useStats();
   const addVisitorMutation = useAddVisitor();
 
   // WebSocket connection
@@ -67,10 +79,11 @@ const Index = () => {
   const hasAnyError = hasVisitorsError || hasStatsError;
 
   // Filter visitors by location, weather, date, and objects
-  const filteredVisitors = visitors.filter(visitor => {
-    const matchesLocation = selectedLocation === 'all' || visitor.location === selectedLocation;
+  const filteredVisitors = visitors.filter((visitor) => {
+    const matchesLocation =
+      selectedLocation === 'all' || visitor.location === selectedLocation;
     const matchesWeather = !weatherFilter || visitor.weather === weatherFilter;
-    
+
     let matchesDate = true;
     if (dateFilter) {
       const visitorDate = new Date(visitor.timestamp);
@@ -80,17 +93,20 @@ const Index = () => {
       toDate.setHours(23, 59, 59, 999);
       matchesDate = visitorDate >= fromDate && visitorDate <= toDate;
     }
-    
+
     let matchesObject = true;
     if (objectFilter) {
       try {
         // Try both field names for compatibility
         const visitorWithAI = visitor as any;
-        const objectsData = visitorWithAI.ai_objects_detected || visitor.objects_detected;
+        const objectsData =
+          visitorWithAI.ai_objects_detected || visitor.objects_detected;
         const detectedObjects = objectsData ? JSON.parse(objectsData) : [];
         if (Array.isArray(detectedObjects)) {
-          matchesObject = detectedObjects.some(obj => 
-            obj.object && obj.object.toLowerCase() === objectFilter.toLowerCase()
+          matchesObject = detectedObjects.some(
+            (obj) =>
+              obj.object &&
+              obj.object.toLowerCase() === objectFilter.toLowerCase()
           );
         } else {
           matchesObject = false;
@@ -99,7 +115,7 @@ const Index = () => {
         matchesObject = false;
       }
     }
-    
+
     return matchesLocation && matchesWeather && matchesDate && matchesObject;
   });
 
@@ -130,17 +146,19 @@ const Index = () => {
     setSortBy('newest');
   };
 
-  const activeFilters = [weatherFilter, dateFilter, objectFilter].filter(Boolean).length;
+  const activeFilters = [weatherFilter, dateFilter, objectFilter].filter(
+    Boolean
+  ).length;
 
   // Show error state if there are critical connection issues
   if (hasAnyError && !visitorsLoading) {
     return (
       <div className="min-h-screen bg-background text-foreground">
         <Header searchTerm={searchTerm} onSearchChange={setSearchTerm} />
-        
+
         <div className="container mx-auto px-4 py-8 max-w-6xl">
           <ConnectionBanner />
-          
+
           <Alert variant="destructive" className="glass border-destructive/20">
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Connection Error</AlertTitle>
@@ -153,7 +171,12 @@ const Index = () => {
                 <li>Firewall or proxy blocking requests</li>
               </ul>
               <div className="mt-4 space-x-2">
-                <Button onClick={handleRetryAll} variant="outline" size="sm" className="hover-lift">
+                <Button
+                  onClick={handleRetryAll}
+                  variant="outline"
+                  size="sm"
+                  className="hover-lift"
+                >
                   <RefreshCw className="h-4 w-4 mr-2" />
                   Try Again
                 </Button>
@@ -165,16 +188,16 @@ const Index = () => {
     );
   }
 
-  const containerClass = isMobile 
-    ? "min-h-screen bg-background text-foreground pb-20" 
-    : "min-h-screen bg-background text-foreground";
+  const containerClass = isMobile
+    ? 'min-h-screen bg-background text-foreground pb-20'
+    : 'min-h-screen bg-background text-foreground';
 
   return (
     <div className={containerClass}>
       {/* Mobile Header */}
       {isMobile ? (
-        <MobileHeader 
-          searchTerm={searchTerm} 
+        <MobileHeader
+          searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
           onRefresh={handleRetryAll}
           isRefreshing={visitorsRefetching}
@@ -182,8 +205,8 @@ const Index = () => {
       ) : (
         <Header searchTerm={searchTerm} onSearchChange={setSearchTerm} />
       )}
-      
-      <div 
+
+      <div
         ref={pullToRefresh.containerRef}
         className={`
           container mx-auto px-4 py-8 max-w-6xl space-y-8
@@ -193,23 +216,23 @@ const Index = () => {
       >
         {/* Pull to refresh indicator */}
         {isMobile && pullToRefresh.pullDistance > 0 && (
-          <div 
+          <div
             className="flex items-center justify-center py-4 transition-opacity"
-            style={{ 
+            style={{
               opacity: pullToRefresh.pullProgress,
-              transform: `translateY(${Math.min(pullToRefresh.pullDistance - 60, 0)}px)`
+              transform: `translateY(${Math.min(pullToRefresh.pullDistance - 60, 0)}px)`,
             }}
           >
-            <RefreshCw 
+            <RefreshCw
               className={`w-6 h-6 text-primary ${
                 pullToRefresh.isRefreshing ? 'animate-spin' : ''
-              }`} 
+              }`}
             />
           </div>
         )}
 
         <ConnectionBanner />
-        
+
         {/* Enhanced Dashboard Header - Hidden on mobile */}
         {!isMobile && (
           <div className="flex items-center justify-between">
@@ -229,20 +252,23 @@ const Index = () => {
                 </div>
               </div>
             </div>
-            <ConnectionStatus isConnected={wsConnected} status={connectionStatus} />
+            <ConnectionStatus
+              isConnected={wsConnected}
+              status={connectionStatus}
+            />
           </div>
         )}
 
         {/* Stats Cards - Mobile optimized */}
         {isMobile ? (
-          <MobileStatsGrid 
-            stats={stats || { today: 0, week: 0, month: 0, isOnline: false }} 
-            isLoading={statsLoading} 
+          <MobileStatsGrid
+            stats={stats || { today: 0, week: 0, month: 0, isOnline: false }}
+            isLoading={statsLoading}
           />
         ) : (
-          <StatsCards 
-            stats={stats || { today: 0, week: 0, month: 0, isOnline: false }} 
-            isLoading={statsLoading} 
+          <StatsCards
+            stats={stats || { today: 0, week: 0, month: 0, isOnline: false }}
+            isLoading={statsLoading}
           />
         )}
 
@@ -275,10 +301,13 @@ const Index = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <Sparkles className="w-6 h-6 text-primary" />
-                <h3 className="text-xl font-semibold text-foreground">Recent Activity</h3>
+                <h3 className="text-xl font-semibold text-foreground">
+                  Recent Activity
+                </h3>
                 {sortedVisitors.length > 0 && (
                   <div className="px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded-full">
-                    {sortedVisitors.length} visitor{sortedVisitors.length !== 1 ? 's' : ''}
+                    {sortedVisitors.length} visitor
+                    {sortedVisitors.length !== 1 ? 's' : ''}
                   </div>
                 )}
               </div>
@@ -302,9 +331,13 @@ const Index = () => {
             <div className="grid gap-6">
               {[...Array(isMobile ? 3 : 6)].map((_, i) => (
                 <Card key={i} className="glass animate-pulse">
-                  <CardContent className={isMobile ? "p-4" : "p-6"}>
-                    <div className={`flex ${isMobile ? 'flex-col space-y-3' : 'space-x-4'}`}>
-                      <Skeleton className={`${isMobile ? 'h-16 w-16' : 'h-20 w-20'} rounded-2xl ${isMobile ? 'mx-auto' : ''}`} />
+                  <CardContent className={isMobile ? 'p-4' : 'p-6'}>
+                    <div
+                      className={`flex ${isMobile ? 'flex-col space-y-3' : 'space-x-4'}`}
+                    >
+                      <Skeleton
+                        className={`${isMobile ? 'h-16 w-16' : 'h-20 w-20'} rounded-2xl ${isMobile ? 'mx-auto' : ''}`}
+                      />
                       <div className="flex-1 space-y-3">
                         <Skeleton className="h-4 w-3/4" />
                         <Skeleton className="h-4 w-1/2" />
@@ -317,25 +350,37 @@ const Index = () => {
             </div>
           ) : sortedVisitors.length === 0 ? (
             <Card className="card-modern border-dashed border-2">
-              <CardContent className={isMobile ? "p-8 text-center" : "p-12 text-center"}>
-                <div className={`relative mx-auto mb-6 ${isMobile ? 'w-16 h-16' : 'w-20 h-20'}`}>
+              <CardContent
+                className={isMobile ? 'p-8 text-center' : 'p-12 text-center'}
+              >
+                <div
+                  className={`relative mx-auto mb-6 ${isMobile ? 'w-16 h-16' : 'w-20 h-20'}`}
+                >
                   <div className="absolute inset-0 gradient-primary rounded-3xl opacity-20 animate-pulse" />
                   <div className="relative flex items-center justify-center w-full h-full">
-                    <Users className={`${isMobile ? 'w-8 h-8' : 'w-10 h-10'} text-muted-foreground`} />
+                    <Users
+                      className={`${isMobile ? 'w-8 h-8' : 'w-10 h-10'} text-muted-foreground`}
+                    />
                   </div>
                 </div>
-                <h3 className={`${isMobile ? 'text-base' : 'text-lg'} font-semibold text-foreground mb-3`}>No Activity Yet</h3>
+                <h3
+                  className={`${isMobile ? 'text-base' : 'text-lg'} font-semibold text-foreground mb-3`}
+                >
+                  No Activity Yet
+                </h3>
                 <p className="text-muted-foreground max-w-md mx-auto leading-relaxed text-sm">
-                  {searchTerm || selectedLocation !== 'all' || weatherFilter || dateFilter
+                  {searchTerm ||
+                  selectedLocation !== 'all' ||
+                  weatherFilter ||
+                  dateFilter
                     ? 'No visitors match your current filters. Try adjusting your search criteria.'
-                    : 'Your smart doorbell is ready and waiting. Visitor activity will appear here when detected by your AI-powered system.'
-                  }
+                    : 'Your smart doorbell is ready and waiting. Visitor activity will appear here when detected by your AI-powered system.'}
                 </p>
                 {(searchTerm || activeFilters > 0) && (
-                  <Button 
-                    onClick={handleClearFilters} 
-                    variant="outline" 
-                    size={isMobile ? "sm" : "default"}
+                  <Button
+                    onClick={handleClearFilters}
+                    variant="outline"
+                    size={isMobile ? 'sm' : 'default'}
                     className="mt-4 hover-lift"
                   >
                     Clear Filters
@@ -345,7 +390,7 @@ const Index = () => {
             </Card>
           ) : (
             <div className="grid gap-6">
-              {sortedVisitors.map((visitor, index) => 
+              {sortedVisitors.map((visitor, index) =>
                 isMobile ? (
                   <ResponsiveVisitorCard
                     key={`${visitor.id}-${visitor.timestamp}`}
@@ -368,7 +413,6 @@ const Index = () => {
 
       {/* Mobile Navigation */}
       {isMobile && <BottomNavigation />}
-      
     </div>
   );
 };

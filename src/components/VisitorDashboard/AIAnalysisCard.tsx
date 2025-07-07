@@ -1,5 +1,13 @@
-
-import { Bot, Eye, Package, User, Brain, CheckCircle, AlertCircle, Zap } from 'lucide-react';
+import {
+  Bot,
+  Eye,
+  Package,
+  User,
+  Brain,
+  CheckCircle,
+  AlertCircle,
+  Zap,
+} from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -12,7 +20,7 @@ interface AIAnalysisCardProps {
 
 export const AIAnalysisCard = ({ visitor }: AIAnalysisCardProps) => {
   const imageUrl = getImageUrl(visitor.image_url);
-  
+
   // Parse AI analysis data
   let detectedObjects: DetectedObject[] = [];
   let sceneAnalysis: SceneAnalysis | null = null;
@@ -35,8 +43,10 @@ export const AIAnalysisCard = ({ visitor }: AIAnalysisCardProps) => {
 
   const getAnalysisIcon = (message: string) => {
     const messageLower = message.toLowerCase();
-    if (messageLower.includes('package') || messageLower.includes('delivery')) return Package;
-    if (messageLower.includes('person') || messageLower.includes('visitor')) return User;
+    if (messageLower.includes('package') || messageLower.includes('delivery'))
+      return Package;
+    if (messageLower.includes('person') || messageLower.includes('visitor'))
+      return User;
     return Eye;
   };
 
@@ -68,7 +78,10 @@ export const AIAnalysisCard = ({ visitor }: AIAnalysisCardProps) => {
             )}
           </CardTitle>
           {visitor.ai_confidence_score && (
-            <Badge variant="secondary" className={getConfidenceColor(visitor.ai_confidence_score)}>
+            <Badge
+              variant="secondary"
+              className={getConfidenceColor(visitor.ai_confidence_score)}
+            >
               {Math.round(visitor.ai_confidence_score)}% Confidence
             </Badge>
           )}
@@ -117,8 +130,12 @@ export const AIAnalysisCard = ({ visitor }: AIAnalysisCardProps) => {
             {visitor.ai_confidence_score !== undefined && (
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">Overall Confidence</span>
-                  <span className="font-medium">{Math.round(visitor.ai_confidence_score)}%</span>
+                  <span className="text-muted-foreground">
+                    Overall Confidence
+                  </span>
+                  <span className="font-medium">
+                    {Math.round(visitor.ai_confidence_score)}%
+                  </span>
                 </div>
                 <Progress value={visitor.ai_confidence_score} className="h-2" />
               </div>
@@ -136,7 +153,10 @@ export const AIAnalysisCard = ({ visitor }: AIAnalysisCardProps) => {
                     <Zap className="w-3 h-3 mr-1" />
                     {sceneAnalysis.lighting} lighting
                   </Badge>
-                  <Badge variant="outline" className={`text-xs ${getQualityColor(sceneAnalysis.image_quality)}`}>
+                  <Badge
+                    variant="outline"
+                    className={`text-xs ${getQualityColor(sceneAnalysis.image_quality)}`}
+                  >
                     {sceneAnalysis.image_quality} quality
                   </Badge>
                 </div>
@@ -154,15 +174,25 @@ export const AIAnalysisCard = ({ visitor }: AIAnalysisCardProps) => {
             </h4>
             <div className="grid sm:grid-cols-2 gap-3">
               {detectedObjects.map((obj, index) => (
-                <div key={index} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                <div
+                  key={index}
+                  className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
+                >
                   <div className="flex items-center space-x-2">
                     <User className="w-4 h-4 text-muted-foreground" />
                     <div>
-                      <div className="text-sm font-medium capitalize">{obj.object}</div>
-                      <div className="text-xs text-muted-foreground">{obj.description}</div>
+                      <div className="text-sm font-medium capitalize">
+                        {obj.object}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {obj.description}
+                      </div>
                     </div>
                   </div>
-                  <Badge variant="outline" className={`text-xs ${getConfidenceColor(obj.confidence)}`}>
+                  <Badge
+                    variant="outline"
+                    className={`text-xs ${getConfidenceColor(obj.confidence)}`}
+                  >
                     {Math.round(obj.confidence)}%
                   </Badge>
                 </div>
@@ -184,7 +214,9 @@ export const AIAnalysisCard = ({ visitor }: AIAnalysisCardProps) => {
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Legacy Objects:</span>
-              <span className="text-foreground font-medium">{visitor.objects_detected}</span>
+              <span className="text-foreground font-medium">
+                {visitor.objects_detected}
+              </span>
             </div>
           </div>
         )}

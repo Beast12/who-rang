@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { AlertCircle, X, User } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -20,7 +19,10 @@ interface UnknownFaceBannerProps {
   onDismiss?: () => void;
 }
 
-export const UnknownFaceBanner = ({ unknownFaces, onDismiss }: UnknownFaceBannerProps) => {
+export const UnknownFaceBanner = ({
+  unknownFaces,
+  onDismiss,
+}: UnknownFaceBannerProps) => {
   const [isVisible, setIsVisible] = useState(true);
   const [selectedFace, setSelectedFace] = useState<UnknownFace | null>(null);
   const [showLabelDialog, setShowLabelDialog] = useState(false);
@@ -60,7 +62,8 @@ export const UnknownFaceBanner = ({ unknownFaces, onDismiss }: UnknownFaceBanner
               <div className="flex items-center justify-between">
                 <div>
                   <span className="font-medium">
-                    {unknownFaces.length} unrecognized face{unknownFaces.length > 1 ? 's' : ''} detected
+                    {unknownFaces.length} unrecognized face
+                    {unknownFaces.length > 1 ? 's' : ''} detected
                   </span>
                   <p className="text-sm mt-1">
                     Help improve face recognition by identifying these visitors.

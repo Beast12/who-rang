@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { facesApi } from '@/services/facesApi';
 import { toast } from '@/hooks/use-toast';
@@ -34,7 +33,10 @@ export const useTestOllamaConnection = () => {
       console.error('Connection test error:', error);
       toast({
         title: 'Connection test failed',
-        description: error.response?.data?.message || error.message || 'Unable to test Ollama connection',
+        description:
+          error.response?.data?.message ||
+          error.message ||
+          'Unable to test Ollama connection',
         variant: 'destructive',
       });
     },
@@ -65,7 +67,10 @@ export const useRefreshOllamaModels = () => {
       console.error('Refresh models error:', error);
       toast({
         title: 'Refresh failed',
-        description: error.response?.data?.error || error.message || 'Unable to refresh model list',
+        description:
+          error.response?.data?.error ||
+          error.message ||
+          'Unable to refresh model list',
         variant: 'destructive',
       });
     },

@@ -1,9 +1,20 @@
-
 import { useState } from 'react';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 export const DisplaySettings = () => {
   const [itemsPerPage, setItemsPerPage] = useState('20');
@@ -12,7 +23,9 @@ export const DisplaySettings = () => {
   return (
     <Card className="bg-card border">
       <CardHeader>
-        <CardTitle className="text-card-foreground">Display Preferences</CardTitle>
+        <CardTitle className="text-card-foreground">
+          Display Preferences
+        </CardTitle>
         <CardDescription className="text-muted-foreground">
           Customize how the dashboard displays information
         </CardDescription>
@@ -39,10 +52,7 @@ export const DisplaySettings = () => {
               Automatically refresh visitor data
             </p>
           </div>
-          <Switch
-            checked={autoRefresh}
-            onCheckedChange={setAutoRefresh}
-          />
+          <Switch checked={autoRefresh} onCheckedChange={setAutoRefresh} />
         </div>
       </CardContent>
     </Card>

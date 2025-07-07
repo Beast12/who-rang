@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { AlertTriangle, CheckCircle, RefreshCw } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -26,7 +25,7 @@ export const ConnectionBanner = () => {
 
   useEffect(() => {
     checkConnection();
-    
+
     // Check connection every 30 seconds
     const interval = setInterval(checkConnection, 30000);
     return () => clearInterval(interval);
@@ -49,7 +48,8 @@ export const ConnectionBanner = () => {
         <div>
           <strong>Backend Connection Issue</strong>
           <br />
-          Cannot connect to the backend server. Some features may not work properly.
+          Cannot connect to the backend server. Some features may not work
+          properly.
           {lastCheck && (
             <div className="text-sm text-muted-foreground mt-1">
               Last checked: {lastCheck.toLocaleTimeString()}

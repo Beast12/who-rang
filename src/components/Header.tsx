@@ -1,4 +1,3 @@
-
 import { Search, Settings, BookOpen, Users, Sparkles } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -38,14 +37,18 @@ export const Header = ({ searchTerm, onSearchChange }: HeaderProps) => {
 
           {/* Enhanced Search Section */}
           <div className="flex items-center space-x-4 flex-1 max-w-md mx-8">
-            <div className={`
+            <div
+              className={`
               relative flex-1 transition-all duration-300
               ${isSearchFocused ? 'scale-105' : ''}
-            `}>
-              <Search className={`
+            `}
+            >
+              <Search
+                className={`
                 absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 transition-colors duration-300
                 ${isSearchFocused ? 'text-primary' : 'text-muted-foreground'}
-              `} />
+              `}
+              />
               <Input
                 placeholder="Search visitors, analyze patterns..."
                 value={searchTerm}
@@ -71,33 +74,33 @@ export const Header = ({ searchTerm, onSearchChange }: HeaderProps) => {
           {/* Navigation Section */}
           <div className="flex items-center space-x-2">
             <ThemeToggle />
-            
+
             <Link to="/faces">
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 className="h-10 px-4 rounded-xl glass-intense hover:shadow-medium transition-all duration-300 hover:scale-105 group"
               >
                 <Users className="w-4 h-4 mr-2 group-hover:text-primary transition-colors" />
                 <span className="font-medium">Faces</span>
               </Button>
             </Link>
-            
+
             <Link to="/api-docs">
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 className="h-10 px-4 rounded-xl glass-intense hover:shadow-medium transition-all duration-300 hover:scale-105 group"
               >
                 <BookOpen className="w-4 h-4 mr-2 group-hover:text-primary transition-colors" />
                 <span className="font-medium">API</span>
               </Button>
             </Link>
-            
+
             <Link to="/settings">
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 className="h-10 px-4 rounded-xl glass-intense hover:shadow-medium transition-all duration-300 hover:scale-105 group"
               >
                 <Settings className="w-4 h-4 mr-2 group-hover:text-primary transition-colors" />

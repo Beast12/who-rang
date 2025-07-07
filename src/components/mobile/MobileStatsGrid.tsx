@@ -50,11 +50,8 @@ export const MobileStatsGrid = ({ stats, isLoading }: MobileStatsGridProps) => {
     <div className="space-y-4">
       {/* Mobile: Single card with swipe navigation */}
       <div className="block sm:hidden">
-        <div 
-          className="relative overflow-hidden"
-          {...touchGestures}
-        >
-          <div 
+        <div className="relative overflow-hidden" {...touchGestures}>
+          <div
             className="flex transition-transform duration-300 ease-out"
             style={{ transform: `translateX(-${currentIndex * 100}%)` }}
           >
@@ -80,9 +77,10 @@ export const MobileStatsGrid = ({ stats, isLoading }: MobileStatsGridProps) => {
               key={index}
               className={`
                 w-2 h-2 rounded-full transition-all duration-200
-                ${index === currentIndex 
-                  ? 'bg-primary w-6' 
-                  : 'bg-muted-foreground/30'
+                ${
+                  index === currentIndex
+                    ? 'bg-primary w-6'
+                    : 'bg-muted-foreground/30'
                 }
               `}
               onClick={() => setCurrentIndex(index)}

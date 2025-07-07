@@ -3,7 +3,11 @@ import { Clock, MapPin, Thermometer, ChevronDown, User } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 import { useNavigate } from 'react-router-dom';
 import { useIsMobile } from '@/hooks/useBreakpoint';
 import type { VisitorEvent } from '@/types/visitor';
@@ -16,7 +20,10 @@ interface ResponsiveVisitorCardProps {
   index: number;
 }
 
-export const ResponsiveVisitorCard = ({ visitor, index }: ResponsiveVisitorCardProps) => {
+export const ResponsiveVisitorCard = ({
+  visitor,
+  index,
+}: ResponsiveVisitorCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const navigate = useNavigate();
   const isMobile = useIsMobile();
@@ -37,14 +44,17 @@ export const ResponsiveVisitorCard = ({ visitor, index }: ResponsiveVisitorCardP
 
   if (isMobile) {
     return (
-      <Card className="card-modern animate-slide-up" style={{ animationDelay: `${index * 50}ms` }}>
+      <Card
+        className="card-modern animate-slide-up"
+        style={{ animationDelay: `${index * 50}ms` }}
+      >
         <CardContent className="p-4">
           {/* Mobile Layout: Vertical Stack */}
           <div className="space-y-4">
             {/* Header with image and basic info */}
             <div className="flex items-start space-x-3">
               {/* Visitor Image */}
-              <div 
+              <div
                 className="relative w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 cursor-pointer hover-lift"
                 onClick={() => navigate(`/visitor/${visitor.id}`)}
               >
@@ -75,11 +85,13 @@ export const ResponsiveVisitorCard = ({ visitor, index }: ResponsiveVisitorCardP
                       <span>{formatDate(visitor.timestamp)}</span>
                     </div>
                   </div>
-                  
+
                   <Collapsible open={isExpanded} onOpenChange={setIsExpanded}>
                     <CollapsibleTrigger asChild>
                       <Button variant="ghost" size="sm" className="p-1">
-                        <ChevronDown className={`w-4 h-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                        <ChevronDown
+                          className={`w-4 h-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                        />
                       </Button>
                     </CollapsibleTrigger>
                   </Collapsible>
@@ -138,11 +150,14 @@ export const ResponsiveVisitorCard = ({ visitor, index }: ResponsiveVisitorCardP
 
   // Desktop Layout: Original horizontal design
   return (
-    <Card className="card-modern hover-lift animate-slide-up" style={{ animationDelay: `${index * 50}ms` }}>
+    <Card
+      className="card-modern hover-lift animate-slide-up"
+      style={{ animationDelay: `${index * 50}ms` }}
+    >
       <CardContent className="p-6">
         <div className="flex items-start space-x-4">
           {/* Visitor Image */}
-          <div 
+          <div
             className="relative w-20 h-20 rounded-2xl overflow-hidden flex-shrink-0 cursor-pointer hover-lift"
             onClick={() => navigate(`/visitor/${visitor.id}`)}
           >
@@ -169,7 +184,10 @@ export const ResponsiveVisitorCard = ({ visitor, index }: ResponsiveVisitorCardP
                 <div className="flex items-center space-x-4 mt-1 text-sm text-muted-foreground">
                   <div className="flex items-center space-x-1">
                     <Clock className="w-4 h-4" />
-                    <span>{formatTime(visitor.timestamp)} • {formatDate(visitor.timestamp)}</span>
+                    <span>
+                      {formatTime(visitor.timestamp)} •{' '}
+                      {formatDate(visitor.timestamp)}
+                    </span>
                   </div>
                   <div className="flex items-center space-x-1">
                     <MapPin className="w-4 h-4" />
@@ -183,7 +201,7 @@ export const ResponsiveVisitorCard = ({ visitor, index }: ResponsiveVisitorCardP
                   )}
                 </div>
               </div>
-              
+
               {visitor.person_name && (
                 <Badge variant="secondary" className="ml-2">
                   <User className="w-3 h-3 mr-1" />

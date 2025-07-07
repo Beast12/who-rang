@@ -2,9 +2,10 @@ import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { WebSocketMessage, APIVisitorEvent, StatsResponse } from '@/types/api';
 import { runtimeConfig } from '@/config/runtime';
 
-const WS_URL = runtimeConfig.VITE_WS_URL === 'auto' 
-  ? `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}`
-  : runtimeConfig.VITE_WS_URL;
+const WS_URL =
+  runtimeConfig.VITE_WS_URL === 'auto'
+    ? `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}`
+    : runtimeConfig.VITE_WS_URL;
 
 // Debug logging for WebSocket environment variables
 console.log('WebSocket Environment Variables:', {
@@ -13,7 +14,7 @@ console.log('WebSocket Environment Variables:', {
   window_location: window.location.href,
   protocol: window.location.protocol,
   host: window.location.host,
-  runtimeConfig
+  runtimeConfig,
 });
 
 interface UseWebSocketReturn {
@@ -33,18 +34,29 @@ export const useWebSocket = (
   const ws = useRef<WebSocket | null>(null);
   const reconnectTimeout = useRef<NodeJS.Timeout>();
   const [isConnected, setIsConnected] = useState(false);
-  const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'disconnected' | 'error'>('disconnected');
+  const [connectionStatus, setConnectionStatus] = useState<
+    'connecting' | 'connected' | 'disconnected' | 'error'
+  >('disconnected');
   const [lastMessage, setLastMessage] = useState<WebSocketMessage | null>(null);
   const reconnectAttempts = useRef(0);
   const maxReconnectAttempts = 5;
   const isConnecting = useRef(false);
 
   // Memoize callbacks to prevent unnecessary reconnections
-  const memoizedOnNewVisitor = useMemo(() => onNewVisitor, []);
-  const memoizedOnStatsUpdate = useMemo(() => onStatsUpdate, []);
-  const memoizedOnDatabaseCleared = useMemo(() => onDatabaseCleared, []);
-  const memoizedOnFaceRecognized = useMemo(() => onFaceRecognized, []);
-  const memoizedOnUnknownFaceDetected = useMemo(() => onUnknownFaceDetected, []);
+  const memoizedOnNewVisitor = useMemo(() => onNewVisitor, [onNewVisitor]);
+  const memoizedOnStatsUpdate = useMemo(() => onStatsUpdate, [onStatsUpdate]);
+  const memoizedOnDatabaseCleared = useMemo(
+    () => onDatabaseCleared,
+    [onDatabaseCleared]
+  );
+  const memoizedOnFaceRecognized = useMemo(
+    () => onFaceRecognized,
+    [onFaceRecognized]
+  );
+  const memoizedOnUnknownFaceDetected = useMemo(
+    () => onUnknownFaceDetected,
+    [onUnknownFaceDetected]
+  );
 
   const cleanup = useCallback(() => {
     if (reconnectTimeout.current) {
@@ -66,9 +78,9 @@ export const useWebSocket = (
 
     isConnecting.current = true;
     setConnectionStatus('connecting');
-    
+
     console.log('Attempting WebSocket connection to:', WS_URL);
-    
+
     try {
       ws.current = new WebSocket(WS_URL);
 
@@ -116,16 +128,24 @@ export const useWebSocket = (
           code: event.code,
           reason: event.reason,
           wasClean: event.wasClean,
-          url: WS_URL
+          url: WS_URL,
         });
         setIsConnected(false);
         setConnectionStatus('disconnected');
         isConnecting.current = false;
 
         // Only attempt to reconnect if it wasn't a manual close
-        if (event.code !== 1000 && reconnectAttempts.current < maxReconnectAttempts) {
-          const delay = Math.min(Math.pow(2, reconnectAttempts.current) * 1000, 30000);
-          console.log(`Reconnecting in ${delay}ms (attempt ${reconnectAttempts.current + 1}/${maxReconnectAttempts})`);
+        if (
+          event.code !== 1000 &&
+          reconnectAttempts.current < maxReconnectAttempts
+        ) {
+          const delay = Math.min(
+            Math.pow(2, reconnectAttempts.current) * 1000,
+            30000
+          );
+          console.log(
+            `Reconnecting in ${delay}ms (attempt ${reconnectAttempts.current + 1}/${maxReconnectAttempts})`
+          );
           reconnectTimeout.current = setTimeout(() => {
             reconnectAttempts.current++;
             connect();
@@ -137,7 +157,7 @@ export const useWebSocket = (
         console.error('WebSocket error:', {
           error,
           url: WS_URL,
-          readyState: ws.current?.readyState
+          readyState: ws.current?.readyState,
         });
         setConnectionStatus('error');
         isConnecting.current = false;
@@ -147,7 +167,13 @@ export const useWebSocket = (
       setConnectionStatus('error');
       isConnecting.current = false;
     }
-  }, [memoizedOnNewVisitor, memoizedOnStatsUpdate, memoizedOnDatabaseCleared, memoizedOnFaceRecognized, memoizedOnUnknownFaceDetected]);
+  }, [
+    memoizedOnNewVisitor,
+    memoizedOnStatsUpdate,
+    memoizedOnDatabaseCleared,
+    memoizedOnFaceRecognized,
+    memoizedOnUnknownFaceDetected,
+  ]);
 
   const sendMessage = useCallback((message: any) => {
     if (ws.current?.readyState === WebSocket.OPEN) {
@@ -158,7 +184,7 @@ export const useWebSocket = (
   useEffect(() => {
     connect();
     return cleanup;
-  }, []); // Remove dependencies to prevent reconnection loops
+  }, [cleanup, connect]);
 
   return {
     isConnected,

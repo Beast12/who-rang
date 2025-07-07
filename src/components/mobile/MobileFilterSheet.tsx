@@ -1,9 +1,32 @@
 import { useState } from 'react';
-import { Filter, X, CalendarDays, MapPin, Cloud, Eye, Package, User, Car, Truck } from 'lucide-react';
+import {
+  Filter,
+  X,
+  CalendarDays,
+  MapPin,
+  Cloud,
+  Eye,
+  Package,
+  User,
+  Car,
+  Truck,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useDetectedObjects } from '@/hooks/useDetectedObjects';
 
 interface MobileFilterSheetProps {
@@ -31,7 +54,8 @@ export const MobileFilterSheet = ({
   const [selectedSort, setSelectedSort] = useState<'newest' | 'oldest'>(sortBy);
 
   // Fetch detected objects
-  const { data: detectedObjectsData, isLoading: objectsLoading } = useDetectedObjects();
+  const { data: detectedObjectsData, isLoading: objectsLoading } =
+    useDetectedObjects();
 
   const weatherOptions = [
     'Clear',
@@ -45,7 +69,12 @@ export const MobileFilterSheet = ({
   // Helper function to get icon for object type
   const getObjectIcon = (objectName: string) => {
     const name = objectName.toLowerCase();
-    if (name.includes('person') || name.includes('human') || name.includes('man') || name.includes('woman')) {
+    if (
+      name.includes('person') ||
+      name.includes('human') ||
+      name.includes('man') ||
+      name.includes('woman')
+    ) {
       return <User className="w-4 h-4" />;
     }
     if (name.includes('car') || name.includes('vehicle')) {
@@ -54,7 +83,11 @@ export const MobileFilterSheet = ({
     if (name.includes('truck') || name.includes('van')) {
       return <Truck className="w-4 h-4" />;
     }
-    if (name.includes('package') || name.includes('box') || name.includes('delivery')) {
+    if (
+      name.includes('package') ||
+      name.includes('box') ||
+      name.includes('delivery')
+    ) {
       return <Package className="w-4 h-4" />;
     }
     return <Eye className="w-4 h-4" />;
@@ -66,13 +99,13 @@ export const MobileFilterSheet = ({
     } else {
       onWeatherFilter(null);
     }
-    
+
     if (selectedObject) {
       onObjectFilter(selectedObject);
     } else {
       onObjectFilter(null);
     }
-    
+
     onSortChange(selectedSort);
     setIsOpen(false);
   };
@@ -88,7 +121,9 @@ export const MobileFilterSheet = ({
   return (
     <div className="flex items-center justify-between mb-4">
       <div className="flex items-center space-x-2">
-        <h3 className="text-lg font-semibold text-foreground">Recent Activity</h3>
+        <h3 className="text-lg font-semibold text-foreground">
+          Recent Activity
+        </h3>
         {activeFilters > 0 && (
           <Badge variant="secondary" className="text-xs">
             {activeFilters} filter{activeFilters !== 1 ? 's' : ''}
@@ -109,12 +144,19 @@ export const MobileFilterSheet = ({
           <SheetHeader>
             <SheetTitle>Filter Options</SheetTitle>
           </SheetHeader>
-          
+
           <div className="mt-6 space-y-6">
             {/* Sort Options */}
             <div className="space-y-3">
-              <label className="text-sm font-medium text-foreground">Sort By</label>
-              <Select value={selectedSort} onValueChange={(value: 'newest' | 'oldest') => setSelectedSort(value)}>
+              <label className="text-sm font-medium text-foreground">
+                Sort By
+              </label>
+              <Select
+                value={selectedSort}
+                onValueChange={(value: 'newest' | 'oldest') =>
+                  setSelectedSort(value)
+                }
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -127,8 +169,13 @@ export const MobileFilterSheet = ({
 
             {/* Weather Filter */}
             <div className="space-y-3">
-              <label className="text-sm font-medium text-foreground">Weather Condition</label>
-              <Select value={selectedWeather} onValueChange={setSelectedWeather}>
+              <label className="text-sm font-medium text-foreground">
+                Weather Condition
+              </label>
+              <Select
+                value={selectedWeather}
+                onValueChange={setSelectedWeather}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="All weather conditions" />
                 </SelectTrigger>
@@ -148,10 +195,18 @@ export const MobileFilterSheet = ({
 
             {/* Objects Filter */}
             <div className="space-y-3">
-              <label className="text-sm font-medium text-foreground">Detected Objects</label>
-              <Select value={selectedObject} onValueChange={setSelectedObject} disabled={objectsLoading}>
+              <label className="text-sm font-medium text-foreground">
+                Detected Objects
+              </label>
+              <Select
+                value={selectedObject}
+                onValueChange={setSelectedObject}
+                disabled={objectsLoading}
+              >
                 <SelectTrigger>
-                  <SelectValue placeholder={objectsLoading ? "Loading..." : "All objects"} />
+                  <SelectValue
+                    placeholder={objectsLoading ? 'Loading...' : 'All objects'}
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="">All objects</SelectItem>
@@ -182,10 +237,7 @@ export const MobileFilterSheet = ({
                 <X className="w-4 h-4 mr-2" />
                 Clear All
               </Button>
-              <Button
-                className="flex-1"
-                onClick={handleApplyFilters}
-              >
+              <Button className="flex-1" onClick={handleApplyFilters}>
                 Apply Filters
               </Button>
             </div>

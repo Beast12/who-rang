@@ -1,7 +1,12 @@
-
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { useDatabaseStats, useClearDatabase } from '@/hooks/useDatabaseStats';
 
@@ -10,7 +15,11 @@ export const DatabaseSettings = () => {
   const clearDatabaseMutation = useClearDatabase();
 
   const handleClearData = () => {
-    if (window.confirm('Are you sure you want to clear all visitor data? This action cannot be undone.')) {
+    if (
+      window.confirm(
+        'Are you sure you want to clear all visitor data? This action cannot be undone.'
+      )
+    ) {
       clearDatabaseMutation.mutate();
     }
   };
@@ -23,7 +32,9 @@ export const DatabaseSettings = () => {
   return (
     <Card className="bg-card border">
       <CardHeader>
-        <CardTitle className="text-card-foreground">Database Management</CardTitle>
+        <CardTitle className="text-card-foreground">
+          Database Management
+        </CardTitle>
         <CardDescription className="text-muted-foreground">
           Manage your visitor data and database settings
         </CardDescription>
@@ -59,18 +70,21 @@ export const DatabaseSettings = () => {
             <Button onClick={handleExportData}>Export All Data</Button>
             <Button variant="outline">Import Data</Button>
           </div>
-          
+
           <div className="pt-4 border-t">
-            <Button 
-              variant="destructive" 
+            <Button
+              variant="destructive"
               onClick={handleClearData}
               disabled={clearDatabaseMutation.isPending}
               className="w-full"
             >
-              {clearDatabaseMutation.isPending ? 'Clearing...' : 'Clear All Data'}
+              {clearDatabaseMutation.isPending
+                ? 'Clearing...'
+                : 'Clear All Data'}
             </Button>
             <p className="text-sm text-muted-foreground mt-2">
-              This action cannot be undone. All visitor data will be permanently deleted.
+              This action cannot be undone. All visitor data will be permanently
+              deleted.
             </p>
           </div>
         </div>

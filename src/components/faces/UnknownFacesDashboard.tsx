@@ -1,26 +1,44 @@
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { 
-  Users, 
-  Search, 
-  Filter, 
-  CheckSquare, 
-  Square, 
-  UserPlus, 
-  Trash2, 
+import {
+  Users,
+  Search,
+  Filter,
+  CheckSquare,
+  Square,
+  UserPlus,
+  Trash2,
   Eye,
   AlertCircle,
   RefreshCw,
-  ArrowRight
+  ArrowRight,
 } from 'lucide-react';
-import { useUnassignedFaces, usePersons, useAssignFaceToPerson, useBulkAssignFaces, useDeleteFace } from '@/hooks/useFaces';
+import {
+  useUnassignedFaces,
+  usePersons,
+  useAssignFaceToPerson,
+  useBulkAssignFaces,
+  useDeleteFace,
+} from '@/hooks/useFaces';
 import { useIsMobile } from '@/hooks/useBreakpoint';
 import { FaceThumbnail } from './FaceThumbnail';
 import { CreatePersonDialog } from './CreatePersonDialog';
@@ -46,10 +64,16 @@ export const UnknownFacesDashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showCreatePerson, setShowCreatePerson] = useState(false);
   const [showAssignDialog, setShowAssignDialog] = useState(false);
-  const [selectedFaceForAssignment, setSelectedFaceForAssignment] = useState<DetectedFace | null>(null);
+  const [selectedFaceForAssignment, setSelectedFaceForAssignment] =
+    useState<DetectedFace | null>(null);
 
   const isMobile = useIsMobile();
-  const { data: facesData, isLoading, error, refetch } = useUnassignedFaces(50, 0, qualityFilter);
+  const {
+    data: facesData,
+    isLoading,
+    error,
+    refetch,
+  } = useUnassignedFaces(50, 0, qualityFilter);
   const { data: persons = [] } = usePersons();
   const assignFaceMutation = useAssignFaceToPerson();
   const bulkAssignMutation = useBulkAssignFaces();
@@ -59,9 +83,10 @@ export const UnknownFacesDashboard = () => {
   const pagination = facesData?.pagination;
 
   // Filter faces by search term
-  const filteredFaces = faces.filter(face => 
-    face.ai_title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    new Date(face.timestamp).toLocaleDateString().includes(searchTerm)
+  const filteredFaces = faces.filter(
+    (face) =>
+      face.ai_title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      new Date(face.timestamp).toLocaleDateString().includes(searchTerm)
   );
 
   const handleSelectFace = (faceId: number, selected: boolean) => {
@@ -78,7 +103,7 @@ export const UnknownFacesDashboard = () => {
     if (selectedFaces.size === filteredFaces.length) {
       setSelectedFaces(new Set());
     } else {
-      setSelectedFaces(new Set(filteredFaces.map(f => f.id)));
+      setSelectedFaces(new Set(filteredFaces.map((f) => f.id)));
     }
   };
 
@@ -86,12 +111,15 @@ export const UnknownFacesDashboard = () => {
     if (selectedFaces.size === 0) return;
 
     const faceIds = Array.from(selectedFaces);
-    bulkAssignMutation.mutate({ faceIds, personId }, {
-      onSuccess: () => {
-        setSelectedFaces(new Set());
-        refetch();
+    bulkAssignMutation.mutate(
+      { faceIds, personId },
+      {
+        onSuccess: () => {
+          setSelectedFaces(new Set());
+          refetch();
+        },
       }
-    });
+    );
   };
 
   const handleAssignSingleFace = (face: DetectedFace) => {
@@ -101,9 +129,13 @@ export const UnknownFacesDashboard = () => {
 
   const handleDeleteSelected = () => {
     if (selectedFaces.size === 0) return;
-    
-    if (window.confirm(`Are you sure you want to delete ${selectedFaces.size} selected faces?`)) {
-      selectedFaces.forEach(faceId => {
+
+    if (
+      window.confirm(
+        `Are you sure you want to delete ${selectedFaces.size} selected faces?`
+      )
+    ) {
+      selectedFaces.forEach((faceId) => {
         deleteFaceMutation.mutate(faceId);
       });
       setSelectedFaces(new Set());
@@ -130,9 +162,9 @@ export const UnknownFacesDashboard = () => {
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>
               Failed to load unknown faces. Please try again.
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 className="ml-2"
                 onClick={() => refetch()}
               >
@@ -151,35 +183,36 @@ export const UnknownFacesDashboard = () => {
       {/* Header */}
       <Card>
         <CardHeader>
-          <div className={`${isMobile ? 'space-y-4' : 'flex items-center justify-between'}`}>
+          <div
+            className={`${isMobile ? 'space-y-4' : 'flex items-center justify-between'}`}
+          >
             <div>
               <CardTitle className="flex items-center space-x-2">
                 <Users className="w-5 h-5" />
                 <span>Unknown Faces</span>
                 {pagination && (
-                  <Badge variant="secondary">
-                    {pagination.total} total
-                  </Badge>
+                  <Badge variant="secondary">{pagination.total} total</Badge>
                 )}
               </CardTitle>
               <CardDescription>
                 Review and assign unidentified faces to persons
               </CardDescription>
             </div>
-            <div className={`flex items-center ${isMobile ? 'justify-between' : 'space-x-2'}`}>
+            <div
+              className={`flex items-center ${isMobile ? 'justify-between' : 'space-x-2'}`}
+            >
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => refetch()}
                 disabled={isLoading}
               >
-                <RefreshCw className={`w-4 h-4 ${isMobile ? '' : 'mr-1'} ${isLoading ? 'animate-spin' : ''}`} />
+                <RefreshCw
+                  className={`w-4 h-4 ${isMobile ? '' : 'mr-1'} ${isLoading ? 'animate-spin' : ''}`}
+                />
                 {!isMobile && 'Refresh'}
               </Button>
-              <Button
-                onClick={() => setShowCreatePerson(true)}
-                size="sm"
-              >
+              <Button onClick={() => setShowCreatePerson(true)} size="sm">
                 <UserPlus className={`w-4 h-4 ${isMobile ? '' : 'mr-1'}`} />
                 {isMobile ? 'New' : 'New Person'}
               </Button>
@@ -207,7 +240,10 @@ export const UnknownFacesDashboard = () => {
 
             {/* Quality Filter */}
             <div className="flex items-center space-x-2">
-              <Label htmlFor="quality-filter" className="text-sm whitespace-nowrap">
+              <Label
+                htmlFor="quality-filter"
+                className="text-sm whitespace-nowrap"
+              >
                 Min Quality:
               </Label>
               <Select
@@ -228,10 +264,12 @@ export const UnknownFacesDashboard = () => {
             {/* Bulk Actions */}
             {selectedFaces.size > 0 && (
               <div className="flex items-center space-x-2 border-l pl-4">
-                <Badge variant="outline">
-                  {selectedFaces.size} selected
-                </Badge>
-                <Select onValueChange={(value) => handleAssignToExistingPerson(parseInt(value))}>
+                <Badge variant="outline">{selectedFaces.size} selected</Badge>
+                <Select
+                  onValueChange={(value) =>
+                    handleAssignToExistingPerson(parseInt(value))
+                  }
+                >
                   <SelectTrigger className="w-40">
                     <SelectValue placeholder="Assign to..." />
                   </SelectTrigger>
@@ -268,7 +306,8 @@ export const UnknownFacesDashboard = () => {
                 onClick={handleSelectAll}
                 className="h-8 w-8 p-0"
               >
-                {selectedFaces.size === filteredFaces.length && filteredFaces.length > 0 ? (
+                {selectedFaces.size === filteredFaces.length &&
+                filteredFaces.length > 0 ? (
                   <CheckSquare className="w-4 h-4" />
                 ) : (
                   <Square className="w-4 h-4" />
@@ -285,7 +324,10 @@ export const UnknownFacesDashboard = () => {
           {isLoading ? (
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
               {[...Array(12)].map((_, i) => (
-                <div key={i} className="aspect-square bg-muted rounded-lg animate-pulse" />
+                <div
+                  key={i}
+                  className="aspect-square bg-muted rounded-lg animate-pulse"
+                />
               ))}
             </div>
           ) : filteredFaces.length === 0 ? (
@@ -295,10 +337,9 @@ export const UnknownFacesDashboard = () => {
                 {searchTerm ? 'No matching faces found' : 'No unknown faces'}
               </h3>
               <p className="text-muted-foreground">
-                {searchTerm 
+                {searchTerm
                   ? 'Try adjusting your search terms or filters'
-                  : 'All detected faces have been assigned to persons'
-                }
+                  : 'All detected faces have been assigned to persons'}
               </p>
             </div>
           ) : (
@@ -309,7 +350,7 @@ export const UnknownFacesDashboard = () => {
                   <div className="absolute top-2 left-2 z-10">
                     <Checkbox
                       checked={selectedFaces.has(face.id)}
-                      onCheckedChange={(checked) => 
+                      onCheckedChange={(checked) =>
                         handleSelectFace(face.id, checked as boolean)
                       }
                       className="bg-white/90 border-2"
@@ -318,8 +359,8 @@ export const UnknownFacesDashboard = () => {
 
                   {/* Quality Badge */}
                   <div className="absolute top-2 right-2 z-10">
-                    <Badge 
-                      variant="secondary" 
+                    <Badge
+                      variant="secondary"
                       className={`text-white text-xs ${getQualityColor(face.quality_score)}`}
                     >
                       {getQualityLabel(face.quality_score)}
@@ -333,7 +374,7 @@ export const UnknownFacesDashboard = () => {
                       size="lg"
                       isUnknown={true}
                     />
-                    
+
                     {/* Overlay Actions */}
                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center space-x-2">
                       <Button
@@ -391,16 +432,19 @@ export const UnknownFacesDashboard = () => {
           persons={persons}
           onAssign={(personId) => {
             if (selectedFaceForAssignment) {
-              assignFaceMutation.mutate({
-                faceId: selectedFaceForAssignment.id,
-                personId
-              }, {
-                onSuccess: () => {
-                  setShowAssignDialog(false);
-                  setSelectedFaceForAssignment(null);
-                  refetch();
+              assignFaceMutation.mutate(
+                {
+                  faceId: selectedFaceForAssignment.id,
+                  personId,
+                },
+                {
+                  onSuccess: () => {
+                    setShowAssignDialog(false);
+                    setSelectedFaceForAssignment(null);
+                    refetch();
+                  },
                 }
-              });
+              );
             }
           }}
         />

@@ -1,4 +1,3 @@
-
 import { Users, Clock, TrendingUp } from 'lucide-react';
 import { StatsCard } from './StatsCard';
 

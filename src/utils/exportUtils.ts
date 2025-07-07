@@ -95,7 +95,7 @@ export const exportToCSV = (data: ExportData) => {
   if (data.dailyStats && data.dailyStats.length > 0) {
     csvContent += 'DAILY STATISTICS\n';
     csvContent += 'Date,Cost,Requests,Tokens\n';
-    data.dailyStats.forEach(day => {
+    data.dailyStats.forEach((day) => {
       csvContent += `${new Date(day.date).toLocaleDateString()},${formatCurrency(day.cost)},${day.requests},${day.tokens}\n`;
     });
     csvContent += '\n';
@@ -105,7 +105,7 @@ export const exportToCSV = (data: ExportData) => {
   if (data.modelStats && data.modelStats.length > 0) {
     csvContent += 'MODEL PERFORMANCE\n';
     csvContent += 'Model,Total Cost,Avg Response Time,Requests,Tokens\n';
-    data.modelStats.forEach(model => {
+    data.modelStats.forEach((model) => {
       csvContent += `${model.model},${formatCurrency(model.cost)},${model.avg_time}ms,${model.requests},${model.tokens}\n`;
     });
     csvContent += '\n';
@@ -114,8 +114,9 @@ export const exportToCSV = (data: ExportData) => {
   // Recent API Calls
   if (data.usageLogs && data.usageLogs.length > 0) {
     csvContent += 'RECENT API CALLS\n';
-    csvContent += 'Timestamp,Provider,Model,Cost,Tokens,Response Time,Success\n';
-    data.usageLogs.slice(0, 50).forEach(log => {
+    csvContent +=
+      'Timestamp,Provider,Model,Cost,Tokens,Response Time,Success\n';
+    data.usageLogs.slice(0, 50).forEach((log) => {
       csvContent += `${new Date(log.created_at).toLocaleString()},${log.provider},${log.model},${formatCurrency(log.cost_usd)},${log.total_tokens},${log.processing_time_ms}ms,${log.success ? 'Yes' : 'No'}\n`;
     });
   }
@@ -180,8 +181,14 @@ export const exportToPDF = async (data: ExportData) => {
     ['Successful Requests', data.overallStats.successful_requests.toString()],
     ['Failed Requests', data.overallStats.failed_requests.toString()],
     ['Total Tokens', formatNumber(data.overallStats.total_tokens)],
-    ['Average Response Time', `${Math.round(data.overallStats.avg_processing_time)}ms`],
-    ['Success Rate', `${((data.overallStats.successful_requests / Math.max(data.overallStats.total_requests, 1)) * 100).toFixed(1)}%`]
+    [
+      'Average Response Time',
+      `${Math.round(data.overallStats.avg_processing_time)}ms`,
+    ],
+    [
+      'Success Rate',
+      `${((data.overallStats.successful_requests / Math.max(data.overallStats.total_requests, 1)) * 100).toFixed(1)}%`,
+    ],
   ];
 
   overviewData.forEach(([label, value]) => {
@@ -207,7 +214,10 @@ export const exportToPDF = async (data: ExportData) => {
       ['Monthly Limit', formatCurrency(data.budget.monthly_limit)],
       ['Monthly Spent', formatCurrency(data.budget.monthly_spent)],
       ['Remaining Budget', formatCurrency(data.budget.remaining)],
-      ['Budget Usage', `${((data.budget.monthly_spent / data.budget.monthly_limit) * 100).toFixed(1)}%`]
+      [
+        'Budget Usage',
+        `${((data.budget.monthly_spent / data.budget.monthly_limit) * 100).toFixed(1)}%`,
+      ],
     ];
 
     budgetData.forEach(([label, value]) => {
@@ -229,7 +239,7 @@ export const exportToPDF = async (data: ExportData) => {
 
     pdf.setFontSize(9);
     pdf.setFont('helvetica', 'bold');
-    
+
     // Table headers
     pdf.text('Model', 25, yPosition);
     pdf.text('Cost', 70, yPosition);
@@ -239,8 +249,8 @@ export const exportToPDF = async (data: ExportData) => {
     yPosition += 8;
 
     pdf.setFont('helvetica', 'normal');
-    
-    data.modelStats.forEach(model => {
+
+    data.modelStats.forEach((model) => {
       checkPageBreak(6);
       pdf.text(model.model.substring(0, 15), 25, yPosition);
       pdf.text(formatCurrency(model.cost), 70, yPosition);
@@ -263,7 +273,7 @@ export const exportToPDF = async (data: ExportData) => {
 
     pdf.setFontSize(8);
     pdf.setFont('helvetica', 'bold');
-    
+
     // Table headers
     pdf.text('Time', 25, yPosition);
     pdf.text('Provider', 55, yPosition);
@@ -274,8 +284,8 @@ export const exportToPDF = async (data: ExportData) => {
     yPosition += 6;
 
     pdf.setFont('helvetica', 'normal');
-    
-    data.usageLogs.slice(0, 20).forEach(log => {
+
+    data.usageLogs.slice(0, 20).forEach((log) => {
       checkPageBreak(5);
       const time = new Date(log.created_at).toLocaleTimeString();
       pdf.text(time, 25, yPosition);
@@ -305,24 +315,24 @@ export const exportToPDF = async (data: ExportData) => {
 // Capture charts as images for PDF
 export const captureChartsForPDF = async (): Promise<string[]> => {
   const chartImages: string[] = [];
-  
+
   // Find all chart containers
   const chartContainers = document.querySelectorAll('.recharts-wrapper');
-  
+
   for (const container of chartContainers) {
     try {
       const canvas = await html2canvas(container as HTMLElement, {
         backgroundColor: '#ffffff',
         scale: 2,
         logging: false,
-        useCORS: true
+        useCORS: true,
       });
       chartImages.push(canvas.toDataURL('image/png'));
     } catch (error) {
       console.warn('Failed to capture chart:', error);
     }
   }
-  
+
   return chartImages;
 };
 
@@ -334,7 +344,7 @@ export const exportToPDFWithCharts = async (data: ExportData) => {
   try {
     // Capture charts first
     const chartImages = await captureChartsForPDF();
-    
+
     // Create PDF with charts
     const pdf = new jsPDF('p', 'mm', 'a4');
     const pageWidth = pdf.internal.pageSize.getWidth();
@@ -374,17 +384,37 @@ export const exportToPDFWithCharts = async (data: ExportData) => {
 
     // Key metrics in a nice layout
     const summaryBoxes = [
-      { label: 'Total Spent', value: formatCurrency(data.overallStats.total_cost), x: 20, y: yPosition },
-      { label: 'API Requests', value: data.overallStats.total_requests.toString(), x: 70, y: yPosition },
-      { label: 'Tokens Used', value: formatNumber(data.overallStats.total_tokens), x: 120, y: yPosition },
-      { label: 'Avg Response', value: `${Math.round(data.overallStats.avg_processing_time)}ms`, x: 170, y: yPosition }
+      {
+        label: 'Total Spent',
+        value: formatCurrency(data.overallStats.total_cost),
+        x: 20,
+        y: yPosition,
+      },
+      {
+        label: 'API Requests',
+        value: data.overallStats.total_requests.toString(),
+        x: 70,
+        y: yPosition,
+      },
+      {
+        label: 'Tokens Used',
+        value: formatNumber(data.overallStats.total_tokens),
+        x: 120,
+        y: yPosition,
+      },
+      {
+        label: 'Avg Response',
+        value: `${Math.round(data.overallStats.avg_processing_time)}ms`,
+        x: 170,
+        y: yPosition,
+      },
     ];
 
-    summaryBoxes.forEach(box => {
+    summaryBoxes.forEach((box) => {
       // Draw box
       pdf.setDrawColor(200, 200, 200);
       pdf.rect(box.x - 2, box.y - 2, 45, 20);
-      
+
       // Add content
       pdf.setFontSize(10);
       pdf.setFont('helvetica', 'normal');
@@ -400,12 +430,12 @@ export const exportToPDFWithCharts = async (data: ExportData) => {
     if (chartImages.length > 0) {
       chartImages.forEach((chartImage, index) => {
         checkPageBreak(100);
-        
+
         pdf.setFontSize(14);
         pdf.setFont('helvetica', 'bold');
         pdf.text(`Chart ${index + 1}`, 20, yPosition);
         yPosition += 10;
-        
+
         // Add chart image
         const imgWidth = 170;
         const imgHeight = 80;
@@ -429,7 +459,6 @@ export const exportToPDFWithCharts = async (data: ExportData) => {
 
     // Save PDF
     pdf.save(filename);
-    
   } catch (error) {
     console.error('Failed to export PDF with charts:', error);
     // Fallback to basic PDF export

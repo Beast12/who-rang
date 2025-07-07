@@ -1,7 +1,10 @@
-
 import { Thermometer } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 import { WeatherIcon } from './WeatherIcon';
@@ -29,15 +32,15 @@ interface WeatherDisplayProps {
   weatherData?: string;
 }
 
-export const WeatherDisplay = ({ 
-  weatherText, 
-  weatherTemperature, 
-  weatherCondition, 
-  weatherHumidity, 
-  weatherData 
+export const WeatherDisplay = ({
+  weatherText,
+  weatherTemperature,
+  weatherCondition,
+  weatherHumidity,
+  weatherData,
 }: WeatherDisplayProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  
+
   // Parse weather data if available
   let parsedWeatherData: WeatherData | null = null;
   if (weatherData) {
@@ -48,8 +51,10 @@ export const WeatherDisplay = ({
     }
   }
 
-  const displayCondition = weatherCondition || parsedWeatherData?.condition || weatherText;
-  const displayTemperature = weatherTemperature ?? parsedWeatherData?.temperature;
+  const displayCondition =
+    weatherCondition || parsedWeatherData?.condition || weatherText;
+  const displayTemperature =
+    weatherTemperature ?? parsedWeatherData?.temperature;
   const displayHumidity = weatherHumidity ?? parsedWeatherData?.humidity;
 
   if (!displayCondition && !displayTemperature) {
@@ -85,19 +90,27 @@ export const WeatherDisplay = ({
       {parsedWeatherData?.forecast && parsedWeatherData.forecast.length > 0 && (
         <Collapsible open={isOpen} onOpenChange={setIsOpen}>
           <CollapsibleTrigger className="flex items-center space-x-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
-            <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+            <ChevronDown
+              className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+            />
             <span>Weather Forecast</span>
           </CollapsibleTrigger>
           <CollapsibleContent className="mt-3">
             <div className="space-y-2 pl-6 border-l-2 border-muted">
               {parsedWeatherData.forecast.slice(0, 3).map((forecast, index) => (
-                <div key={index} className="flex items-center justify-between text-sm">
+                <div
+                  key={index}
+                  className="flex items-center justify-between text-sm"
+                >
                   <div className="flex items-center space-x-2">
-                    <WeatherIcon condition={forecast.condition} className="w-4 h-4" />
+                    <WeatherIcon
+                      condition={forecast.condition}
+                      className="w-4 h-4"
+                    />
                     <span className="text-muted-foreground">
-                      {new Date(forecast.datetime).toLocaleTimeString('en-US', { 
-                        hour: '2-digit', 
-                        minute: '2-digit' 
+                      {new Date(forecast.datetime).toLocaleTimeString('en-US', {
+                        hour: '2-digit',
+                        minute: '2-digit',
                       })}
                     </span>
                   </div>

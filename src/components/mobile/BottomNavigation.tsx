@@ -34,16 +34,17 @@ export const BottomNavigation = () => {
       <div className="grid grid-cols-4 h-16">
         {navItems.map(({ icon: Icon, label, path }) => {
           const isActive = location.pathname === path;
-          
+
           return (
             <Button
               key={path}
               variant="ghost"
               className={`
                 h-full rounded-none flex-col space-y-1 text-xs font-medium
-                ${isActive 
-                  ? 'text-primary bg-primary/10' 
-                  : 'text-muted-foreground hover:text-foreground'
+                ${
+                  isActive
+                    ? 'text-primary bg-primary/10'
+                    : 'text-muted-foreground hover:text-foreground'
                 }
               `}
               onClick={() => navigate(path)}

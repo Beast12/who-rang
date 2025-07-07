@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiService } from '@/services/api';
 import { APIVisitorEvent } from '@/types/api';
@@ -30,7 +29,7 @@ export const useDeleteVisitor = () => {
       // Invalidate and refetch visitors list
       queryClient.invalidateQueries({ queryKey: ['visitors'] });
       queryClient.invalidateQueries({ queryKey: ['stats'] });
-      
+
       toast({
         title: 'Visitor deleted',
         description: 'The visitor record has been removed successfully.',
@@ -58,7 +57,7 @@ export const useAddVisitor = () => {
       // Add the new visitor to the cache
       queryClient.setQueryData(['visitors', 1, 20], (oldData: any) => {
         if (!oldData) return oldData;
-        
+
         return {
           ...oldData,
           visitors: [newVisitor, ...oldData.visitors],

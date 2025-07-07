@@ -1,5 +1,12 @@
-
-import { X, ZoomIn, ZoomOut, Download, Share, ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+  X,
+  ZoomIn,
+  ZoomOut,
+  Download,
+  Share,
+  ChevronLeft,
+  ChevronRight,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface ImageModalHeaderProps {
@@ -39,11 +46,13 @@ export const ImageModalHeader = ({
         </h2>
         {canNavigate && (
           <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-            <span>{currentIndex + 1} of {totalVisitors}</span>
+            <span>
+              {currentIndex + 1} of {totalVisitors}
+            </span>
           </div>
         )}
       </div>
-      
+
       <div className="flex items-center space-x-2">
         {/* Navigation buttons */}
         {canNavigate && (
@@ -66,16 +75,28 @@ export const ImageModalHeader = ({
             </Button>
           </>
         )}
-        
+
         {/* Zoom controls */}
-        <Button variant="ghost" size="sm" onClick={onZoomOut} disabled={zoom <= 0.5}>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onZoomOut}
+          disabled={zoom <= 0.5}
+        >
           <ZoomOut className="w-4 h-4" />
         </Button>
-        <span className="text-sm text-muted-foreground px-2">{Math.round(zoom * 100)}%</span>
-        <Button variant="ghost" size="sm" onClick={onZoomIn} disabled={zoom >= 3}>
+        <span className="text-sm text-muted-foreground px-2">
+          {Math.round(zoom * 100)}%
+        </span>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onZoomIn}
+          disabled={zoom >= 3}
+        >
           <ZoomIn className="w-4 h-4" />
         </Button>
-        
+
         {/* Action buttons */}
         <Button variant="ghost" size="sm" onClick={onDownload}>
           <Download className="w-4 h-4" />

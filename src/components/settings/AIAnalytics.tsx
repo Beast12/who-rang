@@ -1,19 +1,36 @@
 import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { useToast } from '@/hooks/use-toast';
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
   ResponsiveContainer,
   LineChart,
   Line,
@@ -22,14 +39,14 @@ import {
   Cell,
   Area,
   AreaChart,
-  Legend
+  Legend,
 } from 'recharts';
-import { 
-  DollarSign, 
-  TrendingUp, 
-  Activity, 
-  Clock, 
-  AlertTriangle, 
+import {
+  DollarSign,
+  TrendingUp,
+  Activity,
+  Clock,
+  AlertTriangle,
   Download,
   RefreshCw,
   Zap,
@@ -38,7 +55,7 @@ import {
   BarChart3,
   FileText,
   FileSpreadsheet,
-  ChevronDown
+  ChevronDown,
 } from 'lucide-react';
 import { useOpenAIUsageStats, useOpenAIUsageLogs } from '@/hooks/useOpenAI';
 import { exportToCSV, exportToPDF } from '@/utils/exportUtils';
@@ -47,10 +64,18 @@ export const AIAnalytics = () => {
   const [selectedPeriod, setSelectedPeriod] = useState('30d');
   const [selectedProvider, setSelectedProvider] = useState<string>('');
   const [isExporting, setIsExporting] = useState(false);
-  
+
   const { toast } = useToast();
-  const { data: usageStats, isLoading: statsLoading, error: statsError } = useOpenAIUsageStats(selectedPeriod);
-  const { data: usageLogs, isLoading: logsLoading, error: logsError } = useOpenAIUsageLogs(50, 0, selectedProvider);
+  const {
+    data: usageStats,
+    isLoading: statsLoading,
+    error: statsError,
+  } = useOpenAIUsageStats(selectedPeriod);
+  const {
+    data: usageLogs,
+    isLoading: logsLoading,
+    error: logsError,
+  } = useOpenAIUsageLogs(50, 0, selectedProvider);
 
   // Calculate overview metrics
   const overallStats = usageStats?.overall_stats?.[0] || {
@@ -59,18 +84,19 @@ export const AIAnalytics = () => {
     total_cost: 0,
     avg_processing_time: 0,
     successful_requests: 0,
-    failed_requests: 0
+    failed_requests: 0,
   };
 
   const budget = usageStats?.budget || {
     monthly_limit: 0,
     monthly_spent: 0,
-    remaining: 0
+    remaining: 0,
   };
 
-  const budgetUsagePercent = budget.monthly_limit > 0 
-    ? (budget.monthly_spent / budget.monthly_limit) * 100 
-    : 0;
+  const budgetUsagePercent =
+    budget.monthly_limit > 0
+      ? (budget.monthly_spent / budget.monthly_limit) * 100
+      : 0;
 
   // Chart colors
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
@@ -89,9 +115,9 @@ export const AIAnalytics = () => {
   const handleExportCSV = async () => {
     if (!usageStats || !usageLogs) {
       toast({
-        title: "Export Failed",
-        description: "No data available to export",
-        variant: "destructive",
+        title: 'Export Failed',
+        description: 'No data available to export',
+        variant: 'destructive',
       });
       return;
     }
@@ -104,21 +130,21 @@ export const AIAnalytics = () => {
         modelStats: usageStats.model_stats || [],
         usageLogs: usageLogs.logs || [],
         budget: usageStats.budget,
-        period: selectedPeriod
+        period: selectedPeriod,
       };
 
       exportToCSV(exportData);
-      
+
       toast({
-        title: "Export Successful",
-        description: "CSV file has been downloaded",
+        title: 'Export Successful',
+        description: 'CSV file has been downloaded',
       });
     } catch (error) {
       console.error('Export failed:', error);
       toast({
-        title: "Export Failed",
-        description: "Failed to export CSV file",
-        variant: "destructive",
+        title: 'Export Failed',
+        description: 'Failed to export CSV file',
+        variant: 'destructive',
       });
     } finally {
       setIsExporting(false);
@@ -128,9 +154,9 @@ export const AIAnalytics = () => {
   const handleExportPDF = async () => {
     if (!usageStats || !usageLogs) {
       toast({
-        title: "Export Failed",
-        description: "No data available to export",
-        variant: "destructive",
+        title: 'Export Failed',
+        description: 'No data available to export',
+        variant: 'destructive',
       });
       return;
     }
@@ -143,21 +169,21 @@ export const AIAnalytics = () => {
         modelStats: usageStats.model_stats || [],
         usageLogs: usageLogs.logs || [],
         budget: usageStats.budget,
-        period: selectedPeriod
+        period: selectedPeriod,
       };
 
       await exportToPDF(exportData);
-      
+
       toast({
-        title: "Export Successful",
-        description: "PDF report has been downloaded",
+        title: 'Export Successful',
+        description: 'PDF report has been downloaded',
       });
     } catch (error) {
       console.error('Export failed:', error);
       toast({
-        title: "Export Failed",
-        description: "Failed to export PDF file",
-        variant: "destructive",
+        title: 'Export Failed',
+        description: 'Failed to export PDF file',
+        variant: 'destructive',
       });
     } finally {
       setIsExporting(false);
@@ -189,7 +215,9 @@ export const AIAnalytics = () => {
       {/* Header Controls */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">AI Cost Analytics</h2>
+          <h2 className="text-2xl font-bold tracking-tight">
+            AI Cost Analytics
+          </h2>
           <p className="text-muted-foreground">
             Monitor your external AI service usage and costs
           </p>
@@ -218,11 +246,17 @@ export const AIAnalytics = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={handleExportCSV} disabled={isExporting}>
+              <DropdownMenuItem
+                onClick={handleExportCSV}
+                disabled={isExporting}
+              >
                 <FileSpreadsheet className="w-4 h-4 mr-2" />
                 Export as CSV
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleExportPDF} disabled={isExporting}>
+              <DropdownMenuItem
+                onClick={handleExportPDF}
+                disabled={isExporting}
+              >
                 <FileText className="w-4 h-4 mr-2" />
                 Export as PDF
               </DropdownMenuItem>
@@ -239,9 +273,13 @@ export const AIAnalytics = () => {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(overallStats.total_cost)}</div>
+            <div className="text-2xl font-bold">
+              {formatCurrency(overallStats.total_cost)}
+            </div>
             <p className="text-xs text-muted-foreground">
-              {selectedPeriod === '30d' ? 'This month' : `Last ${selectedPeriod}`}
+              {selectedPeriod === '30d'
+                ? 'This month'
+                : `Last ${selectedPeriod}`}
             </p>
           </CardContent>
         </Card>
@@ -252,7 +290,9 @@ export const AIAnalytics = () => {
             <Activity className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatNumber(overallStats.total_requests)}</div>
+            <div className="text-2xl font-bold">
+              {formatNumber(overallStats.total_requests)}
+            </div>
             <p className="text-xs text-muted-foreground">
               {overallStats.successful_requests} successful
             </p>
@@ -265,22 +305,38 @@ export const AIAnalytics = () => {
             <Zap className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatNumber(overallStats.total_tokens)}</div>
+            <div className="text-2xl font-bold">
+              {formatNumber(overallStats.total_tokens)}
+            </div>
             <p className="text-xs text-muted-foreground">
-              Avg {Math.round(overallStats.total_tokens / Math.max(overallStats.total_requests, 1))} per request
+              Avg{' '}
+              {Math.round(
+                overallStats.total_tokens /
+                  Math.max(overallStats.total_requests, 1)
+              )}{' '}
+              per request
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avg Response Time</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Avg Response Time
+            </CardTitle>
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{Math.round(overallStats.avg_processing_time)}ms</div>
+            <div className="text-2xl font-bold">
+              {Math.round(overallStats.avg_processing_time)}ms
+            </div>
             <p className="text-xs text-muted-foreground">
-              {((overallStats.successful_requests / Math.max(overallStats.total_requests, 1)) * 100).toFixed(1)}% success rate
+              {(
+                (overallStats.successful_requests /
+                  Math.max(overallStats.total_requests, 1)) *
+                100
+              ).toFixed(1)}
+              % success rate
             </p>
           </CardContent>
         </Card>
@@ -301,9 +357,18 @@ export const AIAnalytics = () => {
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium">
-                {formatCurrency(budget.monthly_spent)} of {formatCurrency(budget.monthly_limit)}
+                {formatCurrency(budget.monthly_spent)} of{' '}
+                {formatCurrency(budget.monthly_limit)}
               </span>
-              <Badge variant={budgetUsagePercent > 90 ? 'destructive' : budgetUsagePercent > 75 ? 'secondary' : 'default'}>
+              <Badge
+                variant={
+                  budgetUsagePercent > 90
+                    ? 'destructive'
+                    : budgetUsagePercent > 75
+                      ? 'secondary'
+                      : 'default'
+                }
+              >
                 {budgetUsagePercent.toFixed(1)}% used
               </Badge>
             </div>
@@ -332,28 +397,30 @@ export const AIAnalytics = () => {
               <TrendingUp className="w-5 h-5" />
               <span>Daily Spending Trend</span>
             </CardTitle>
-            <CardDescription>
-              Cost breakdown over time
-            </CardDescription>
+            <CardDescription>Cost breakdown over time</CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
               <AreaChart data={usageStats?.daily_stats || []}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis 
-                  dataKey="date" 
-                  tickFormatter={(value) => new Date(value).toLocaleDateString()}
+                <XAxis
+                  dataKey="date"
+                  tickFormatter={(value) =>
+                    new Date(value).toLocaleDateString()
+                  }
                 />
                 <YAxis tickFormatter={formatCurrency} />
-                <Tooltip 
-                  labelFormatter={(value) => new Date(value).toLocaleDateString()}
+                <Tooltip
+                  labelFormatter={(value) =>
+                    new Date(value).toLocaleDateString()
+                  }
                   formatter={(value: number) => [formatCurrency(value), 'Cost']}
                 />
-                <Area 
-                  type="monotone" 
-                  dataKey="cost" 
-                  stroke="#8884d8" 
-                  fill="#8884d8" 
+                <Area
+                  type="monotone"
+                  dataKey="cost"
+                  stroke="#8884d8"
+                  fill="#8884d8"
                   fillOpacity={0.3}
                 />
               </AreaChart>
@@ -380,13 +447,18 @@ export const AIAnalytics = () => {
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ model, cost }) => `${model}: ${formatCurrency(cost)}`}
+                  label={({ model, cost }) =>
+                    `${model}: ${formatCurrency(cost)}`
+                  }
                   outerRadius={80}
                   fill="#8884d8"
                   dataKey="cost"
                 >
                   {(usageStats?.model_stats || []).map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
                   ))}
                 </Pie>
                 <Tooltip formatter={(value: number) => formatCurrency(value)} />
@@ -409,50 +481,65 @@ export const AIAnalytics = () => {
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={450}>
-            <BarChart data={usageStats?.model_stats || []} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+            <BarChart
+              data={usageStats?.model_stats || []}
+              margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
+            >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="model" />
-              <YAxis 
-                yAxisId="left" 
-                orientation="left" 
+              <YAxis
+                yAxisId="left"
+                orientation="left"
                 tickFormatter={formatCurrency}
-                label={{ value: 'Total Cost ($)', angle: -90, position: 'insideLeft' }}
+                label={{
+                  value: 'Total Cost ($)',
+                  angle: -90,
+                  position: 'insideLeft',
+                }}
               />
-              <YAxis 
-                yAxisId="right" 
-                orientation="right" 
+              <YAxis
+                yAxisId="right"
+                orientation="right"
                 tickFormatter={(value) => `${value}ms`}
-                label={{ value: 'Response Time (ms)', angle: 90, position: 'insideRight' }}
+                label={{
+                  value: 'Response Time (ms)',
+                  angle: 90,
+                  position: 'insideRight',
+                }}
               />
-              <Tooltip 
+              <Tooltip
                 formatter={(value: number, name: string) => [
                   name === 'Total Cost' ? formatCurrency(value) : `${value}ms`,
-                  name
+                  name,
                 ]}
                 labelFormatter={(label) => `Model: ${label}`}
                 contentStyle={{
                   backgroundColor: 'hsl(var(--background))',
                   border: '1px solid hsl(var(--border))',
-                  borderRadius: '6px'
+                  borderRadius: '6px',
                 }}
               />
-              <Legend 
-                verticalAlign="bottom" 
+              <Legend
+                verticalAlign="bottom"
                 height={36}
                 iconType="rect"
-                formatter={(value) => value === 'Total Cost' ? '💰 Total Cost' : '⚡ Avg Response Time'}
+                formatter={(value) =>
+                  value === 'Total Cost'
+                    ? '💰 Total Cost'
+                    : '⚡ Avg Response Time'
+                }
               />
-              <Bar 
-                yAxisId="left" 
-                dataKey="cost" 
-                fill="#3b82f6" 
+              <Bar
+                yAxisId="left"
+                dataKey="cost"
+                fill="#3b82f6"
                 name="Total Cost"
                 radius={[2, 2, 0, 0]}
               />
-              <Bar 
-                yAxisId="right" 
-                dataKey="avg_time" 
-                fill="#f59e0b" 
+              <Bar
+                yAxisId="right"
+                dataKey="avg_time"
+                fill="#f59e0b"
                 name="Avg Response Time"
                 radius={[2, 2, 0, 0]}
               />
@@ -468,7 +555,8 @@ export const AIAnalytics = () => {
             <div className="flex items-center space-x-2">
               <div className="w-3 h-3 bg-amber-500 rounded"></div>
               <span className="text-muted-foreground">
-                <strong>Orange bars:</strong> Average response time in milliseconds
+                <strong>Orange bars:</strong> Average response time in
+                milliseconds
               </span>
             </div>
           </div>
@@ -483,7 +571,12 @@ export const AIAnalytics = () => {
               <Calendar className="w-5 h-5" />
               <span>Recent API Calls</span>
             </span>
-            <Select value={selectedProvider || "all"} onValueChange={(value) => setSelectedProvider(value === "all" ? "" : value)}>
+            <Select
+              value={selectedProvider || 'all'}
+              onValueChange={(value) =>
+                setSelectedProvider(value === 'all' ? '' : value)
+              }
+            >
               <SelectTrigger className="w-40">
                 <SelectValue />
               </SelectTrigger>
@@ -508,7 +601,10 @@ export const AIAnalytics = () => {
           ) : (
             <div className="space-y-2">
               {usageLogs?.logs?.slice(0, 10).map((log) => (
-                <div key={log.id} className="flex items-center justify-between p-3 border rounded-lg">
+                <div
+                  key={log.id}
+                  className="flex items-center justify-between p-3 border rounded-lg"
+                >
                   <div className="flex items-center space-x-3">
                     <Badge variant={log.success ? 'default' : 'destructive'}>
                       {log.provider}
@@ -521,9 +617,12 @@ export const AIAnalytics = () => {
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-medium">{formatCurrency(log.cost_usd)}</p>
+                    <p className="text-sm font-medium">
+                      {formatCurrency(log.cost_usd)}
+                    </p>
                     <p className="text-xs text-muted-foreground">
-                      {formatNumber(log.total_tokens)} tokens • {log.processing_time_ms}ms
+                      {formatNumber(log.total_tokens)} tokens •{' '}
+                      {log.processing_time_ms}ms
                     </p>
                   </div>
                 </div>

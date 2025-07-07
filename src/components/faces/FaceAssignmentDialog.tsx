@@ -1,9 +1,21 @@
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { UserPlus, Users, Eye } from 'lucide-react';
 import { FaceThumbnail } from './FaceThumbnail';
 import { useFaceSimilarities } from '@/hooks/useFaces';
@@ -38,12 +50,12 @@ interface FaceAssignmentDialogProps {
   onAssign: (personId: number) => void;
 }
 
-export const FaceAssignmentDialog = ({ 
-  open, 
-  onOpenChange, 
-  face, 
-  persons, 
-  onAssign 
+export const FaceAssignmentDialog = ({
+  open,
+  onOpenChange,
+  face,
+  persons,
+  onAssign,
 }: FaceAssignmentDialogProps) => {
   const [selectedPersonId, setSelectedPersonId] = useState<string>('');
   const { data: similaritiesData } = useFaceSimilarities(face.id, 0.6, 5);
@@ -75,7 +87,8 @@ export const FaceAssignmentDialog = ({
             <span>Assign Face to Person</span>
           </DialogTitle>
           <DialogDescription>
-            Choose which person this face belongs to, or create a new person profile.
+            Choose which person this face belongs to, or create a new person
+            profile.
           </DialogDescription>
         </DialogHeader>
 
@@ -92,8 +105,8 @@ export const FaceAssignmentDialog = ({
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <Badge 
-                    variant="secondary" 
+                  <Badge
+                    variant="secondary"
                     className={`absolute -top-2 -right-2 text-white text-xs ${getQualityColor(face.quality_score)}`}
                   >
                     {getQualityLabel(face.quality_score)}
@@ -109,11 +122,15 @@ export const FaceAssignmentDialog = ({
                   <div className="flex items-center space-x-4 text-sm">
                     <div className="flex items-center space-x-1">
                       <span className="text-muted-foreground">Confidence:</span>
-                      <Badge variant="outline">{Math.round(face.confidence)}%</Badge>
+                      <Badge variant="outline">
+                        {Math.round(face.confidence)}%
+                      </Badge>
                     </div>
                     <div className="flex items-center space-x-1">
                       <span className="text-muted-foreground">Quality:</span>
-                      <Badge variant="outline">{Math.round(face.quality_score * 100)}%</Badge>
+                      <Badge variant="outline">
+                        {Math.round(face.quality_score * 100)}%
+                      </Badge>
                     </div>
                   </div>
                   <Button
@@ -145,8 +162,8 @@ export const FaceAssignmentDialog = ({
                             className="w-full h-full object-cover"
                           />
                         </div>
-                        <Badge 
-                          variant="secondary" 
+                        <Badge
+                          variant="secondary"
                           className="absolute -top-1 -right-1 text-xs"
                         >
                           {Math.round(similar.similarity * 100)}%
@@ -159,7 +176,8 @@ export const FaceAssignmentDialog = ({
                   ))}
                 </div>
                 <p className="text-xs text-muted-foreground mt-2">
-                  These faces have similar features. Consider if they belong to the same person.
+                  These faces have similar features. Consider if they belong to
+                  the same person.
                 </p>
               </CardContent>
             </Card>
@@ -171,13 +189,19 @@ export const FaceAssignmentDialog = ({
               <h3 className="font-medium mb-3">Assign to Person</h3>
               <div className="space-y-4">
                 <div>
-                  <Select value={selectedPersonId} onValueChange={setSelectedPersonId}>
+                  <Select
+                    value={selectedPersonId}
+                    onValueChange={setSelectedPersonId}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Select a person..." />
                     </SelectTrigger>
                     <SelectContent>
                       {persons.map((person) => (
-                        <SelectItem key={person.id} value={person.id.toString()}>
+                        <SelectItem
+                          key={person.id}
+                          value={person.id.toString()}
+                        >
                           <div className="flex items-center justify-between w-full">
                             <span>{person.name}</span>
                             <div className="flex items-center space-x-2 ml-4">
@@ -203,7 +227,8 @@ export const FaceAssignmentDialog = ({
                   <div className="text-center py-4">
                     <Users className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
                     <p className="text-sm text-muted-foreground">
-                      No persons created yet. Create a new person to assign this face.
+                      No persons created yet. Create a new person to assign this
+                      face.
                     </p>
                   </div>
                 )}
@@ -216,10 +241,7 @@ export const FaceAssignmentDialog = ({
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button 
-            onClick={handleAssign}
-            disabled={!selectedPersonId}
-          >
+          <Button onClick={handleAssign} disabled={!selectedPersonId}>
             Assign Face
           </Button>
         </div>

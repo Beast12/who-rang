@@ -6,43 +6,49 @@ interface PullToRefreshOptions {
   enabled?: boolean;
 }
 
-export const usePullToRefresh = ({ 
-  onRefresh, 
+export const usePullToRefresh = ({
+  onRefresh,
   threshold = 60,
-  enabled = true 
+  enabled = true,
 }: PullToRefreshOptions) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [pullDistance, setPullDistance] = useState(0);
   const startY = useRef<number | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    if (!enabled || isRefreshing) return;
-    
-    const container = containerRef.current;
-    if (!container || container.scrollTop > 0) return;
-    
-    startY.current = e.touches[0].clientY;
-  }, [enabled, isRefreshing]);
+  const handleTouchStart = useCallback(
+    (e: React.TouchEvent) => {
+      if (!enabled || isRefreshing) return;
 
-  const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    if (!enabled || isRefreshing || startY.current === null) return;
-    
-    const container = containerRef.current;
-    if (!container || container.scrollTop > 0) return;
-    
-    const currentY = e.touches[0].clientY;
-    const distance = Math.max(0, currentY - startY.current);
-    
-    if (distance > 0) {
-      e.preventDefault();
-      setPullDistance(Math.min(distance, threshold * 1.5));
-    }
-  }, [enabled, isRefreshing, threshold]);
+      const container = containerRef.current;
+      if (!container || container.scrollTop > 0) return;
+
+      startY.current = e.touches[0].clientY;
+    },
+    [enabled, isRefreshing]
+  );
+
+  const handleTouchMove = useCallback(
+    (e: React.TouchEvent) => {
+      if (!enabled || isRefreshing || startY.current === null) return;
+
+      const container = containerRef.current;
+      if (!container || container.scrollTop > 0) return;
+
+      const currentY = e.touches[0].clientY;
+      const distance = Math.max(0, currentY - startY.current);
+
+      if (distance > 0) {
+        e.preventDefault();
+        setPullDistance(Math.min(distance, threshold * 1.5));
+      }
+    },
+    [enabled, isRefreshing, threshold]
+  );
 
   const handleTouchEnd = useCallback(async () => {
     if (!enabled || isRefreshing || startY.current === null) return;
-    
+
     if (pullDistance >= threshold) {
       setIsRefreshing(true);
       try {
@@ -51,7 +57,7 @@ export const usePullToRefresh = ({
         setIsRefreshing(false);
       }
     }
-    
+
     startY.current = null;
     setPullDistance(0);
   }, [enabled, isRefreshing, pullDistance, threshold, onRefresh]);

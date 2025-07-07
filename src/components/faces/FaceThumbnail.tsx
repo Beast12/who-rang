@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { User, Tag, AlertCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -53,14 +52,16 @@ export const FaceThumbnail = ({
 
   return (
     <div className="relative inline-block">
-      <div className={`${sizeClasses[size]} rounded-lg overflow-hidden bg-muted relative group`}>
+      <div
+        className={`${sizeClasses[size]} rounded-lg overflow-hidden bg-muted relative group`}
+      >
         <img
           src={imageError ? getPlaceholderImage() : getImageUrl(finalImageUrl)}
           alt={alt || personName || 'Face thumbnail'}
           className={`w-full h-full object-cover ${className || ''}`}
           onError={handleImageError}
         />
-        
+
         {/* Unknown face overlay */}
         {isUnknown && (
           <div className="absolute inset-0 bg-orange-500/20 flex items-center justify-center">

@@ -1,4 +1,3 @@
-
 export interface APIVisitorEvent {
   id: number;
   timestamp: string;
@@ -61,6 +60,17 @@ export interface APIError {
 }
 
 export interface WebSocketMessage {
-  type: 'new_visitor' | 'stats_update' | 'connection_status' | 'database_cleared' | 'face_recognized' | 'unknown_face_detected';
-  data: APIVisitorEvent | StatsResponse | { status: 'connected' | 'disconnected' } | { deletedCount: number; timestamp: string } | any;
+  type:
+    | 'new_visitor'
+    | 'stats_update'
+    | 'connection_status'
+    | 'database_cleared'
+    | 'face_recognized'
+    | 'unknown_face_detected';
+  data:
+    | APIVisitorEvent
+    | StatsResponse
+    | { status: 'connected' | 'disconnected' }
+    | { deletedCount: number; timestamp: string }
+    | any;
 }

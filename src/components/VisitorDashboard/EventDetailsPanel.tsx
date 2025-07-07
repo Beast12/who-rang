@@ -1,4 +1,3 @@
-
 import { Calendar, MapPin, Camera } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { VisitorEvent } from '@/types/visitor';
@@ -19,14 +18,16 @@ const formatFullTimestamp = (timestamp: string) => {
       hour: '2-digit',
       minute: '2-digit',
     }),
-    relative: getRelativeTime(date)
+    relative: getRelativeTime(date),
   };
 };
 
 const getRelativeTime = (date: Date) => {
   const now = new Date();
-  const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
-  
+  const diffInMinutes = Math.floor(
+    (now.getTime() - date.getTime()) / (1000 * 60)
+  );
+
   if (diffInMinutes < 1) return 'Just now';
   if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
   if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`;
@@ -50,7 +51,9 @@ export const EventDetailsPanel = ({ visitor }: EventDetailsPanelProps) => {
             <span className="text-sm font-medium">When</span>
           </div>
           <div className="ml-6 space-y-1">
-            <div className="text-foreground font-medium">{timeData.relative}</div>
+            <div className="text-foreground font-medium">
+              {timeData.relative}
+            </div>
             <div className="text-sm text-muted-foreground">{timeData.full}</div>
           </div>
         </div>
@@ -62,15 +65,21 @@ export const EventDetailsPanel = ({ visitor }: EventDetailsPanelProps) => {
             <span className="text-sm font-medium">Location</span>
           </div>
           <div className="ml-6">
-            <div className="text-foreground font-medium">{visitor.location}</div>
+            <div className="text-foreground font-medium">
+              {visitor.location}
+            </div>
           </div>
         </div>
 
         {/* Enhanced Weather Display */}
-        {(visitor.weather || visitor.weather_condition || visitor.weather_temperature) && (
+        {(visitor.weather ||
+          visitor.weather_condition ||
+          visitor.weather_temperature) && (
           <div className="space-y-2">
             <div className="flex items-center space-x-2 text-muted-foreground">
-              <span className="text-sm font-medium">Weather at time of visit</span>
+              <span className="text-sm font-medium">
+                Weather at time of visit
+              </span>
             </div>
             <div className="ml-6">
               <WeatherDisplay
@@ -85,7 +94,9 @@ export const EventDetailsPanel = ({ visitor }: EventDetailsPanelProps) => {
         )}
 
         {/* Device Info - only show if available */}
-        {(visitor.device_name || visitor.device_firmware || visitor.device_battery) && (
+        {(visitor.device_name ||
+          visitor.device_firmware ||
+          visitor.device_battery) && (
           <div className="space-y-2">
             <div className="flex items-center space-x-2 text-muted-foreground">
               <Camera className="w-4 h-4" />
@@ -93,13 +104,19 @@ export const EventDetailsPanel = ({ visitor }: EventDetailsPanelProps) => {
             </div>
             <div className="ml-6 space-y-1">
               {visitor.device_name && (
-                <div className="text-foreground font-medium">{visitor.device_name}</div>
+                <div className="text-foreground font-medium">
+                  {visitor.device_name}
+                </div>
               )}
               {visitor.device_firmware && (
-                <div className="text-sm text-muted-foreground">Firmware {visitor.device_firmware}</div>
+                <div className="text-sm text-muted-foreground">
+                  Firmware {visitor.device_firmware}
+                </div>
               )}
               {visitor.device_battery && (
-                <div className="text-sm text-muted-foreground">Battery: {visitor.device_battery}%</div>
+                <div className="text-sm text-muted-foreground">
+                  Battery: {visitor.device_battery}%
+                </div>
               )}
             </div>
           </div>

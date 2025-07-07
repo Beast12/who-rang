@@ -1,4 +1,3 @@
-
 export interface DetectedObject {
   object: string;
   confidence: number;

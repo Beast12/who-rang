@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { VisitorEvent } from '@/types/visitor';
@@ -17,23 +16,23 @@ interface ImageModalProps {
   onNavigate?: (direction: 'prev' | 'next') => void;
 }
 
-export const ImageModal = ({ 
-  isOpen, 
-  onClose, 
-  visitor, 
-  visitors = [], 
-  currentIndex = 0, 
-  onNavigate 
+export const ImageModal = ({
+  isOpen,
+  onClose,
+  visitor,
+  visitors = [],
+  currentIndex = 0,
+  onNavigate,
 }: ImageModalProps) => {
   const [zoom, setZoom] = useState(1);
   const imageUrl = getImageUrl(visitor.image_url);
 
   const handleZoomIn = () => {
-    setZoom(prev => Math.min(prev + 0.5, 3));
+    setZoom((prev) => Math.min(prev + 0.5, 3));
   };
 
   const handleZoomOut = () => {
-    setZoom(prev => Math.max(prev - 0.5, 0.5));
+    setZoom((prev) => Math.max(prev - 0.5, 0.5));
   };
 
   const handleDownload = async () => {
@@ -71,7 +70,9 @@ export const ImageModal = ({
     if (navigator.share) {
       navigator.share(shareData);
     } else {
-      navigator.clipboard.writeText(`${shareData.title}: ${shareData.text}\n${shareData.url}`);
+      navigator.clipboard.writeText(
+        `${shareData.title}: ${shareData.text}\n${shareData.url}`
+      );
       toast({
         title: 'Copied to clipboard',
         description: 'Visitor details have been copied to clipboard.',
@@ -95,7 +96,7 @@ export const ImageModal = ({
         <DialogTitle className="sr-only">
           Visitor Image - {visitor.visitor_id}
         </DialogTitle>
-        
+
         <ImageModalHeader
           visitorId={visitor.visitor_id}
           currentIndex={currentIndex}

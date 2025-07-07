@@ -1,7 +1,12 @@
-
 import { useState } from 'react';
 import { User, Trash2, Edit, Eye, Calendar } from 'lucide-react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Person } from '@/types/faces';
@@ -18,12 +23,12 @@ export const PersonCard = ({ person, onDelete }: PersonCardProps) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
-      year: 'numeric'
+      year: 'numeric',
     });
   };
 
   return (
-    <Card 
+    <Card
       className="hover:shadow-lg transition-all duration-300 cursor-pointer"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -35,7 +40,9 @@ export const PersonCard = ({ person, onDelete }: PersonCardProps) => {
               <User className="w-6 h-6 text-primary" />
             </div>
             <div>
-              <CardTitle className="text-lg font-semibold">{person.name}</CardTitle>
+              <CardTitle className="text-lg font-semibold">
+                {person.name}
+              </CardTitle>
               <div className="flex items-center space-x-1 text-sm text-muted-foreground">
                 <Calendar className="w-3 h-3" />
                 <span>Added {formatDate(person.created_at)}</span>
@@ -69,14 +76,18 @@ export const PersonCard = ({ person, onDelete }: PersonCardProps) => {
             {person.notes}
           </p>
         )}
-        
+
         <div className="flex space-x-4 text-sm">
           <div className="text-center">
-            <div className="font-semibold text-foreground">{person.encoding_count || 0}</div>
+            <div className="font-semibold text-foreground">
+              {person.encoding_count || 0}
+            </div>
             <div className="text-muted-foreground">Training Images</div>
           </div>
           <div className="text-center">
-            <div className="font-semibold text-foreground">{person.detection_count || 0}</div>
+            <div className="font-semibold text-foreground">
+              {person.detection_count || 0}
+            </div>
             <div className="text-muted-foreground">Detections</div>
           </div>
         </div>
@@ -86,12 +97,18 @@ export const PersonCard = ({ person, onDelete }: PersonCardProps) => {
         <div className="flex items-center justify-between w-full">
           <div className="flex space-x-2">
             {(person.detection_count || 0) > 0 ? (
-              <Badge variant="default" className="text-xs">Active</Badge>
+              <Badge variant="default" className="text-xs">
+                Active
+              </Badge>
             ) : (
-              <Badge variant="secondary" className="text-xs">Inactive</Badge>
+              <Badge variant="secondary" className="text-xs">
+                Inactive
+              </Badge>
             )}
             {(person.encoding_count || 0) > 0 && (
-              <Badge variant="outline" className="text-xs">Trained</Badge>
+              <Badge variant="outline" className="text-xs">
+                Trained
+              </Badge>
             )}
           </div>
           <Button variant="ghost" size="sm" className="text-muted-foreground">

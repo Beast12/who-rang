@@ -1,6 +1,11 @@
-
 import axios from 'axios';
-import { Person, PersonWithDetails, FaceRecognitionConfig, VisitorEventWithPerson, FaceRecognitionStats } from '@/types/faces';
+import {
+  Person,
+  PersonWithDetails,
+  FaceRecognitionConfig,
+  VisitorEventWithPerson,
+  FaceRecognitionStats,
+} from '@/types/faces';
 import { runtimeConfig } from '@/config/runtime';
 
 const API_BASE_URL = runtimeConfig.VITE_API_URL;
@@ -25,12 +30,18 @@ export const facesApi = {
     return response.data;
   },
 
-  async createPerson(person: { name: string; notes?: string }): Promise<Person> {
+  async createPerson(person: {
+    name: string;
+    notes?: string;
+  }): Promise<Person> {
     const response = await api.post('/faces/persons', person);
     return response.data;
   },
 
-  async updatePerson(id: number, person: { name: string; notes?: string }): Promise<Person> {
+  async updatePerson(
+    id: number,
+    person: { name: string; notes?: string }
+  ): Promise<Person> {
     const response = await api.put(`/faces/persons/${id}`, person);
     return response.data;
   },
@@ -45,13 +56,20 @@ export const facesApi = {
     return response.data;
   },
 
-  async updateFaceConfig(config: Partial<FaceRecognitionConfig>): Promise<void> {
+  async updateFaceConfig(
+    config: Partial<FaceRecognitionConfig>
+  ): Promise<void> {
     await api.put('/faces/config', config);
   },
 
   // Ollama integration
   async getOllamaModels(): Promise<{
-    models: Array<{ value: string; label: string; size?: number; modified_at?: string }>;
+    models: Array<{
+      value: string;
+      label: string;
+      size?: number;
+      modified_at?: string;
+    }>;
     ollama_url: string;
     total: number;
     error?: string;
@@ -72,16 +90,23 @@ export const facesApi = {
   },
 
   // Labeling
-  async labelVisitorEvent(visitorEventId: number, personId?: number, confidence?: number): Promise<void> {
+  async labelVisitorEvent(
+    visitorEventId: number,
+    personId?: number,
+    confidence?: number
+  ): Promise<void> {
     await api.post('/faces/label', {
       visitor_event_id: visitorEventId,
       person_id: personId,
-      confidence
+      confidence,
     });
   },
 
   // Events with person information
-  async getEventsWithPersons(page = 1, limit = 20): Promise<{
+  async getEventsWithPersons(
+    page = 1,
+    limit = 20
+  ): Promise<{
     events: VisitorEventWithPerson[];
     total: number;
     page: number;
@@ -98,20 +123,30 @@ export const facesApi = {
     // For now, we'll derive stats from existing data
     const persons = await this.getPersons();
     const totalPersons = persons.length;
-    const totalEncodings = persons.reduce((sum, p) => sum + (p.encoding_count || 0), 0);
-    const recognizedEvents = persons.reduce((sum, p) => sum + (p.detection_count || 0), 0);
-    
+    const totalEncodings = persons.reduce(
+      (sum, p) => sum + (p.encoding_count || 0),
+      0
+    );
+    const recognizedEvents = persons.reduce(
+      (sum, p) => sum + (p.detection_count || 0),
+      0
+    );
+
     return {
       totalPersons,
       totalEncodings,
       recognizedEvents,
       unrecognizedEvents: 0, // Would need to be calculated from events
-      averageConfidence: 0.75 // Placeholder
+      averageConfidence: 0.75, // Placeholder
     };
   },
 
   // Enhanced face detection endpoints
-  async getUnassignedFaces(limit = 50, offset = 0, qualityThreshold = 0): Promise<{
+  async getUnassignedFaces(
+    limit = 50,
+    offset = 0,
+    qualityThreshold = 0
+  ): Promise<{
     faces: Array<{
       id: number;
       visitor_event_id: number;
@@ -132,7 +167,9 @@ export const facesApi = {
       hasMore: boolean;
     };
   }> {
-    const response = await api.get(`/detected-faces/unassigned?limit=${limit}&offset=${offset}&quality_threshold=${qualityThreshold}`);
+    const response = await api.get(
+      `/detected-faces/unassigned?limit=${limit}&offset=${offset}&quality_threshold=${qualityThreshold}`
+    );
     return response.data;
   },
 
@@ -155,13 +192,18 @@ export const facesApi = {
     return response.data;
   },
 
-  async assignFaceToPerson(faceId: number, personId: number): Promise<{
+  async assignFaceToPerson(
+    faceId: number,
+    personId: number
+  ): Promise<{
     message: string;
     faceId: number;
     personId: number;
     personName: string;
   }> {
-    const response = await api.post(`/detected-faces/${faceId}/assign`, { personId });
+    const response = await api.post(`/detected-faces/${faceId}/assign`, {
+      personId,
+    });
     return response.data;
   },
 
@@ -173,17 +215,27 @@ export const facesApi = {
     return response.data;
   },
 
-  async bulkAssignFaces(faceIds: number[], personId: number): Promise<{
+  async bulkAssignFaces(
+    faceIds: number[],
+    personId: number
+  ): Promise<{
     message: string;
     assignedCount: number;
     totalRequested: number;
     errors?: string[];
   }> {
-    const response = await api.post('/detected-faces/bulk-assign', { faceIds, personId });
+    const response = await api.post('/detected-faces/bulk-assign', {
+      faceIds,
+      personId,
+    });
     return response.data;
   },
 
-  async getFaceSimilarities(faceId: number, threshold = 0.6, limit = 10): Promise<{
+  async getFaceSimilarities(
+    faceId: number,
+    threshold = 0.6,
+    limit = 10
+  ): Promise<{
     targetFace: any;
     similarities: Array<{
       id: number;
@@ -195,7 +247,9 @@ export const facesApi = {
     }>;
     totalFound: number;
   }> {
-    const response = await api.get(`/detected-faces/${faceId}/similarities?threshold=${threshold}&limit=${limit}`);
+    const response = await api.get(
+      `/detected-faces/${faceId}/similarities?threshold=${threshold}&limit=${limit}`
+    );
     return response.data;
   },
 
@@ -222,5 +276,5 @@ export const facesApi = {
   }> {
     const response = await api.get('/detected-faces/stats');
     return response.data;
-  }
+  },
 };

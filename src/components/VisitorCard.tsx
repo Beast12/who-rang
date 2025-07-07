@@ -1,6 +1,13 @@
-
 import { useState } from 'react';
-import { MapPin, Clock, Trash2, Eye, User, Tag, AlertCircle } from 'lucide-react';
+import {
+  MapPin,
+  Clock,
+  Trash2,
+  Eye,
+  User,
+  Tag,
+  AlertCircle,
+} from 'lucide-react';
 import { VisitorEvent } from '@/types/visitor';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -24,8 +31,10 @@ interface VisitorCardProps {
 const formatTimeAgo = (timestamp: string) => {
   const now = new Date();
   const then = new Date(timestamp);
-  const diffInMinutes = Math.floor((now.getTime() - then.getTime()) / (1000 * 60));
-  
+  const diffInMinutes = Math.floor(
+    (now.getTime() - then.getTime()) / (1000 * 60)
+  );
+
   if (diffInMinutes < 1) return 'Just now';
   if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
   if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`;
@@ -40,10 +49,16 @@ export const VisitorCard = ({ visitor, index }: VisitorCardProps) => {
   const navigate = useNavigate();
 
   const imageUrl = getImageUrl(visitor.image_url);
-  const isUnknownFace = !visitor.person_name && visitor.confidence_score && visitor.confidence_score > 0.7;
+  const isUnknownFace =
+    !visitor.person_name &&
+    visitor.confidence_score &&
+    visitor.confidence_score > 0.7;
 
   const handleDelete = () => {
-    if (visitor.id && window.confirm('Are you sure you want to delete this visitor record?')) {
+    if (
+      visitor.id &&
+      window.confirm('Are you sure you want to delete this visitor record?')
+    ) {
       deleteVisitorMutation.mutate(visitor.id);
     }
   };
@@ -70,7 +85,7 @@ export const VisitorCard = ({ visitor, index }: VisitorCardProps) => {
 
   return (
     <>
-      <div 
+      <div
         className="group rounded-lg bg-card border p-6 hover:shadow-lg transition-all duration-300 hover:scale-[1.02] animate-fade-in cursor-pointer relative"
         style={{ animationDelay: `${index * 50}ms` }}
         onClick={handleViewDetails}
@@ -78,7 +93,10 @@ export const VisitorCard = ({ visitor, index }: VisitorCardProps) => {
         {/* Unknown Face Indicator */}
         {isUnknownFace && (
           <div className="absolute -top-2 -right-2 z-10">
-            <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-200 animate-pulse">
+            <Badge
+              variant="outline"
+              className="bg-orange-50 text-orange-700 border-orange-200 animate-pulse"
+            >
               <AlertCircle className="w-3 h-3 mr-1" />
               Unknown
             </Badge>
@@ -112,8 +130,12 @@ export const VisitorCard = ({ visitor, index }: VisitorCardProps) => {
                         {visitor.person_name}
                       </p>
                       {visitor.recognition_confidence && (
-                        <Badge variant="outline" className="text-xs bg-green-50 text-green-700 border-green-200">
-                          {Math.round(visitor.recognition_confidence * 100)}% match
+                        <Badge
+                          variant="outline"
+                          className="text-xs bg-green-50 text-green-700 border-green-200"
+                        >
+                          {Math.round(visitor.recognition_confidence * 100)}%
+                          match
                         </Badge>
                       )}
                     </div>
@@ -144,27 +166,30 @@ export const VisitorCard = ({ visitor, index }: VisitorCardProps) => {
                     </div>
                   ) : null}
                 </div>
-                
+
                 {/* AI Message */}
                 <p className="text-card-foreground font-medium mb-2 leading-relaxed">
                   "{visitor.ai_message}"
                 </p>
-                
+
                 {/* Metadata */}
                 <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                   <div className="flex items-center space-x-1">
                     <Clock className="w-4 h-4" />
                     <span>{formatTimeAgo(visitor.timestamp)}</span>
                   </div>
-                  
+
                   <div className="flex items-center space-x-1">
                     <MapPin className="w-4 h-4" />
                     <span>{visitor.location}</span>
                   </div>
-                  
+
                   {visitor.weather && (
                     <div className="flex items-center space-x-1">
-                      <WeatherIcon condition={visitor.weather} className="w-4 h-4" />
+                      <WeatherIcon
+                        condition={visitor.weather}
+                        className="w-4 h-4"
+                      />
                       <span>{visitor.weather}</span>
                     </div>
                   )}

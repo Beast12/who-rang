@@ -1,7 +1,13 @@
 import { useState } from 'react';
 import { Search, Menu, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet';
 import { Input } from '@/components/ui/input';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useNavigate } from 'react-router-dom';
@@ -15,13 +21,13 @@ interface MobileHeaderProps {
   rightButton?: React.ReactNode;
 }
 
-export const MobileHeader = ({ 
+export const MobileHeader = ({
   title,
-  searchTerm = '', 
-  onSearchChange, 
+  searchTerm = '',
+  onSearchChange,
   onRefresh,
   isRefreshing = false,
-  rightButton
+  rightButton,
 }: MobileHeaderProps) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -42,14 +48,16 @@ export const MobileHeader = ({
           <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
             <div className="w-4 h-4 bg-primary-foreground rounded-full" />
           </div>
-          <h1 className="text-lg font-semibold text-foreground">{title || 'WhoRang'}</h1>
+          <h1 className="text-lg font-semibold text-foreground">
+            {title || 'WhoRang'}
+          </h1>
         </div>
 
         {/* Actions */}
         <div className="flex items-center space-x-2">
           {/* Right Button */}
           {rightButton}
-          
+
           {/* Search Toggle */}
           {onSearchChange && (
             <Button
@@ -71,7 +79,9 @@ export const MobileHeader = ({
               disabled={isRefreshing}
               className="focus-modern"
             >
-              <RefreshCw className={`w-5 h-5 ${isRefreshing ? 'animate-spin' : ''}`} />
+              <RefreshCw
+                className={`w-5 h-5 ${isRefreshing ? 'animate-spin' : ''}`}
+              />
             </Button>
           )}
 

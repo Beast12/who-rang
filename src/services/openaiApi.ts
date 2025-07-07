@@ -86,7 +86,11 @@ export const openaiApi = {
   },
 
   // Get usage logs
-  async getUsageLogs(limit: number = 50, offset: number = 0, provider?: string): Promise<{
+  async getUsageLogs(
+    limit: number = 50,
+    offset: number = 0,
+    provider?: string
+  ): Promise<{
     logs: Array<{
       id: number;
       provider: string;
@@ -115,12 +119,12 @@ export const openaiApi = {
       limit: limit.toString(),
       offset: offset.toString(),
     });
-    
+
     if (provider) {
       params.append('provider', provider);
     }
-    
+
     const response = await api.get(`/openai/usage/logs?${params}`);
     return response.data;
-  }
+  },
 };

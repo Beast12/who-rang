@@ -33,29 +33,30 @@ export const FloatingActionButton = ({
       label: 'Settings',
       onClick: onSettings || (() => navigate('/settings')),
     },
-  ].filter(action => action.onClick);
+  ].filter((action) => action.onClick);
 
   return (
     <div className="fixed bottom-20 right-4 z-40 flex flex-col-reverse items-end space-y-reverse space-y-3">
       {/* Action buttons */}
-      {isExpanded && actions.map((action, index) => (
-        <Button
-          key={action.label}
-          size="sm"
-          variant="secondary"
-          className={`
+      {isExpanded &&
+        actions.map((action, index) => (
+          <Button
+            key={action.label}
+            size="sm"
+            variant="secondary"
+            className={`
             w-12 h-12 rounded-full shadow-large animate-scale-bounce glass-intense
             hover:scale-110 transition-all duration-200
           `}
-          style={{ animationDelay: `${index * 50}ms` }}
-          onClick={() => {
-            action.onClick?.();
-            setIsExpanded(false);
-          }}
-        >
-          <action.icon className="w-5 h-5" />
-        </Button>
-      ))}
+            style={{ animationDelay: `${index * 50}ms` }}
+            onClick={() => {
+              action.onClick?.();
+              setIsExpanded(false);
+            }}
+          >
+            <action.icon className="w-5 h-5" />
+          </Button>
+        ))}
 
       {/* Main FAB */}
       <Button

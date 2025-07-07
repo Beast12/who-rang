@@ -1,10 +1,28 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { CalendarIcon, Filter, X, Eye, Package, User, Car, Truck } from 'lucide-react';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import {
+  CalendarIcon,
+  Filter,
+  X,
+  Eye,
+  Package,
+  User,
+  Car,
+  Truck,
+} from 'lucide-react';
 import { format } from 'date-fns';
 import { useDetectedObjects } from '@/hooks/useDetectedObjects';
 import { Badge } from '@/components/ui/badge';
@@ -18,24 +36,32 @@ interface FilterBarProps {
   activeFilters: number;
 }
 
-export const FilterBar = ({ 
-  onWeatherFilter, 
-  onDateFilter, 
+export const FilterBar = ({
+  onWeatherFilter,
+  onDateFilter,
   onObjectFilter,
-  onSortChange, 
+  onSortChange,
   onClearFilters,
-  activeFilters 
+  activeFilters,
 }: FilterBarProps) => {
-  const [dateRange, setDateRange] = useState<{ from: Date; to: Date } | null>(null);
+  const [dateRange, setDateRange] = useState<{ from: Date; to: Date } | null>(
+    null
+  );
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-  
+
   // Fetch detected objects
-  const { data: detectedObjectsData, isLoading: objectsLoading } = useDetectedObjects();
-  
+  const { data: detectedObjectsData, isLoading: objectsLoading } =
+    useDetectedObjects();
+
   // Helper function to get icon for object type
   const getObjectIcon = (objectName: string) => {
     const name = objectName.toLowerCase();
-    if (name.includes('person') || name.includes('human') || name.includes('man') || name.includes('woman')) {
+    if (
+      name.includes('person') ||
+      name.includes('human') ||
+      name.includes('man') ||
+      name.includes('woman')
+    ) {
       return <User className="w-4 h-4" />;
     }
     if (name.includes('car') || name.includes('vehicle')) {
@@ -44,7 +70,11 @@ export const FilterBar = ({
     if (name.includes('truck') || name.includes('van')) {
       return <Truck className="w-4 h-4" />;
     }
-    if (name.includes('package') || name.includes('box') || name.includes('delivery')) {
+    if (
+      name.includes('package') ||
+      name.includes('box') ||
+      name.includes('delivery')
+    ) {
       return <Package className="w-4 h-4" />;
     }
     return <Eye className="w-4 h-4" />;
@@ -57,20 +87,31 @@ export const FilterBar = ({
   };
 
   const quickDateFilters = [
-    { label: 'Today', onClick: () => {
-      const today = new Date();
-      handleDateSelect({ from: today, to: today });
-    }},
-    { label: 'This Week', onClick: () => {
-      const today = new Date();
-      const weekStart = new Date(today.setDate(today.getDate() - today.getDay()));
-      handleDateSelect({ from: weekStart, to: new Date() });
-    }},
-    { label: 'This Month', onClick: () => {
-      const today = new Date();
-      const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-      handleDateSelect({ from: monthStart, to: new Date() });
-    }}
+    {
+      label: 'Today',
+      onClick: () => {
+        const today = new Date();
+        handleDateSelect({ from: today, to: today });
+      },
+    },
+    {
+      label: 'This Week',
+      onClick: () => {
+        const today = new Date();
+        const weekStart = new Date(
+          today.setDate(today.getDate() - today.getDay())
+        );
+        handleDateSelect({ from: weekStart, to: new Date() });
+      },
+    },
+    {
+      label: 'This Month',
+      onClick: () => {
+        const today = new Date();
+        const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+        handleDateSelect({ from: monthStart, to: new Date() });
+      },
+    },
   ];
 
   return (
@@ -78,11 +119,17 @@ export const FilterBar = ({
       <div className="flex items-center space-x-4">
         <div className="flex items-center space-x-2">
           <Filter className="w-4 h-4 text-text-secondary" />
-          <span className="text-sm font-medium text-text-secondary">Filters:</span>
+          <span className="text-sm font-medium text-text-secondary">
+            Filters:
+          </span>
         </div>
 
         {/* Weather Filter */}
-        <Select onValueChange={(value) => onWeatherFilter(value === 'all' ? null : value)}>
+        <Select
+          onValueChange={(value) =>
+            onWeatherFilter(value === 'all' ? null : value)
+          }
+        >
           <SelectTrigger className="w-32">
             <SelectValue placeholder="Weather" />
           </SelectTrigger>
@@ -97,15 +144,19 @@ export const FilterBar = ({
         {/* Date Filter */}
         <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
           <PopoverTrigger asChild>
-            <Button variant="outline" className="w-48 justify-start text-left font-normal">
+            <Button
+              variant="outline"
+              className="w-48 justify-start text-left font-normal"
+            >
               <CalendarIcon className="mr-2 h-4 w-4" />
               {dateRange?.from ? (
                 dateRange.to ? (
                   <>
-                    {format(dateRange.from, "LLL dd")} - {format(dateRange.to, "LLL dd")}
+                    {format(dateRange.from, 'LLL dd')} -{' '}
+                    {format(dateRange.to, 'LLL dd')}
                   </>
                 ) : (
-                  format(dateRange.from, "LLL dd, y")
+                  format(dateRange.from, 'LLL dd, y')
                 )
               ) : (
                 <span>Pick a date range</span>
@@ -131,7 +182,11 @@ export const FilterBar = ({
             <Calendar
               initialFocus
               mode="range"
-              selected={dateRange ? { from: dateRange.from, to: dateRange.to } : undefined}
+              selected={
+                dateRange
+                  ? { from: dateRange.from, to: dateRange.to }
+                  : undefined
+              }
               onSelect={(range) => {
                 if (range?.from && range?.to) {
                   handleDateSelect({ from: range.from, to: range.to });
@@ -143,9 +198,16 @@ export const FilterBar = ({
         </Popover>
 
         {/* Objects Filter */}
-        <Select onValueChange={(value) => onObjectFilter(value === 'all' ? null : value)} disabled={objectsLoading}>
+        <Select
+          onValueChange={(value) =>
+            onObjectFilter(value === 'all' ? null : value)
+          }
+          disabled={objectsLoading}
+        >
           <SelectTrigger className="w-40">
-            <SelectValue placeholder={objectsLoading ? "Loading..." : "Objects"} />
+            <SelectValue
+              placeholder={objectsLoading ? 'Loading...' : 'Objects'}
+            />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Objects</SelectItem>
@@ -166,7 +228,9 @@ export const FilterBar = ({
         </Select>
 
         {/* Sort */}
-        <Select onValueChange={(value) => onSortChange(value as 'newest' | 'oldest')}>
+        <Select
+          onValueChange={(value) => onSortChange(value as 'newest' | 'oldest')}
+        >
           <SelectTrigger className="w-32">
             <SelectValue placeholder="Sort by" />
           </SelectTrigger>

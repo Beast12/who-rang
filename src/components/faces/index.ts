@@ -1,4 +1,3 @@
-
 export { PersonCard } from './PersonCard';
 export { CreatePersonDialog } from './CreatePersonDialog';
 export { FaceRecognitionSettings } from './FaceRecognitionSettings';

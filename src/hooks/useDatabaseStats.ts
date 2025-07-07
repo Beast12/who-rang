@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiService } from '@/services/api';
 import { toast } from '@/hooks/use-toast';
@@ -14,7 +13,7 @@ export const useDatabaseStats = () => {
 
 export const useClearDatabase = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: () => apiService.clearDatabase(),
     onSuccess: (data) => {
@@ -22,7 +21,7 @@ export const useClearDatabase = () => {
       queryClient.invalidateQueries({ queryKey: ['visitors'] });
       queryClient.invalidateQueries({ queryKey: ['stats'] });
       queryClient.invalidateQueries({ queryKey: ['database-stats'] });
-      
+
       toast({
         title: 'Database cleared',
         description: `Successfully deleted ${data.deletedCount} visitor records.`,

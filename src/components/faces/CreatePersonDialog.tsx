@@ -1,6 +1,12 @@
-
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,10 +18,13 @@ interface CreatePersonDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export const CreatePersonDialog = ({ open, onOpenChange }: CreatePersonDialogProps) => {
+export const CreatePersonDialog = ({
+  open,
+  onOpenChange,
+}: CreatePersonDialogProps) => {
   const [name, setName] = useState('');
   const [notes, setNotes] = useState('');
-  
+
   const createPersonMutation = useCreatePerson();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -29,7 +38,7 @@ export const CreatePersonDialog = ({ open, onOpenChange }: CreatePersonDialogPro
           setName('');
           setNotes('');
           onOpenChange(false);
-        }
+        },
       }
     );
   };
@@ -46,10 +55,11 @@ export const CreatePersonDialog = ({ open, onOpenChange }: CreatePersonDialogPro
         <DialogHeader>
           <DialogTitle>Add New Person</DialogTitle>
           <DialogDescription>
-            Create a profile for someone who visits regularly. You can train the system to recognize them later.
+            Create a profile for someone who visits regularly. You can train the
+            system to recognize them later.
           </DialogDescription>
         </DialogHeader>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="name">Name *</Label>
@@ -61,7 +71,7 @@ export const CreatePersonDialog = ({ open, onOpenChange }: CreatePersonDialogPro
               required
             />
           </div>
-          
+
           <div className="space-y-2">
             <Label htmlFor="notes">Notes (optional)</Label>
             <Textarea
@@ -72,7 +82,7 @@ export const CreatePersonDialog = ({ open, onOpenChange }: CreatePersonDialogPro
               rows={3}
             />
           </div>
-          
+
           <DialogFooter>
             <Button
               type="button"

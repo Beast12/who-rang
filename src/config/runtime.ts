@@ -1,4 +1,3 @@
-
 // Runtime configuration that can be updated after build
 interface RuntimeConfig {
   VITE_API_URL: string;
@@ -13,14 +12,15 @@ const getRuntimeConfig = (): RuntimeConfig => {
     console.log('Using runtime configuration:', config);
     return config;
   }
-  
+
   // Fallback to Vite environment variables for development
   const fallbackConfig = {
     VITE_API_URL: import.meta.env.VITE_API_URL || '/api',
-    VITE_WS_URL: import.meta.env.VITE_WS_URL || 
-      `${window?.location?.protocol === 'https:' ? 'wss:' : 'ws:'}//${window?.location?.host}`
+    VITE_WS_URL:
+      import.meta.env.VITE_WS_URL ||
+      `${window?.location?.protocol === 'https:' ? 'wss:' : 'ws:'}//${window?.location?.host}`,
   };
-  
+
   console.log('Using fallback configuration:', fallbackConfig);
   return fallbackConfig;
 };
@@ -36,9 +36,9 @@ export const checkBackendHealth = async (): Promise<boolean> => {
         'Content-Type': 'application/json',
       },
       // Add timeout to prevent hanging
-      signal: AbortSignal.timeout(5000)
+      signal: AbortSignal.timeout(5000),
     });
-    
+
     console.log('Backend health check response:', response.status);
     return response.ok;
   } catch (error) {

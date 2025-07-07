@@ -1,7 +1,12 @@
-
 import { useState } from 'react';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 
 export const NotificationSettings = () => {
@@ -11,7 +16,9 @@ export const NotificationSettings = () => {
   return (
     <Card className="bg-card border">
       <CardHeader>
-        <CardTitle className="text-card-foreground">Notification Settings</CardTitle>
+        <CardTitle className="text-card-foreground">
+          Notification Settings
+        </CardTitle>
         <CardDescription className="text-muted-foreground">
           Configure alerts and notifications for new visitors
         </CardDescription>
@@ -19,7 +26,9 @@ export const NotificationSettings = () => {
       <CardContent className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
-            <Label className="text-foreground font-medium">Desktop Notifications</Label>
+            <Label className="text-foreground font-medium">
+              Desktop Notifications
+            </Label>
             <p className="text-sm text-muted-foreground">
               Show browser notifications for new visitors
             </p>
@@ -37,10 +46,7 @@ export const NotificationSettings = () => {
               Play sound when new visitor detected
             </p>
           </div>
-          <Switch
-            checked={soundAlerts}
-            onCheckedChange={setSoundAlerts}
-          />
+          <Switch checked={soundAlerts} onCheckedChange={setSoundAlerts} />
         </div>
       </CardContent>
     </Card>

@@ -1,4 +1,3 @@
-
 import { ArrowLeft, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,7 +14,10 @@ interface DashboardHeaderProps {
   onBack: () => void;
 }
 
-export const DashboardHeader = ({ visitorId, onBack }: DashboardHeaderProps) => {
+export const DashboardHeader = ({
+  visitorId,
+  onBack,
+}: DashboardHeaderProps) => {
   return (
     <header className="border-b border-border bg-card">
       <div className="container mx-auto px-4 py-4 max-w-7xl">
@@ -24,7 +26,7 @@ export const DashboardHeader = ({ visitorId, onBack }: DashboardHeaderProps) => 
             <Button variant="ghost" size="sm" onClick={onBack} className="p-2">
               <ArrowLeft className="w-4 h-4" />
             </Button>
-            
+
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem>
@@ -39,7 +41,9 @@ export const DashboardHeader = ({ visitorId, onBack }: DashboardHeaderProps) => 
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
-                  <BreadcrumbPage className="font-mono">{visitorId}</BreadcrumbPage>
+                  <BreadcrumbPage className="font-mono">
+                    {visitorId}
+                  </BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>

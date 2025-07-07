@@ -1,4 +1,3 @@
-
 import { VisitorEvent } from '@/types/visitor';
 import { VisitorCard } from './VisitorCard';
 import { Button } from '@/components/ui/button';
@@ -12,21 +11,27 @@ interface ActivityFeedProps {
   onLoadMore?: () => void;
 }
 
-export const ActivityFeed = ({ visitors, isLoading, error, hasMore, onLoadMore }: ActivityFeedProps) => {
+export const ActivityFeed = ({
+  visitors,
+  isLoading,
+  error,
+  hasMore,
+  onLoadMore,
+}: ActivityFeedProps) => {
   if (error) {
     return (
       <div className="text-center py-12 animate-fade-in">
         <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
           <AlertCircle className="w-8 h-8 text-red-600" />
         </div>
-        <h3 className="text-lg font-medium text-foreground mb-2">Connection Error</h3>
+        <h3 className="text-lg font-medium text-foreground mb-2">
+          Connection Error
+        </h3>
         <p className="text-muted-foreground mb-4">
-          {error.message || 'Unable to load visitor data. Please check your connection.'}
+          {error.message ||
+            'Unable to load visitor data. Please check your connection.'}
         </p>
-        <Button 
-          onClick={() => window.location.reload()} 
-          variant="outline"
-        >
+        <Button onClick={() => window.location.reload()} variant="outline">
           Retry
         </Button>
       </div>
@@ -58,8 +63,12 @@ export const ActivityFeed = ({ visitors, isLoading, error, hasMore, onLoadMore }
         <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
           <span className="text-2xl">🔔</span>
         </div>
-        <h3 className="text-lg font-medium text-foreground mb-2">No visitors yet</h3>
-        <p className="text-muted-foreground">Visitor activity will appear here when your doorbell is triggered.</p>
+        <h3 className="text-lg font-medium text-foreground mb-2">
+          No visitors yet
+        </h3>
+        <p className="text-muted-foreground">
+          Visitor activity will appear here when your doorbell is triggered.
+        </p>
       </div>
     );
   }
@@ -67,20 +76,16 @@ export const ActivityFeed = ({ visitors, isLoading, error, hasMore, onLoadMore }
   return (
     <div className="space-y-4">
       {visitors.map((visitor, index) => (
-        <VisitorCard 
-          key={visitor.id || visitor.visitor_id} 
-          visitor={visitor} 
+        <VisitorCard
+          key={visitor.id || visitor.visitor_id}
+          visitor={visitor}
           index={index}
         />
       ))}
-      
+
       {hasMore && (
         <div className="flex justify-center pt-6">
-          <Button
-            onClick={onLoadMore}
-            variant="outline"
-            disabled={isLoading}
-          >
+          <Button onClick={onLoadMore} variant="outline" disabled={isLoading}>
             {isLoading ? 'Loading...' : 'Load More'}
           </Button>
         </div>
