@@ -5,6 +5,15 @@ const openaiController = require('../controllers/openaiController');
 // Get available OpenAI models
 router.get('/models', openaiController.getAvailableModels);
 
+// Get available models for specific provider
+router.get('/models/:provider', openaiController.getProviderModels);
+
+// Get current AI model
+router.get('/model/current', openaiController.getCurrentModel);
+
+// Set AI model
+router.post('/model', openaiController.setAIModel);
+
 // Test OpenAI API connection
 router.post('/test-connection', openaiController.testConnection);
 

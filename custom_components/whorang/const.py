@@ -76,6 +76,8 @@ SERVICE_TRIGGER_ANALYSIS: Final = "trigger_analysis"
 SERVICE_ADD_KNOWN_VISITOR: Final = "add_known_visitor"
 SERVICE_REMOVE_KNOWN_VISITOR: Final = "remove_known_visitor"
 SERVICE_SET_AI_PROVIDER: Final = "set_ai_provider"
+SERVICE_SET_AI_MODEL: Final = "set_ai_model"
+SERVICE_GET_AVAILABLE_MODELS: Final = "get_available_models"
 SERVICE_EXPORT_DATA: Final = "export_data"
 SERVICE_TEST_WEBHOOK: Final = "test_webhook"
 

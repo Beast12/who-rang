@@ -7,7 +7,7 @@ from typing import Any, Dict, List, Optional
 from homeassistant.components.select import SelectEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity import DeviceInfo
+from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
@@ -34,6 +34,7 @@ async def async_setup_entry(
 
     entities = [
         WhoRangAIProviderSelect(coordinator, config_entry),
+        WhoRangAIModelSelect(coordinator, config_entry),
     ]
 
     async_add_entities(entities)
@@ -158,4 +159,67 @@ class WhoRangAIProviderSelect(WhoRangSelectEntity):
             "monthly_budget_limit": face_config.get("monthly_budget_limit"),
             "available_providers": self.options,
             "configured_api_keys": list(api_keys.keys()),
+        }
+
+
+class WhoRangAIModelSelect(WhoRangSelectEntity):
+    """Select entity for AI model selection within chosen provider."""
+
+    def __init__(
+        self,
+        coordinator: WhoRangDataUpdateCoordinator,
+        config_entry: ConfigEntry,
+    ) -> None:
+        """Initialize the select entity."""
+        super().__init__(coordinator, config_entry, "ai_model")
+        self._attr_name = "AI Model"
+        self._attr_icon = "mdi:brain"
+        self._attr_entity_category = EntityCategory.CONFIG
+        self._entry = config_entry
+
+    @property
+    def options(self) -> List[str]:
+        """Return available models for current AI provider."""
+        current_provider = self.coordinator.data.get("current_ai_provider", "local")
+        available_models = self.coordinator.data.get("available_models", {})
+        
+        return available_models.get(current_provider, ["default"])
+
+    @property
+    def current_option(self) -> Optional[str]:
+        """Return currently selected model."""
+        return self.coordinator.data.get("current_ai_model", "default")
+
+    async def async_select_option(self, option: str) -> None:
+        """Change the selected AI model."""
+        if option not in self.options:
+            _LOGGER.error("Invalid AI model option: %s", option)
+            return
+
+        _LOGGER.debug("Changing AI model to: %s", option)
+        
+        success = await self.coordinator.api_client.set_ai_model(option)
+        if success:
+            _LOGGER.info("Successfully changed AI model to: %s", option)
+            await self.coordinator.async_request_refresh()
+        else:
+            _LOGGER.error("Failed to change AI model to: %s", option)
+
+    @property
+    def available(self) -> bool:
+        """Return if entity is available."""
+        current_provider = self.coordinator.data.get("current_ai_provider")
+        # Hide model selection for local provider as it's handled in face recognition settings
+        return current_provider and current_provider != "local"
+
+    @property
+    def extra_state_attributes(self) -> Dict[str, Any]:
+        """Return additional state attributes."""
+        current_provider = self.coordinator.data.get("current_ai_provider", "local")
+        available_models = self.coordinator.data.get("available_models", {})
+        
+        return {
+            "current_provider": current_provider,
+            "available_models": available_models.get(current_provider, []),
+            "total_models": len(available_models.get(current_provider, [])),
         }

@@ -92,3 +92,33 @@ export_data:
 test_webhook:
   name: Test Webhook
   description: Test webhook functionality by sending a test event
+
+set_ai_model:
+  name: Set AI Model
+  description: Set the AI model for the current provider
+  fields:
+    model:
+      name: Model
+      description: Model name to set
+      required: true
+      example: "gpt-4o"
+      selector:
+        text:
+
+get_available_models:
+  name: Get Available Models
+  description: Get list of available models for current or specified provider
+  fields:
+    provider:
+      name: Provider
+      description: AI provider to get models for (optional)
+      required: false
+      example: "openai"
+      selector:
+        select:
+          options:
+            - "local"
+            - "openai"
+            - "claude"
+            - "gemini"
+            - "google-cloud-vision"

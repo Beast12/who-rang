@@ -89,6 +89,14 @@ class WhoRangDataUpdateCoordinator(DataUpdateCoordinator):
             # Get AI usage stats if cost tracking is enabled
             ai_usage = await self.api_client.get_ai_usage_stats(days=1)
             
+            # Get current AI provider and model information
+            face_config = system_info.get("face_config", {})
+            current_ai_provider = face_config.get("ai_provider", "local")
+            current_ai_model = await self.api_client.get_current_ai_model()
+            
+            # Get available models for all providers
+            available_models = await self.api_client.get_available_models()
+            
             # Detect if there's a new visitor
             if latest_visitor and latest_visitor.get("visitor_id") != self._last_visitor_id:
                 self._last_visitor_id = latest_visitor.get("visitor_id")
@@ -99,6 +107,9 @@ class WhoRangDataUpdateCoordinator(DataUpdateCoordinator):
                 "latest_visitor": latest_visitor,
                 "known_persons": known_persons,
                 "ai_usage": ai_usage,
+                "current_ai_provider": current_ai_provider,
+                "current_ai_model": current_ai_model,
+                "available_models": available_models,
                 "last_update": datetime.now().isoformat(),
                 "websocket_connected": self._websocket is not None and not self._websocket.closed,
             }

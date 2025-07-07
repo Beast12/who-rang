@@ -397,6 +397,211 @@ class OpenAIController {
       });
     }
   }
+
+  // Get available models for specific provider
+  static async getProviderModels(req, res) {
+    try {
+      const { provider } = req.params;
+      
+      console.log('=== GETTING PROVIDER MODELS ===');
+      console.log('Provider:', provider);
+
+      const defaultModels = OpenAIController._getDefaultModels();
+      
+      if (!defaultModels[provider]) {
+        return res.status(400).json({
+          error: `Unknown provider: ${provider}`,
+          available_providers: Object.keys(defaultModels)
+        });
+      }
+
+      // For local provider, try to get dynamic models from Ollama
+      if (provider === 'local') {
+        // TODO: Implement Ollama model fetching
+        // For now, return default local models
+        res.json({
+          data: defaultModels[provider],
+          provider: provider,
+          total: defaultModels[provider].length
+        });
+        return;
+      }
+
+      // For external providers, return default models
+      // TODO: Implement dynamic model fetching for each provider
+      res.json({
+        data: defaultModels[provider],
+        provider: provider,
+        total: defaultModels[provider].length
+      });
+
+    } catch (error) {
+      console.error('=== GET PROVIDER MODELS ERROR ===');
+      console.error('Error details:', error);
+      
+      res.status(500).json({
+        error: 'Failed to get provider models',
+        details: error.message
+      });
+    }
+  }
+
+  // Get current AI model
+  static async getCurrentModel(req, res) {
+    try {
+      const db = getDatabase();
+      const configStmt = db.prepare('SELECT ai_provider, current_ai_model, ollama_model, openai_model FROM face_recognition_config LIMIT 1');
+      const config = configStmt.get();
+
+      if (!config) {
+        return res.json({
+          data: {
+            provider: 'local',
+            model: 'llava'
+          }
+        });
+      }
+
+      let currentModel = config.current_ai_model;
+      
+      // Fallback to provider-specific model fields if current_ai_model is not set
+      if (!currentModel) {
+        switch (config.ai_provider) {
+          case 'local':
+            currentModel = config.ollama_model || 'llava';
+            break;
+          case 'openai':
+            currentModel = config.openai_model || 'gpt-4o';
+            break;
+          default:
+            currentModel = 'default';
+        }
+      }
+
+      res.json({
+        data: {
+          provider: config.ai_provider || 'local',
+          model: currentModel
+        }
+      });
+
+    } catch (error) {
+      console.error('=== GET CURRENT MODEL ERROR ===');
+      console.error('Error details:', error);
+      
+      res.status(500).json({
+        error: 'Failed to get current model',
+        details: error.message
+      });
+    }
+  }
+
+  // Set AI model
+  static async setAIModel(req, res) {
+    try {
+      const { model } = req.body;
+      
+      if (!model) {
+        return res.status(400).json({
+          success: false,
+          error: 'Model is required'
+        });
+      }
+
+      console.log('=== SETTING AI MODEL ===');
+      console.log('Model:', model);
+
+      const db = getDatabase();
+      
+      // Get current config
+      const configStmt = db.prepare('SELECT * FROM face_recognition_config LIMIT 1');
+      let config = configStmt.get();
+
+      if (!config) {
+        return res.status(400).json({
+          success: false,
+          error: 'AI configuration not found. Please set up AI provider first.'
+        });
+      }
+
+      // Update the current model and provider-specific model field
+      const updateStmt = db.prepare(`
+        UPDATE face_recognition_config 
+        SET current_ai_model = ?, 
+            ${config.ai_provider === 'local' ? 'ollama_model' : 
+              config.ai_provider === 'openai' ? 'openai_model' : 
+              'current_ai_model'} = ?,
+            updated_at = ?
+        WHERE id = ?
+      `);
+      
+      updateStmt.run(
+        model,
+        model,
+        new Date().toISOString(),
+        config.id
+      );
+
+      console.log(`Successfully set AI model to: ${model} for provider: ${config.ai_provider}`);
+
+      res.json({
+        success: true,
+        message: `AI model set to ${model}`,
+        model: model,
+        provider: config.ai_provider
+      });
+
+    } catch (error) {
+      console.error('=== SET AI MODEL ERROR ===');
+      console.error('Error details:', error);
+      
+      res.status(500).json({
+        success: false,
+        error: 'Failed to set AI model',
+        details: error.message
+      });
+    }
+  }
+
+  // Get default model mappings
+  static _getDefaultModels() {
+    return {
+      local: [
+        'llava',
+        'llava:7b',
+        'llava:13b',
+        'llava:34b',
+        'bakllava',
+        'cogvlm',
+        'llama-vision'
+      ],
+      openai: [
+        'gpt-4o',
+        'gpt-4o-mini',
+        'gpt-4-turbo',
+        'gpt-4-vision-preview',
+        'gpt-3.5-turbo'
+      ],
+      claude: [
+        'claude-3-5-sonnet-20241022',
+        'claude-3-5-haiku-20241022',
+        'claude-3-opus-20240229',
+        'claude-3-sonnet-20240229',
+        'claude-3-haiku-20240307'
+      ],
+      gemini: [
+        'gemini-1.5-pro',
+        'gemini-1.5-flash',
+        'gemini-1.0-pro-vision',
+        'gemini-1.0-pro'
+      ],
+      'google-cloud-vision': [
+        'vision-api-v1',
+        'vision-api-v1p1beta1',
+        'vision-api-v1p2beta1'
+      ]
+    };
+  }
 }
 
 module.exports = OpenAIController;

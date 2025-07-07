@@ -22,6 +22,8 @@ from .const import (
     SERVICE_ADD_KNOWN_VISITOR,
     SERVICE_REMOVE_KNOWN_VISITOR,
     SERVICE_SET_AI_PROVIDER,
+    SERVICE_SET_AI_MODEL,
+    SERVICE_GET_AVAILABLE_MODELS,
     SERVICE_EXPORT_DATA,
     SERVICE_TEST_WEBHOOK,
 )
@@ -229,6 +231,49 @@ async def _async_register_services(hass: HomeAssistant) -> None:
             else:
                 _LOGGER.error("Webhook test failed")
 
+    async def set_ai_model_service(call) -> None:
+        """Handle set AI model service call."""
+        model = call.data.get("model")
+        
+        if not model:
+            _LOGGER.error("Model is required for setting AI model")
+            return
+            
+        # Get all coordinators
+        coordinators = [
+            coordinator for coordinator in hass.data[DOMAIN].values()
+            if isinstance(coordinator, WhoRangDataUpdateCoordinator)
+        ]
+        
+        for coordinator in coordinators:
+            success = await coordinator.api_client.set_ai_model(model)
+            if success:
+                _LOGGER.info("Set AI model to: %s", model)
+                await coordinator.async_request_refresh()
+            else:
+                _LOGGER.error("Failed to set AI model to: %s", model)
+
+    async def get_available_models_service(call) -> None:
+        """Handle get available models service call."""
+        provider = call.data.get("provider")
+        
+        # Get all coordinators
+        coordinators = [
+            coordinator for coordinator in hass.data[DOMAIN].values()
+            if isinstance(coordinator, WhoRangDataUpdateCoordinator)
+        ]
+        
+        for coordinator in coordinators:
+            try:
+                if provider:
+                    models = await coordinator.api_client.get_provider_models(provider)
+                    _LOGGER.info("Available models for %s: %s", provider, models)
+                else:
+                    models = await coordinator.api_client.get_available_models()
+                    _LOGGER.info("Available models: %s", models)
+            except Exception as err:
+                _LOGGER.error("Failed to get available models: %s", err)
+
     # Register services
     hass.services.async_register(
         DOMAIN,
@@ -283,4 +328,22 @@ async def _async_register_services(hass: HomeAssistant) -> None:
         SERVICE_TEST_WEBHOOK,
         test_webhook_service,
         schema=vol.Schema({}),
+    )
+
+    hass.services.async_register(
+        DOMAIN,
+        SERVICE_SET_AI_MODEL,
+        set_ai_model_service,
+        schema=vol.Schema({
+            vol.Required("model"): str,
+        }),
+    )
+
+    hass.services.async_register(
+        DOMAIN,
+        SERVICE_GET_AVAILABLE_MODELS,
+        get_available_models_service,
+        schema=vol.Schema({
+            vol.Optional("provider"): vol.In(["local", "openai", "claude", "gemini", "google-cloud-vision"]),
+        }),
     )

@@ -134,6 +134,7 @@ function createTables() {
     addColumnIfNotExists('face_recognition_config', 'ollama_model', 'TEXT DEFAULT \'llava\'');
     addColumnIfNotExists('face_recognition_config', 'openai_model', 'TEXT DEFAULT \'gpt-4o\'');
     addColumnIfNotExists('face_recognition_config', 'claude_model', 'TEXT DEFAULT \'claude-3-sonnet-20240229\'');
+    addColumnIfNotExists('face_recognition_config', 'current_ai_model', 'TEXT');
     addColumnIfNotExists('face_recognition_config', 'cost_tracking_enabled', 'BOOLEAN DEFAULT 1');
     addColumnIfNotExists('face_recognition_config', 'monthly_budget_limit', 'REAL DEFAULT 0');
 

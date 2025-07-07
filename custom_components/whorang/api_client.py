@@ -322,7 +322,7 @@ class WhoRangAPIClient:
             _LOGGER.error("Failed to set AI provider: %s", err)
             raise
 
-    async def set_ai_provider_with_key(self, provider: str, api_key: str = None) -> bool:
+    async def set_ai_provider_with_key(self, provider: str, api_key: Optional[str] = None) -> bool:
         """Set AI provider with API key if required."""
         try:
             payload = {"provider": provider}
@@ -441,6 +441,78 @@ class WhoRangAPIClient:
         except Exception as err:
             _LOGGER.error("Connection validation failed: %s", err)
             return False
+
+    async def get_available_models(self, provider: Optional[str] = None) -> Dict[str, Any]:
+        """Get available models for AI providers."""
+        try:
+            endpoint = "/api/openai/models"
+            if provider:
+                endpoint = f"/api/openai/models/{provider}"
+            
+            response = await self._request("GET", endpoint)
+            return response.get("data", self._get_default_models())
+        except Exception as e:
+            _LOGGER.error("Failed to get available models: %s", e)
+            return self._get_default_models()
+
+    def _get_default_models(self) -> Dict[str, List[str]]:
+        """Return default model mappings based on frontend patterns."""
+        return {
+            "local": ["llava", "llava:7b", "llava:13b", "llava:34b", "bakllava", "cogvlm", "llama-vision"],
+            "openai": [
+                "gpt-4o",
+                "gpt-4o-mini", 
+                "gpt-4-turbo",
+                "gpt-4-vision-preview",
+                "gpt-3.5-turbo"
+            ],
+            "claude": [
+                "claude-3-5-sonnet-20241022",
+                "claude-3-5-haiku-20241022", 
+                "claude-3-opus-20240229",
+                "claude-3-sonnet-20240229",
+                "claude-3-haiku-20240307"
+            ],
+            "gemini": [
+                "gemini-1.5-pro",
+                "gemini-1.5-flash",
+                "gemini-1.0-pro-vision",
+                "gemini-1.0-pro"
+            ],
+            "google-cloud-vision": [
+                "vision-api-v1",
+                "vision-api-v1p1beta1",
+                "vision-api-v1p2beta1"
+            ]
+        }
+
+    async def set_ai_model(self, model: str) -> bool:
+        """Set the active AI model."""
+        try:
+            response = await self._request("POST", "/api/openai/model", data={"model": model})
+            return response.get("success", False)
+        except Exception as e:
+            _LOGGER.error("Failed to set AI model %s: %s", model, e)
+            return False
+
+    async def get_current_ai_model(self) -> str:
+        """Get currently selected AI model."""
+        try:
+            response = await self._request("GET", "/api/openai/model/current")
+            return response.get("data", {}).get("model", "default")
+        except Exception as e:
+            _LOGGER.error("Failed to get current AI model: %s", e)
+            return "default"
+
+    async def get_provider_models(self, provider: str) -> List[str]:
+        """Get available models for specific provider."""
+        try:
+            response = await self._request("GET", f"/api/openai/models/{provider}")
+            return response.get("data", [])
+        except Exception as e:
+            _LOGGER.error("Failed to get models for provider %s: %s", provider, e)
+            default_models = self._get_default_models()
+            return default_models.get(provider, [])
 
     async def get_system_info(self) -> Dict[str, Any]:
         """Get comprehensive system information."""
