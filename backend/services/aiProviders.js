@@ -11,6 +11,24 @@ class BaseAIProvider {
   async generateFaceEncoding(imageUrl, faceData) {
     throw new Error('generateFaceEncoding method must be implemented');
   }
+
+  // Unified helper to convert HTTP URLs to local file paths
+  convertToLocalPath(imageUrl) {
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      try {
+        const url = new URL(imageUrl);
+        // Extract the path part (e.g., /uploads/image.jpg)
+        if (url.pathname.startsWith('/uploads/')) {
+          console.log(`Converting HTTP URL to local path: ${imageUrl} -> ${url.pathname}`);
+          return url.pathname;
+        }
+      } catch (error) {
+        console.error('Error parsing URL:', error);
+      }
+    }
+    // Return as-is if not an HTTP URL or doesn't match expected pattern
+    return imageUrl;
+  }
 }
 
 class OpenAIVisionProvider extends BaseAIProvider {
@@ -614,38 +632,25 @@ If no faces are detected, set faces_detected to 0 and faces to empty array. Alwa
   async convertImageToBase64(imageUrl) {
     const fs = require('fs').promises;
     const path = require('path');
-    const http = require('http');
-    const https = require('https');
     
     try {
+      // Use the unified helper to convert HTTP URLs to local paths
+      const localImageUrl = this.convertToLocalPath(imageUrl);
+      
       let imageBuffer;
       
-      // First, try to convert external URLs to local paths
-      if (imageUrl.startsWith('http')) {
-        // Extract the path from the URL and try to access it locally first
-        const urlPath = new URL(imageUrl).pathname;
-        if (urlPath.startsWith('/uploads/')) {
-          console.log('Converting external URL to local path:', urlPath);
-          const localPath = path.join(__dirname, '..', urlPath);
-          try {
-            imageBuffer = await fs.readFile(localPath);
-            console.log('Successfully read image from local path:', localPath);
-          } catch (localError) {
-            console.log('Local file not found, attempting download:', imageUrl);
-            imageBuffer = await this.downloadImage(imageUrl);
-          }
-        } else {
-          // Remote URL - download the image
-          console.log('Downloading remote image:', imageUrl);
-          imageBuffer = await this.downloadImage(imageUrl);
-        }
-      } else if (imageUrl.startsWith('/uploads/')) {
+      if (localImageUrl.startsWith('/uploads/')) {
         // Local file path
-        const imagePath = path.join(__dirname, '..', imageUrl);
+        const imagePath = path.join(__dirname, '..', localImageUrl);
         imageBuffer = await fs.readFile(imagePath);
+        console.log(`Successfully read image from local path: ${imagePath}`);
+      } else if (localImageUrl.startsWith('http')) {
+        // Still an HTTP URL - download it
+        console.log('Downloading remote image:', localImageUrl);
+        imageBuffer = await this.downloadImage(localImageUrl);
       } else {
         // Direct file path
-        imageBuffer = await fs.readFile(imageUrl);
+        imageBuffer = await fs.readFile(localImageUrl);
       }
       
       return imageBuffer.toString('base64');
