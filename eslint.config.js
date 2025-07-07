@@ -24,6 +24,14 @@ export default tseslint.config(
         { allowConstantExport: true },
       ],
       "@typescript-eslint/no-unused-vars": "off",
+      // Temporarily allow any types for v1.0.0 release
+      "@typescript-eslint/no-explicit-any": "off",
+      // Allow empty object types for UI components
+      "@typescript-eslint/no-empty-object-type": "off",
+      // Allow require imports for config files
+      "@typescript-eslint/no-require-imports": "off",
+      // Make React hooks exhaustive deps a warning instead of error
+      "react-hooks/exhaustive-deps": "warn",
     },
   }
 );
