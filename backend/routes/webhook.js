@@ -150,7 +150,9 @@ async function handleWebhookEvent(req, res) {
     // Add face processing to queue
     const fullImageUrl = req.file 
       ? `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`
-      : newEvent.image_url;
+      : processedImageUrl.startsWith('/uploads/') 
+        ? `${req.protocol}://${req.get('host')}${processedImageUrl}`
+        : processedImageUrl;
     
     // Queue face processing (non-blocking)
     faceProcessingService.addToProcessingQueue(eventWithId.id, fullImageUrl)
