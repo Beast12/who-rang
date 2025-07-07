@@ -14,4 +14,10 @@ router.get('/usage/stats', openaiController.getUsageStats);
 // Get AI usage logs
 router.get('/usage/logs', openaiController.getUsageLogs);
 
+// Get available AI providers
+router.get('/providers', openaiController.getAvailableProviders);
+
+// Set AI provider
+router.post('/provider', openaiController.setAIProvider);
+
 module.exports = router;

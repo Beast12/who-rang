@@ -322,6 +322,40 @@ class WhoRangAPIClient:
             _LOGGER.error("Failed to set AI provider: %s", err)
             raise
 
+    async def set_ai_provider_with_key(self, provider: str, api_key: str = None) -> bool:
+        """Set AI provider with API key if required."""
+        try:
+            payload = {"provider": provider}
+            if api_key and provider != "local":
+                payload["api_key"] = api_key
+            
+            response = await self._request("POST", f"{API_OPENAI}/provider", data=payload)
+            return response.get("success", False)
+        except Exception as err:
+            _LOGGER.error("Failed to set AI provider %s: %s", provider, err)
+            return False
+
+    async def get_available_providers(self) -> Dict[str, Any]:
+        """Get available AI providers and their requirements."""
+        try:
+            response = await self._request("GET", f"{API_OPENAI}/providers")
+            return response.get("data", {
+                "local": {"requires_key": False},
+                "openai": {"requires_key": True},
+                "claude": {"requires_key": True},
+                "gemini": {"requires_key": True},
+                "google_cloud_vision": {"requires_key": True}
+            })
+        except Exception as err:
+            _LOGGER.error("Failed to get AI providers: %s", err)
+            return {
+                "local": {"requires_key": False},
+                "openai": {"requires_key": True},
+                "claude": {"requires_key": True},
+                "gemini": {"requires_key": True},
+                "google_cloud_vision": {"requires_key": True}
+            }
+
     async def trigger_analysis(self, visitor_id: Optional[str] = None) -> Dict[str, Any]:
         """Trigger AI analysis for a visitor or latest visitor."""
         endpoint = "/api/analysis/trigger"

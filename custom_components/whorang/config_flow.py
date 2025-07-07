@@ -6,6 +6,7 @@ import logging
 import urllib.parse
 from typing import Any, Dict, Optional, Tuple
 
+import aiohttp
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.const import CONF_HOST, CONF_PORT
@@ -169,6 +170,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     def __init__(self) -> None:
         """Initialize the config flow."""
         self._discovered_info: Optional[Dict[str, Any]] = None
+        self._config_data: Optional[Dict[str, Any]] = None
 
     async def async_step_user(
         self, user_input: Optional[Dict[str, Any]] = None
@@ -196,11 +198,156 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 )
                 self._abort_if_unique_id_configured()
 
-                return self.async_create_entry(title=info["title"], data=parsed_data)
+                # Store config data and proceed to AI providers step
+                self._config_data = {
+                    "title": info["title"],
+                    "parsed_data": parsed_data
+                }
+                return await self.async_step_ai_providers()
 
         return self.async_show_form(
             step_id="user", data_schema=STEP_USER_DATA_SCHEMA, errors=errors
         )
+
+    async def async_step_ai_providers(self, user_input: Optional[Dict[str, Any]] = None) -> FlowResult:
+        """Configure AI providers and API keys."""
+        errors: Dict[str, str] = {}
+        
+        if user_input is not None:
+            # Validate API keys for selected providers
+            api_keys = {}
+            for provider, api_key in user_input.items():
+                if api_key and api_key.strip():
+                    api_keys[provider] = api_key.strip()
+            
+            # Test API keys if provided
+            if not api_keys or await self._test_api_keys(api_keys):
+                # Create config entry with AI API keys
+                final_data = self._config_data["parsed_data"].copy()
+                final_data["ai_api_keys"] = api_keys
+                
+                return self.async_create_entry(
+                    title=self._config_data["title"],
+                    data=final_data
+                )
+            else:
+                errors["base"] = "invalid_api_keys"
+        
+        return self.async_show_form(
+            step_id="ai_providers",
+            data_schema=vol.Schema({
+                vol.Optional("openai_api_key", description="OpenAI API Key"): str,
+                vol.Optional("claude_api_key", description="Anthropic Claude API Key"): str,
+                vol.Optional("gemini_api_key", description="Google Gemini API Key"): str,
+                vol.Optional("google_cloud_api_key", description="Google Cloud Vision API Key"): str,
+            }),
+            errors=errors,
+            description_placeholders={
+                "openai_help": "Get your API key from https://platform.openai.com/api-keys",
+                "claude_help": "Get your API key from https://console.anthropic.com/",
+                "gemini_help": "Get your API key from https://aistudio.google.com/app/apikey",
+                "google_cloud_help": "Get your API key from Google Cloud Console"
+            }
+        )
+
+    async def _test_api_keys(self, api_keys: Dict[str, str]) -> bool:
+        """Test provided API keys."""
+        try:
+            for provider, api_key in api_keys.items():
+                if not await self._test_single_api_key(provider, api_key):
+                    _LOGGER.error("API key validation failed for provider: %s", provider)
+                    return False
+            return True
+        except Exception as err:
+            _LOGGER.error("API key testing failed: %s", err)
+            return False
+
+    async def _test_single_api_key(self, provider: str, api_key: str) -> bool:
+        """Test a single API key."""
+        try:
+            if provider == "openai_api_key":
+                return await self._test_openai_key(api_key)
+            elif provider == "claude_api_key":
+                return await self._test_claude_key(api_key)
+            elif provider == "gemini_api_key":
+                return await self._test_gemini_key(api_key)
+            elif provider == "google_cloud_api_key":
+                return await self._test_google_cloud_key(api_key)
+            return True
+        except Exception as err:
+            _LOGGER.error("Failed to test API key for %s: %s", provider, err)
+            return False
+
+    async def _test_openai_key(self, api_key: str) -> bool:
+        """Test OpenAI API key."""
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(
+                    "https://api.openai.com/v1/models",
+                    headers={"Authorization": f"Bearer {api_key}"},
+                    timeout=aiohttp.ClientTimeout(total=10)
+                ) as response:
+                    return response.status == 200
+        except Exception as err:
+            _LOGGER.debug("OpenAI API key test failed: %s", err)
+            return False
+
+    async def _test_claude_key(self, api_key: str) -> bool:
+        """Test Claude API key."""
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.post(
+                    "https://api.anthropic.com/v1/messages",
+                    headers={
+                        "x-api-key": api_key,
+                        "anthropic-version": "2023-06-01",
+                        "content-type": "application/json"
+                    },
+                    json={
+                        "model": "claude-3-haiku-20240307",
+                        "max_tokens": 1,
+                        "messages": [{"role": "user", "content": "test"}]
+                    },
+                    timeout=aiohttp.ClientTimeout(total=10)
+                ) as response:
+                    # 200 is success, 400 is also OK for validation (means API key is valid but request format might be wrong)
+                    return response.status in [200, 400]
+        except Exception as err:
+            _LOGGER.debug("Claude API key test failed: %s", err)
+            return False
+
+    async def _test_gemini_key(self, api_key: str) -> bool:
+        """Test Gemini API key."""
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(
+                    f"https://generativelanguage.googleapis.com/v1beta/models?key={api_key}",
+                    timeout=aiohttp.ClientTimeout(total=10)
+                ) as response:
+                    return response.status == 200
+        except Exception as err:
+            _LOGGER.debug("Gemini API key test failed: %s", err)
+            return False
+
+    async def _test_google_cloud_key(self, api_key: str) -> bool:
+        """Test Google Cloud Vision API key."""
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.post(
+                    f"https://vision.googleapis.com/v1/images:annotate?key={api_key}",
+                    json={
+                        "requests": [{
+                            "image": {"content": ""},
+                            "features": [{"type": "LABEL_DETECTION", "maxResults": 1}]
+                        }]
+                    },
+                    timeout=aiohttp.ClientTimeout(total=10)
+                ) as response:
+                    # 400 is expected for empty image, but means API key is valid
+                    return response.status in [200, 400]
+        except Exception as err:
+            _LOGGER.debug("Google Cloud Vision API key test failed: %s", err)
+            return False
 
     async def async_step_discovery(
         self, discovery_info: Dict[str, Any]
@@ -267,6 +414,15 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         self, user_input: Optional[Dict[str, Any]] = None
     ) -> FlowResult:
         """Manage the options."""
+        return self.async_show_menu(
+            step_id="init",
+            menu_options=["general", "ai_providers"]
+        )
+
+    async def async_step_general(
+        self, user_input: Optional[Dict[str, Any]] = None
+    ) -> FlowResult:
+        """Configure general options."""
         if user_input is not None:
             return self.async_create_entry(title="", data=user_input)
 
@@ -291,9 +447,161 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         )
 
         return self.async_show_form(
-            step_id="init",
+            step_id="general",
             data_schema=options_schema,
         )
+
+    async def async_step_ai_providers(
+        self, user_input: Optional[Dict[str, Any]] = None
+    ) -> FlowResult:
+        """Configure AI provider API keys."""
+        errors: Dict[str, str] = {}
+        
+        if user_input is not None:
+            # Update API keys
+            api_keys = {}
+            for provider, api_key in user_input.items():
+                if api_key and api_key.strip():
+                    api_keys[provider] = api_key.strip()
+            
+            # Test API keys if provided
+            if not api_keys or await self._test_api_keys(api_keys):
+                # Update config entry data with new API keys
+                new_data = dict(self.config_entry.data)
+                new_data["ai_api_keys"] = api_keys
+                
+                self.hass.config_entries.async_update_entry(
+                    self.config_entry, data=new_data
+                )
+                return self.async_create_entry(title="", data={})
+            else:
+                errors["base"] = "invalid_api_keys"
+        
+        # Get current API keys
+        current_keys = self.config_entry.data.get("ai_api_keys", {})
+        
+        return self.async_show_form(
+            step_id="ai_providers",
+            data_schema=vol.Schema({
+                vol.Optional(
+                    "openai_api_key", 
+                    default=current_keys.get("openai_api_key", "")
+                ): str,
+                vol.Optional(
+                    "claude_api_key",
+                    default=current_keys.get("claude_api_key", "")
+                ): str,
+                vol.Optional(
+                    "gemini_api_key",
+                    default=current_keys.get("gemini_api_key", "")
+                ): str,
+                vol.Optional(
+                    "google_cloud_api_key",
+                    default=current_keys.get("google_cloud_api_key", "")
+                ): str,
+            }),
+            errors=errors,
+            description_placeholders={
+                "note": "Leave fields empty to remove API keys. Only configured providers will be available for selection."
+            }
+        )
+
+    async def _test_api_keys(self, api_keys: Dict[str, str]) -> bool:
+        """Test provided API keys."""
+        try:
+            for provider, api_key in api_keys.items():
+                if not await self._test_single_api_key(provider, api_key):
+                    _LOGGER.error("API key validation failed for provider: %s", provider)
+                    return False
+            return True
+        except Exception as err:
+            _LOGGER.error("API key testing failed: %s", err)
+            return False
+
+    async def _test_single_api_key(self, provider: str, api_key: str) -> bool:
+        """Test a single API key."""
+        try:
+            if provider == "openai_api_key":
+                return await self._test_openai_key(api_key)
+            elif provider == "claude_api_key":
+                return await self._test_claude_key(api_key)
+            elif provider == "gemini_api_key":
+                return await self._test_gemini_key(api_key)
+            elif provider == "google_cloud_api_key":
+                return await self._test_google_cloud_key(api_key)
+            return True
+        except Exception as err:
+            _LOGGER.error("Failed to test API key for %s: %s", provider, err)
+            return False
+
+    async def _test_openai_key(self, api_key: str) -> bool:
+        """Test OpenAI API key."""
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(
+                    "https://api.openai.com/v1/models",
+                    headers={"Authorization": f"Bearer {api_key}"},
+                    timeout=aiohttp.ClientTimeout(total=10)
+                ) as response:
+                    return response.status == 200
+        except Exception as err:
+            _LOGGER.debug("OpenAI API key test failed: %s", err)
+            return False
+
+    async def _test_claude_key(self, api_key: str) -> bool:
+        """Test Claude API key."""
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.post(
+                    "https://api.anthropic.com/v1/messages",
+                    headers={
+                        "x-api-key": api_key,
+                        "anthropic-version": "2023-06-01",
+                        "content-type": "application/json"
+                    },
+                    json={
+                        "model": "claude-3-haiku-20240307",
+                        "max_tokens": 1,
+                        "messages": [{"role": "user", "content": "test"}]
+                    },
+                    timeout=aiohttp.ClientTimeout(total=10)
+                ) as response:
+                    return response.status in [200, 400]
+        except Exception as err:
+            _LOGGER.debug("Claude API key test failed: %s", err)
+            return False
+
+    async def _test_gemini_key(self, api_key: str) -> bool:
+        """Test Gemini API key."""
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(
+                    f"https://generativelanguage.googleapis.com/v1beta/models?key={api_key}",
+                    timeout=aiohttp.ClientTimeout(total=10)
+                ) as response:
+                    return response.status == 200
+        except Exception as err:
+            _LOGGER.debug("Gemini API key test failed: %s", err)
+            return False
+
+    async def _test_google_cloud_key(self, api_key: str) -> bool:
+        """Test Google Cloud Vision API key."""
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.post(
+                    f"https://vision.googleapis.com/v1/images:annotate?key={api_key}",
+                    json={
+                        "requests": [{
+                            "image": {"content": ""},
+                            "features": [{"type": "LABEL_DETECTION", "maxResults": 1}]
+                        }]
+                    },
+                    timeout=aiohttp.ClientTimeout(total=10)
+                ) as response:
+                    return response.status in [200, 400]
+        except Exception as err:
+            _LOGGER.debug("Google Cloud Vision API key test failed: %s", err)
+            return False
 
 
 class CannotConnect(HomeAssistantError):

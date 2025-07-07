@@ -285,6 +285,118 @@ class OpenAIController {
       });
     }
   }
+
+  // Get available AI providers
+  static async getAvailableProviders(req, res) {
+    try {
+      const providers = {
+        local: { requires_key: false, name: 'Local Ollama' },
+        openai: { requires_key: true, name: 'OpenAI Vision' },
+        claude: { requires_key: true, name: 'Claude Vision' },
+        gemini: { requires_key: true, name: 'Google Gemini' },
+        'google-cloud-vision': { requires_key: true, name: 'Google Cloud Vision' }
+      };
+
+      res.json({
+        data: providers,
+        providers: Object.keys(providers)
+      });
+
+    } catch (error) {
+      console.error('Error fetching available providers:', error);
+      res.status(500).json({
+        error: 'Failed to fetch available providers',
+        details: error.message
+      });
+    }
+  }
+
+  // Set AI provider
+  static async setAIProvider(req, res) {
+    try {
+      const { provider, api_key } = req.body;
+      
+      if (!provider) {
+        return res.status(400).json({
+          success: false,
+          error: 'Provider is required'
+        });
+      }
+
+      const validProviders = ['local', 'openai', 'claude', 'gemini', 'google-cloud-vision'];
+      if (!validProviders.includes(provider)) {
+        return res.status(400).json({
+          success: false,
+          error: `Invalid provider. Must be one of: ${validProviders.join(', ')}`
+        });
+      }
+
+      console.log('=== SETTING AI PROVIDER ===');
+      console.log('Provider:', provider);
+      console.log('Has API key:', !!api_key);
+
+      const db = getDatabase();
+      
+      // Get current config
+      const configStmt = db.prepare('SELECT * FROM face_recognition_config LIMIT 1');
+      let config = configStmt.get();
+
+      if (!config) {
+        // Create initial config if it doesn't exist
+        const insertStmt = db.prepare(`
+          INSERT INTO face_recognition_config (
+            enabled, ai_provider, confidence_threshold, cost_tracking_enabled,
+            monthly_budget_limit, api_key, created_at, updated_at
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        `);
+        
+        const now = new Date().toISOString();
+        insertStmt.run(
+          1, // enabled
+          provider,
+          0.7, // confidence_threshold
+          1, // cost_tracking_enabled
+          50.0, // monthly_budget_limit
+          api_key || null,
+          now,
+          now
+        );
+      } else {
+        // Update existing config
+        const updateStmt = db.prepare(`
+          UPDATE face_recognition_config 
+          SET ai_provider = ?, api_key = ?, updated_at = ?
+          WHERE id = ?
+        `);
+        
+        updateStmt.run(
+          provider,
+          api_key || config.api_key, // Keep existing API key if not provided
+          new Date().toISOString(),
+          config.id
+        );
+      }
+
+      console.log(`Successfully set AI provider to: ${provider}`);
+
+      res.json({
+        success: true,
+        message: `AI provider set to ${provider}`,
+        provider: provider,
+        has_api_key: !!api_key
+      });
+
+    } catch (error) {
+      console.error('=== SET AI PROVIDER ERROR ===');
+      console.error('Error details:', error);
+      
+      res.status(500).json({
+        success: false,
+        error: 'Failed to set AI provider',
+        details: error.message
+      });
+    }
+  }
 }
 
 module.exports = OpenAIController;

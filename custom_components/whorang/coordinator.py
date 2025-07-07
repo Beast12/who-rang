@@ -372,13 +372,19 @@ class WhoRangDataUpdateCoordinator(DataUpdateCoordinator):
             _LOGGER.error("Failed to test webhook: %s", err)
             return False
 
-    async def async_set_ai_provider(self, provider: str) -> bool:
-        """Set the active AI provider."""
+    async def async_set_ai_provider(self, provider: str, api_key: str = None) -> bool:
+        """Set the active AI provider with optional API key."""
         try:
-            await self.api_client.set_ai_provider(provider)
-            # Refresh data after changing provider
-            await self.async_request_refresh()
-            return True
+            if api_key:
+                success = await self.api_client.set_ai_provider_with_key(provider, api_key)
+            else:
+                await self.api_client.set_ai_provider(provider)
+                success = True
+            
+            if success:
+                # Refresh data after changing provider
+                await self.async_request_refresh()
+            return success
         except Exception as err:
             _LOGGER.error("Failed to set AI provider: %s", err)
             return False

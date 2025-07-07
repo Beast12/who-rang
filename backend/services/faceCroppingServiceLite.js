@@ -1,3 +1,8 @@
+/**
+ * Lightweight face cropping service that works without canvas dependency
+ * Falls back to basic functionality when canvas is not available
+ */
+
 const fs = require('fs').promises;
 const path = require('path');
 
@@ -7,8 +12,26 @@ class FaceCroppingServiceLite {
     this.facesDir = path.join(this.uploadsDir, 'faces');
     this.thumbnailsDir = path.join(this.uploadsDir, 'thumbnails');
     
+    // Check if canvas is available
+    this.canvasAvailable = this.checkCanvasAvailability();
+    
+    if (this.canvasAvailable) {
+      console.log('Canvas available - full face cropping functionality enabled');
+    } else {
+      console.log('Canvas not available - using lite face processing mode');
+    }
+    
     // Ensure directories exist
     this.ensureDirectories();
+  }
+
+  checkCanvasAvailability() {
+    try {
+      require('canvas');
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 
   async ensureDirectories() {
@@ -16,60 +39,66 @@ class FaceCroppingServiceLite {
       await fs.mkdir(this.uploadsDir, { recursive: true });
       await fs.mkdir(this.facesDir, { recursive: true });
       await fs.mkdir(this.thumbnailsDir, { recursive: true });
-      console.log('Face cropping directories ensured (lite version)');
+      console.log('Face cropping directories ensured');
     } catch (error) {
       console.error('Error creating face cropping directories:', error);
     }
   }
 
   /**
-   * Lite version - creates placeholder face crops without actual image processing
-   * This allows the system to work without canvas dependency
+   * Extract face crops from a full doorbell image
+   * In lite mode, returns face metadata without actual cropping
    */
   async extractFaceCrops(imageUrl, faceDetections, visitorEventId) {
     try {
-      console.log(`Creating ${faceDetections.length} face placeholders for image: ${imageUrl}`);
+      console.log(`Processing ${faceDetections.length} face detections for visitor ${visitorEventId}`);
       
-      const faceCrops = [];
-      
-      for (let i = 0; i < faceDetections.length; i++) {
-        const face = faceDetections[i];
-        const faceId = `${visitorEventId}_face_${i + 1}_${Date.now()}`;
-        
-        try {
-          // Create placeholder paths (actual cropping would happen here with canvas)
-          const faceCropPath = `/uploads/faces/${faceId}.jpg`;
-          const thumbnailPath = `/uploads/thumbnails/thumb_${faceId}.jpg`;
-          
-          // For now, we'll reference the original image
-          // In a full implementation, this would be the actual cropped face
-          faceCrops.push({
-            faceId,
-            faceCropPath: imageUrl, // Use original image as placeholder
-            thumbnailPath: imageUrl, // Use original image as placeholder
-            boundingBox: face.bounding_box,
-            confidence: face.confidence,
-            qualityScore: this.calculateFaceQuality(face, 1920, 1080), // Assume standard resolution
-            originalFace: face
-          });
-          
-          console.log(`Face placeholder ${i + 1} created: ${faceId}`);
-        } catch (error) {
-          console.error(`Error creating face placeholder ${i + 1}:`, error);
-        }
+      if (this.canvasAvailable) {
+        // Use full canvas-based cropping
+        const fullService = require('./faceCroppingService');
+        return await fullService.extractFaceCrops(imageUrl, faceDetections, visitorEventId);
+      } else {
+        // Lite mode - return face metadata without actual cropping
+        return await this.extractFaceMetadata(imageUrl, faceDetections, visitorEventId);
       }
-      
-      return faceCrops;
     } catch (error) {
-      console.error('Error in extractFaceCrops (lite):', error);
-      throw error;
+      console.error('Error in extractFaceCrops:', error);
+      // Return basic face metadata even if processing fails
+      return await this.extractFaceMetadata(imageUrl, faceDetections, visitorEventId);
     }
+  }
+
+  /**
+   * Extract face metadata without actual image cropping
+   */
+  async extractFaceMetadata(imageUrl, faceDetections, visitorEventId) {
+    const faceCrops = [];
+    
+    for (let i = 0; i < faceDetections.length; i++) {
+      const face = faceDetections[i];
+      const faceId = `${visitorEventId}_face_${i + 1}_${Date.now()}`;
+      
+      faceCrops.push({
+        faceId,
+        faceCropPath: null, // No actual crop in lite mode
+        thumbnailPath: null, // No thumbnail in lite mode
+        boundingBox: face.bounding_box,
+        confidence: face.confidence,
+        qualityScore: this.calculateFaceQuality(face, 1920, 1080), // Assume standard resolution
+        originalFace: face,
+        liteMode: true // Flag to indicate this is lite mode processing
+      });
+      
+      console.log(`Face metadata ${i + 1} processed: ${faceId}`);
+    }
+    
+    return faceCrops;
   }
 
   /**
    * Calculate face quality score based on various factors
    */
-  calculateFaceQuality(face, imageWidth, imageHeight) {
+  calculateFaceQuality(face, imageWidth = 1920, imageHeight = 1080) {
     let qualityScore = 0.5; // Base score
     
     // Size factor - larger faces are generally better quality
@@ -116,7 +145,7 @@ class FaceCroppingServiceLite {
       return {
         embedding: embedding,
         features: features,
-        method: 'description_based_lite'
+        method: 'description_based'
       };
     } catch (error) {
       console.error('Error generating face embedding:', error);
@@ -230,8 +259,29 @@ class FaceCroppingServiceLite {
    */
   async cleanupOldFiles(daysOld = 30) {
     try {
-      console.log('Cleanup not implemented in lite version');
-      // In lite version, we don't create actual files to clean up
+      const cutoffDate = new Date();
+      cutoffDate.setDate(cutoffDate.getDate() - daysOld);
+
+      const directories = [this.facesDir, this.thumbnailsDir];
+
+      for (const dir of directories) {
+        try {
+          const files = await fs.readdir(dir);
+          
+          for (const file of files) {
+            const filePath = path.join(dir, file);
+            const stats = await fs.stat(filePath);
+            
+            if (stats.mtime < cutoffDate) {
+              await fs.unlink(filePath);
+              console.log(`Cleaned up old file: ${file}`);
+            }
+          }
+        } catch (error) {
+          // Directory might not exist, that's okay
+          console.debug(`Directory ${dir} not accessible:`, error.message);
+        }
+      }
     } catch (error) {
       console.error('Error cleaning up old files:', error);
     }

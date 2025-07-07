@@ -15,6 +15,22 @@
           "verify_ssl": "Uncheck for self-signed certificates"
         }
       },
+      "ai_providers": {
+        "title": "Configure AI Providers",
+        "description": "Enter API keys for external AI providers you want to use. Leave empty to skip providers. Only providers with valid API keys will be available for selection.",
+        "data": {
+          "openai_api_key": "OpenAI API Key",
+          "claude_api_key": "Anthropic Claude API Key", 
+          "gemini_api_key": "Google Gemini API Key",
+          "google_cloud_api_key": "Google Cloud Vision API Key"
+        },
+        "data_description": {
+          "openai_api_key": "Get from https://platform.openai.com/api-keys",
+          "claude_api_key": "Get from https://console.anthropic.com/",
+          "gemini_api_key": "Get from https://aistudio.google.com/app/apikey",
+          "google_cloud_api_key": "Get from Google Cloud Console"
+        }
+      },
       "discovery_confirm": {
         "title": "Confirm WhoRang Discovery",
         "description": "Do you want to add the WhoRang system found at {host}:{port}?"
@@ -26,7 +42,8 @@
       "invalid_url": "Invalid URL format. Please enter a valid URL or IP:port combination.",
       "ssl_error": "SSL connection error. Please check your SSL settings or disable SSL verification for self-signed certificates.",
       "timeout": "Connection timeout. Please check your network connection and try again.",
-      "unknown": "Unexpected error occurred. Please try again."
+      "unknown": "Unexpected error occurred. Please try again.",
+      "invalid_api_keys": "One or more API keys are invalid. Please check your keys and try again."
     },
     "abort": {
       "already_configured": "WhoRang system is already configured",
@@ -39,6 +56,10 @@
     "step": {
       "init": {
         "title": "WhoRang Options",
+        "description": "Choose what you want to configure."
+      },
+      "general": {
+        "title": "General Options",
         "description": "Configure WhoRang integration options to customize behavior and performance.",
         "data": {
           "update_interval": "Update interval (seconds)",
@@ -50,7 +71,26 @@
           "enable_websocket": "Enable real-time updates via WebSocket connection",
           "enable_cost_tracking": "Track AI processing costs and usage statistics"
         }
+      },
+      "ai_providers": {
+        "title": "Manage AI Provider API Keys",
+        "description": "Update API keys for external AI providers. Changes take effect immediately. Leave fields empty to remove API keys.",
+        "data": {
+          "openai_api_key": "OpenAI API Key",
+          "claude_api_key": "Anthropic Claude API Key",
+          "gemini_api_key": "Google Gemini API Key",
+          "google_cloud_api_key": "Google Cloud Vision API Key"
+        },
+        "data_description": {
+          "openai_api_key": "Get from https://platform.openai.com/api-keys",
+          "claude_api_key": "Get from https://console.anthropic.com/",
+          "gemini_api_key": "Get from https://aistudio.google.com/app/apikey",
+          "google_cloud_api_key": "Get from Google Cloud Console"
+        }
       }
+    },
+    "error": {
+      "invalid_api_keys": "One or more API keys are invalid. Please check your keys and try again."
     }
   },
   "entity": {
