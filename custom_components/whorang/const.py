@@ -78,6 +78,8 @@ SERVICE_REMOVE_KNOWN_VISITOR: Final = "remove_known_visitor"
 SERVICE_SET_AI_PROVIDER: Final = "set_ai_provider"
 SERVICE_SET_AI_MODEL: Final = "set_ai_model"
 SERVICE_GET_AVAILABLE_MODELS: Final = "get_available_models"
+SERVICE_REFRESH_OLLAMA_MODELS: Final = "refresh_ollama_models"
+SERVICE_TEST_OLLAMA_CONNECTION: Final = "test_ollama_connection"
 SERVICE_EXPORT_DATA: Final = "export_data"
 SERVICE_TEST_WEBHOOK: Final = "test_webhook"
 

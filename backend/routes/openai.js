@@ -3,7 +3,7 @@ const router = express.Router();
 const openaiController = require('../controllers/openaiController');
 
 // Get available OpenAI models
-router.get('/models', openaiController.getAvailableModels);
+router.get('/models', openaiController.getAllModels);
 
 // Get available models for specific provider
 router.get('/models/:provider', openaiController.getProviderModels);

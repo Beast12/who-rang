@@ -24,6 +24,8 @@ from .const import (
     SERVICE_SET_AI_PROVIDER,
     SERVICE_SET_AI_MODEL,
     SERVICE_GET_AVAILABLE_MODELS,
+    SERVICE_REFRESH_OLLAMA_MODELS,
+    SERVICE_TEST_OLLAMA_CONNECTION,
     SERVICE_EXPORT_DATA,
     SERVICE_TEST_WEBHOOK,
 )
@@ -274,6 +276,43 @@ async def _async_register_services(hass: HomeAssistant) -> None:
             except Exception as err:
                 _LOGGER.error("Failed to get available models: %s", err)
 
+    async def refresh_ollama_models_service(call) -> None:
+        """Handle refresh Ollama models service call."""
+        # Get all coordinators
+        coordinators = [
+            coordinator for coordinator in hass.data[DOMAIN].values()
+            if isinstance(coordinator, WhoRangDataUpdateCoordinator)
+        ]
+        
+        for coordinator in coordinators:
+            try:
+                # Force refresh of Ollama models
+                ollama_models = await coordinator.api_client.get_ollama_models()
+                _LOGGER.info("Refreshed Ollama models: found %d models", len(ollama_models))
+                
+                # Trigger coordinator refresh to update entities
+                await coordinator.async_request_refresh()
+            except Exception as err:
+                _LOGGER.error("Failed to refresh Ollama models: %s", err)
+
+    async def test_ollama_connection_service(call) -> None:
+        """Handle test Ollama connection service call."""
+        # Get all coordinators
+        coordinators = [
+            coordinator for coordinator in hass.data[DOMAIN].values()
+            if isinstance(coordinator, WhoRangDataUpdateCoordinator)
+        ]
+        
+        for coordinator in coordinators:
+            try:
+                status = await coordinator.api_client.get_ollama_status()
+                if status.get("status") == "connected":
+                    _LOGGER.info("Ollama connection test successful: %s", status.get("message", "Connected"))
+                else:
+                    _LOGGER.warning("Ollama connection test failed: %s", status.get("message", "Disconnected"))
+            except Exception as err:
+                _LOGGER.error("Failed to test Ollama connection: %s", err)
+
     # Register services
     hass.services.async_register(
         DOMAIN,
@@ -346,4 +385,18 @@ async def _async_register_services(hass: HomeAssistant) -> None:
         schema=vol.Schema({
             vol.Optional("provider"): vol.In(["local", "openai", "claude", "gemini", "google-cloud-vision"]),
         }),
+    )
+
+    hass.services.async_register(
+        DOMAIN,
+        SERVICE_REFRESH_OLLAMA_MODELS,
+        refresh_ollama_models_service,
+        schema=vol.Schema({}),
+    )
+
+    hass.services.async_register(
+        DOMAIN,
+        SERVICE_TEST_OLLAMA_CONNECTION,
+        test_ollama_connection_service,
+        schema=vol.Schema({}),
     )

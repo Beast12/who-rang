@@ -514,6 +514,61 @@ class WhoRangAPIClient:
             default_models = self._get_default_models()
             return default_models.get(provider, [])
 
+    async def get_ollama_models(self) -> List[Dict[str, Any]]:
+        """Get available Ollama models from existing endpoint."""
+        try:
+            response = await self._request("GET", "/api/faces/ollama/models")
+            models_data = response.get("models", [])
+            
+            # Transform to match HA expectations
+            transformed_models = []
+            for model in models_data:
+                if isinstance(model, dict):
+                    transformed_models.append({
+                        "name": model.get("value", ""),
+                        "display_name": model.get("label", ""),
+                        "size": model.get("size", 0),
+                        "modified_at": model.get("modified_at"),
+                        "is_vision": True  # Backend already filters for vision models
+                    })
+            
+            _LOGGER.debug("Retrieved %d Ollama models", len(transformed_models))
+            return transformed_models
+            
+        except Exception as e:
+            _LOGGER.error("Failed to get Ollama models: %s", e)
+            return []
+
+    async def get_ollama_status(self) -> Dict[str, Any]:
+        """Get Ollama connection status."""
+        try:
+            response = await self._request("POST", "/api/faces/ollama/test")
+            return {
+                "status": "connected" if response.get("success") else "disconnected",
+                "version": response.get("version"),
+                "url": response.get("ollama_url"),
+                "message": response.get("message"),
+                "last_check": response.get("debug", {}).get("response_data", {})
+            }
+        except Exception as e:
+            _LOGGER.error("Failed to get Ollama status: %s", e)
+            return {
+                "status": "disconnected", 
+                "error": str(e),
+                "message": f"Connection failed: {e}"
+            }
+
+    def _format_size(self, size_bytes: int) -> str:
+        """Format model size for display."""
+        if size_bytes == 0:
+            return "Unknown"
+        
+        for unit in ['B', 'KB', 'MB', 'GB', 'TB']:
+            if size_bytes < 1024.0:
+                return f"{size_bytes:.1f} {unit}"
+            size_bytes /= 1024.0
+        return f"{size_bytes:.1f} PB"
+
     async def get_system_info(self) -> Dict[str, Any]:
         """Get comprehensive system information."""
         try:

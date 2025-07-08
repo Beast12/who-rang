@@ -358,25 +358,98 @@ Backend Model Storage → API Response → Coordinator → Entity State → UI D
 - **User Migration**: Existing model preferences preserved and enhanced
 - **Documentation**: Clear upgrade path and feature documentation
 
+## Enhanced Implementation: Dynamic Ollama Model Discovery (January 8, 2025)
+
+### **Major Enhancement: Real-time Ollama Model Discovery**
+
+Building on the foundation of dynamic AI model selection, implemented **dynamic Ollama model discovery** that replaces static model lists with real-time detection of actually installed Ollama models.
+
+**Key Enhancement**:
+- **Before**: Static local models `["llava", "llava:7b", "llava:13b", "bakllava"]`
+- **After**: Dynamic discovery showing actual installed Ollama models with metadata
+
+### **New Ollama-Specific Features**
+
+#### **Enhanced API Client Methods**:
+- **`get_ollama_models()`**: Leverages existing `/api/faces/ollama/models` endpoint
+- **`get_ollama_status()`**: Uses existing `/api/faces/ollama/test` endpoint
+- **Rich Model Metadata**: Size, modification date, display names, vision capabilities
+
+#### **Enhanced Coordinator Integration**:
+- **Conditional Discovery**: Only queries Ollama when local provider selected
+- **Real-time Updates**: Automatic model list updates when Ollama models change
+- **Status Monitoring**: Ollama connection health and version tracking
+
+#### **Enhanced AI Model Select Entity**:
+- **Dynamic Local Models**: Shows actual installed Ollama models
+- **Rich Attributes**: Model size, modification date, connection status in entity attributes
+- **Smart Fallbacks**: Static models when Ollama unavailable
+
+#### **New Ollama Services**:
+- **`refresh_ollama_models`**: Manual model list refresh capability
+- **`test_ollama_connection`**: Ollama connectivity diagnostics
+
+### **Technical Architecture Enhancement**
+
+#### **Data Flow for Local Provider**:
+```
+Ollama Instance → Backend Controller → HA API Client → Coordinator → Select Entity → UI
+     ↓                    ↓                ↓              ↓            ↓
+/api/tags         /api/faces/ollama/   get_ollama_    _async_update_   options
+endpoint          models endpoint      models()       data()           property
+```
+
+#### **Frontend-Backend Parity Achievement**:
+- **Same API Endpoints**: HA integration uses identical endpoints as GUI
+- **Same Model Filtering**: Vision model filtering logic matches GUI exactly
+- **Same Error Handling**: Consistent fallback behavior across interfaces
+
+### **User Experience Transformation**
+
+#### **Local Provider Experience**:
+- **Real-time Visibility**: Shows only models actually installed in Ollama
+- **Rich Information**: Model size, modification date, capabilities
+- **Status Awareness**: Clear indication of Ollama connection status
+- **Diagnostic Tools**: Service calls for troubleshooting connectivity
+
+#### **Enhanced Entity Attributes**:
+```yaml
+# Example AI Model entity attributes for local provider
+model_size: "4.2 GB"
+model_display_name: "LLaVA 13B"
+last_modified: "2024-01-15T10:30:00Z"
+is_vision_model: true
+total_available_models: 5
+ollama_status: "connected"
+ollama_version: "0.1.17"
+ollama_url: "http://localhost:11434"
+```
+
 ## Conclusion
 
-This implementation successfully brings dynamic AI model selection to the Home Assistant WhoRang integration, providing users with fine-grained control over AI processing while maintaining the security, reliability, and user experience standards of the existing integration.
+This implementation successfully brings comprehensive AI model management to the Home Assistant WhoRang integration, providing users with both static model selection for external providers and dynamic model discovery for local Ollama installations.
 
 **Key Benefits Delivered**:
 - ✅ **Frontend-Backend Parity**: HA integration matches web interface capabilities
+- ✅ **Real-time Model Discovery**: Shows actual installed Ollama models
+- ✅ **Rich Model Metadata**: Size, modification date, and capabilities
 - ✅ **User Choice**: Fine-grained control over AI model selection
 - ✅ **Cost Optimization**: Users can choose cost-effective models
 - ✅ **Performance Tuning**: Select models based on speed vs accuracy needs
+- ✅ **Diagnostic Tools**: Comprehensive troubleshooting capabilities
 - ✅ **Future-Proof**: Easy addition of new models and providers
 - ✅ **Professional Quality**: Production-ready implementation with comprehensive error handling
 
-The enhancement transforms the WhoRang integration from basic provider selection to sophisticated model management, enabling users to optimize their AI doorbell system for their specific needs, budget, and performance requirements.
+The enhancement transforms the WhoRang integration from basic provider selection to sophisticated model management with real-time discovery capabilities, enabling users to optimize their AI doorbell system for their specific needs, budget, and performance requirements.
 
 **Architecture Patterns Established**:
 - **Dynamic Entity Options**: Select entities with provider-dependent option lists
+- **Real-time Model Discovery**: Live detection of available models
+- **Leveraging Existing Infrastructure**: Reused proven GUI API endpoints
+- **Rich Entity Metadata**: Comprehensive state attributes for monitoring
 - **Coordinated Updates**: Multi-entity state synchronization via coordinator
 - **Service-Based Management**: Comprehensive service API for automation
-- **Fallback Strategies**: Robust error handling with sensible defaults
+- **Graceful Degradation**: Robust fallback mechanisms for reliability
 - **Backend-Frontend Sync**: Consistent model data across all interfaces
 
-This implementation serves as a reference for future AI-related enhancements and demonstrates best practices for complex Home Assistant integrations with dynamic, interdependent entities.
+This implementation serves as a reference for future AI-related enhancements and demonstrates best practices for complex Home Assistant integrations with dynamic, interdependent entities and real-time external system integration.

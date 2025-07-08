@@ -181,9 +181,19 @@ class WhoRangAIModelSelect(WhoRangSelectEntity):
     def options(self) -> List[str]:
         """Return available models for current AI provider."""
         current_provider = self.coordinator.data.get("current_ai_provider", "local")
-        available_models = self.coordinator.data.get("available_models", {})
         
-        return available_models.get(current_provider, ["default"])
+        if current_provider == "local":
+            # Use dynamic Ollama models
+            ollama_models = self.coordinator.data.get("ollama_models", [])
+            if ollama_models:
+                return [model["name"] for model in ollama_models]
+            else:
+                # Fallback to static list if Ollama unavailable
+                return ["llava", "llava:7b", "llava:13b", "bakllava"]
+        else:
+            # Use static lists for external providers
+            available_models = self.coordinator.data.get("available_models", {})
+            return available_models.get(current_provider, ["default"])
 
     @property
     def current_option(self) -> Optional[str]:
@@ -209,17 +219,50 @@ class WhoRangAIModelSelect(WhoRangSelectEntity):
     def available(self) -> bool:
         """Return if entity is available."""
         current_provider = self.coordinator.data.get("current_ai_provider")
-        # Hide model selection for local provider as it's handled in face recognition settings
-        return current_provider and current_provider != "local"
+        # Show model selection for all providers including local
+        return current_provider is not None
 
     @property
     def extra_state_attributes(self) -> Dict[str, Any]:
         """Return additional state attributes."""
         current_provider = self.coordinator.data.get("current_ai_provider", "local")
-        available_models = self.coordinator.data.get("available_models", {})
         
-        return {
-            "current_provider": current_provider,
-            "available_models": available_models.get(current_provider, []),
-            "total_models": len(available_models.get(current_provider, [])),
-        }
+        if current_provider == "local":
+            ollama_models = self.coordinator.data.get("ollama_models", [])
+            ollama_status = self.coordinator.data.get("ollama_status", {})
+            current_model = self.current_option
+            
+            # Find current model info
+            model_info = next((m for m in ollama_models if m["name"] == current_model), {})
+            
+            return {
+                "current_provider": current_provider,
+                "model_size": self._format_size(model_info.get("size", 0)),
+                "model_display_name": model_info.get("display_name", current_model),
+                "last_modified": model_info.get("modified_at"),
+                "is_vision_model": model_info.get("is_vision", False),
+                "total_available_models": len(ollama_models),
+                "ollama_status": ollama_status.get("status", "unknown"),
+                "ollama_version": ollama_status.get("version"),
+                "ollama_url": ollama_status.get("url"),
+                "ollama_message": ollama_status.get("message")
+            }
+        else:
+            # External providers
+            available_models = self.coordinator.data.get("available_models", {})
+            return {
+                "current_provider": current_provider,
+                "available_models": available_models.get(current_provider, []),
+                "total_models": len(available_models.get(current_provider, [])),
+            }
+
+    def _format_size(self, size_bytes: int) -> str:
+        """Format model size for display."""
+        if size_bytes == 0:
+            return "Unknown"
+        
+        for unit in ['B', 'KB', 'MB', 'GB', 'TB']:
+            if size_bytes < 1024.0:
+                return f"{size_bytes:.1f} {unit}"
+            size_bytes /= 1024.0
+        return f"{size_bytes:.1f} PB"

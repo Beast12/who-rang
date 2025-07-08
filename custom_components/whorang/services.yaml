@@ -122,3 +122,11 @@ get_available_models:
             - "claude"
             - "gemini"
             - "google-cloud-vision"
+
+refresh_ollama_models:
+  name: Refresh Ollama Models
+  description: Refresh the list of available Ollama models from the local instance
+
+test_ollama_connection:
+  name: Test Ollama Connection
+  description: Test connection to the Ollama service and get status information

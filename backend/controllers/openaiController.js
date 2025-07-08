@@ -398,6 +398,31 @@ class OpenAIController {
     }
   }
 
+  // Get available models for all providers
+  static async getAllModels(req, res) {
+    try {
+      console.log('=== GETTING ALL PROVIDER MODELS ===');
+
+      const defaultModels = OpenAIController._getDefaultModels();
+      
+      // For now, return default models for all providers
+      // TODO: Implement dynamic model fetching for each provider
+      res.json({
+        data: defaultModels,
+        total_providers: Object.keys(defaultModels).length
+      });
+
+    } catch (error) {
+      console.error('=== GET ALL MODELS ERROR ===');
+      console.error('Error details:', error);
+      
+      res.status(500).json({
+        error: 'Failed to get all models',
+        details: error.message
+      });
+    }
+  }
+
   // Get available models for specific provider
   static async getProviderModels(req, res) {
     try {
