@@ -1,42 +1,21 @@
 import { runtimeConfig } from '@/config/runtime';
 
-// Fix the API_BASE_URL construction to only remove trailing /api
-const getApiBaseUrl = () => {
-  const apiUrl = runtimeConfig.VITE_API_URL;
-  
-  // Only remove /api if it's at the end of the URL
-  if (apiUrl.endsWith('/api')) {
-    return apiUrl.slice(0, -4); // Remove the last 4 characters ('/api')
-  }
-  
-  return apiUrl;
-};
-
-const API_BASE_URL = getApiBaseUrl();
+const API_BASE_URL = runtimeConfig.VITE_API_URL.replace(/\/api$/, '');
 
 export const getImageUrl = (imageUrl: string | undefined | null): string => {
-  // Handle null, undefined, or empty string
-  if (!imageUrl || typeof imageUrl !== 'string') {
+  if (!imageUrl) {
     return getPlaceholderImage();
   }
-  
-  // If it's already an absolute URL (starts with http/https), return as-is
-  if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+
+  // If it's already an absolute URL, return as-is
+  if (imageUrl.startsWith('http')) {
     return imageUrl;
   }
-  
-  // If it's a relative path from backend (starts with /uploads/), prepend API base URL
-  if (imageUrl.startsWith('/uploads/')) {
-    return `${API_BASE_URL}${imageUrl}`;
-  }
-  
-  // If it's just a filename or other relative path, assume it's in uploads
-  if (!imageUrl.startsWith('/')) {
-    return `${API_BASE_URL}/uploads/${imageUrl}`;
-  }
-  
-  // Default case - prepend API base URL
-  return `${API_BASE_URL}${imageUrl}`;
+
+  // Ensure the path starts with a slash
+  const imagePath = imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`;
+
+  return `${API_BASE_URL}${imagePath}`;
 };
 
 export const getPlaceholderImage = (): string => {
