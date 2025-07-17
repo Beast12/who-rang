@@ -20,8 +20,13 @@ export const getImageUrl = (imageUrl: string | undefined | null): string => {
     return getPlaceholderImage();
   }
   
-  // If it's already an absolute URL (starts with http/https), return as-is
-  if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+  // If it's an insecure http URL, proxy it through the backend
+  if (imageUrl.startsWith('http://')) {
+    return `${API_BASE_URL}/api/image-proxy?url=${encodeURIComponent(imageUrl)}`;
+  }
+
+  // If it's already a secure absolute URL, return as-is
+  if (imageUrl.startsWith('https://')) {
     return imageUrl;
   }
   
